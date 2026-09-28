@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Notes Generator</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Inter, sans-serif;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, #e7dcff, transparent 35%),
+        radial-gradient(circle at bottom right, #d9f8ed, transparent 35%),
+        #f7f8fc;
+    color: #222;
+}
+
+header {
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid #e8e8ef;
+}
+
+.nav {
+    max-width: 1300px;
+    margin: auto;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    color: #5d39d4;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#6237db,#9b68ff);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.badge {
+    background: #f0ebff;
+    color: #633bd0;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.hero {
+    max-width: 1300px;
+    margin: auto;
+    padding: 45px 30px 25px;
+}
+
+.hero h1 {
+    font-size: 40px;
+    letter-spacing: -1px;
+}
+
+.gradient {
+    background: linear-gradient(90deg,#6338dc,#a258ff);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    margin-top: 12px;
+    color: #70717c;
+}
+
+.main {
+    max-width: 1300px;
+    margin: auto;
+    padding: 20px 30px 60px;
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 25px;
+}
+
+.card {
+    background: rgba(255,255,255,.92);
+    border: 1px solid #e7e7ee;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(30,20,70,.07);
+}
+
+.input-card {
+    padding: 25px;
+    height: fit-content;
+}
+
+.title {
+    margin-bottom: 18px;
+}
+
+.title h2 {
+    font-size: 19px;
+}
+
+.title p {
+    margin-top: 5px;
+    color: #858691;
+    font-size: 12px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 350px;
+    resize: vertical;
+    border: 1px solid #dddde6;
+    border-radius: 13px;
+    padding: 15px;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.6;
+    background: #fafafd;
+}
+
+textarea:focus {
+    background: white;
+    border-color: #754be0;
+    box-shadow: 0 0 0 4px rgba(117,75,224,.08);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: inherit;
+    font-weight: 700;
+}
+
+.generate {
+    flex: 1;
+    background: linear-gradient(135deg,#6238dc,#8957ed);
+    color: white;
+}
+
+.secondary {
+    background: #f0f0f5;
+    color: #555660;
+}
+
+.generate:hover {
+    transform: translateY(-1px);
+}
+
+.output-card {
+    padding: 25px;
+}
+
+.output-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.output {
+    min-height: 500px;
+    border: 1px solid #e7e7ed;
+    border-radius: 14px;
+    padding: 30px;
+    background: white;
+    line-height: 1.7;
+}
+
+.output h2 {
+    color: #5936ca;
+    margin: 20px 0 8px;
+}
+
+.output h2:first-child {
+    margin-top: 0;
+}
+
+.output h3 {
+    margin-top: 16px;
+}
+
+.output ul {
+    padding-left: 25px;
+}
+
+.loading {
+    display: none;
+    margin-top: 12px;
+    color: #6840d5;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@media(max-width:900px) {
+    .main {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:600px) {
+    .main,
+    .hero {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <div class="nav">
+
+```
+    <div class="logo">
+        <div class="logo-icon">✦</div>
+        AI Notes Generator
+    </div>
+
+    <div class="badge">
+        AI STUDY TOOL
+    </div>
+
+</div>
+```
+
+</header>
+
+<section class="hero">
+
+```
+<h1>
+    Turn long text into
+    <span class="gradient">smart notes.</span>
+</h1>
+
+<p>
+    Paste your textbook content, topic or chapter summary and
+    generate clean revision notes instantly.
+</p>
+```
+
+</section>
+
+<main class="main">
+
+```
+<section class="card input-card">
+
+    <div class="title">
+
+        <h2>Enter Study Material</h2>
+
+        <p>
+            Paste your textbook paragraph or topic below.
+        </p>
+
+    </div>
+
+    <textarea
+        id="inputText"
+        placeholder="Example:
+```
+
+Information security is the practice of protecting information
+from unauthorized access, use, disclosure, disruption,
+modification or destruction..."></textarea>
+
+```
+    <div class="actions">
+
+        <button
+            class="secondary"
+            onclick="loadSample()">
+            Sample
+        </button>
+
+        <button
+            class="secondary"
+            onclick="clearText()">
+            Clear
+        </button>
+
+        <button
+            class="generate"
+            onclick="generateNotes()">
+            ✨ Generate Notes
+        </button>
+
+    </div>
+
+    <div
+        class="loading"
+        id="loading">
+        ✨ AI is creating your study notes...
+    </div>
+
+</section>
+
+
+<section class="card output-card">
+
+    <div class="output-top">
+
+        <h2>Generated Notes</h2>
+
+        <div>
+
+            <button
+                class="secondary"
+                onclick="copyNotes()">
+                📋 Copy
+            </button>
+
+            <button
+                class="secondary"
+                onclick="downloadNotes()">
+                ↓ Download
+            </button>
+
+        </div>
+
+    </div>
+
+    <div
+        class="output"
+        id="output">
+
+        <h2>Ready to study?</h2>
+
+        <p>
+            Enter your study material and click
+            <b>Generate Notes</b>.
+        </p>
+
+    </div>
+
+</section>
+```
+
+</main>
+
+<script>
+
+function loadSample() {
+
+    document.getElementById("inputText").value = `
+
+Information Security
+
+Information security is the practice of protecting
+information and information systems from unauthorized
+access, use, disclosure, disruption, modification,
+or destruction.
+
+The main goals of information security are
+confidentiality, integrity and availability.
+
+Confidentiality ensures that information is accessible
+only to authorized users.
+
+Integrity ensures that information remains accurate
+and is not modified without authorization.
+
+Availability ensures that authorized users can access
+information whenever required.
+
+`;
+
+}
+
+function clearText() {
+
+    document.getElementById("inputText").value = "";
+
+    document.getElementById("output").innerHTML = `
+        <h2>Ready to study?</h2>
+        <p>
+            Enter your study material and click
+            <b>Generate Notes</b>.
+        </p>
+    `;
+
+}
+
+function generateNotes() {
+
+    const text =
+        document.getElementById("inputText").value.trim();
+
+    if (!text) {
+
+        alert("Please enter some study material.");
+
+        return;
+    }
+
+    const loading =
+        document.getElementById("loading");
+
+    loading.style.display = "block";
+
+    /*
+       AI PROMPT
+
+       This prompt will later be sent to
+       an AI API.
+    */
+
+    const prompt = `
+Convert the following study material into
+short, clear and exam-friendly notes.
+
+Rules:
+- Use headings.
+- Use bullet points.
+- Highlight important concepts.
+- Keep explanations simple.
+- Remove unnecessary repetition.
+- Preserve important technical information.
+
+Study material:
+
+${text}
+`;
+
+    console.log("AI Prompt:", prompt);
+
+
+    setTimeout(() => {
+
+        document.getElementById("output").innerHTML = `
+
+            <h2>📚 Study Notes</h2>
+
+            <h3>Definition</h3>
+
+            <p>
+                Information security is the practice of
+                protecting information and information
+                systems from unauthorized access, use,
+                disclosure, modification or destruction.
+            </p>
+
+            <h3>🔐 Main Goals</h3>
+
+            <ul>
+                <li>
+                    <b>Confidentiality:</b>
+                    Information should only be accessible
+                    to authorized users.
+                </li>
+
+                <li>
+                    <b>Integrity:</b>
+                    Information should remain accurate
+                    and protected from unauthorized changes.
+                </li>
+
+                <li>
+                    <b>Availability:</b>
+                    Authorized users should be able to
+                    access information when required.
+                </li>
+            </ul>
+
+            <h3>⭐ Key Point</h3>
+
+            <p>
+                The three fundamental principles of
+                information security are
+                <b>Confidentiality, Integrity and Availability (CIA)</b>.
+            </p>
+
+        `;
+
+        loading.style.display = "none";
+
+    }, 1200);
+
+}
+
+
+function copyNotes() {
+
+    const text =
+        document.getElementById("output").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Notes copied successfully!");
+
+}
+
+
+function downloadNotes() {
+
+    const text =
+        document.getElementById("output").innerText;
+
+    const blob =
+        new Blob([text], {type:"text/plain"});
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download = "AI-Study-Notes.txt";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+</script>
+
+</body>
+</html>

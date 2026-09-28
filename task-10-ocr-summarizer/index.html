@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Notes Summarizer | OCR + AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --purple:#6d4aff;
+    --purple-dark:#5135d8;
+    --purple-light:#f0edff;
+    --green:#20b486;
+    --green-light:#e9faf4;
+    --text:#1d2433;
+    --muted:#7b8497;
+    --border:#e8eaf0;
+    --bg:#f7f8fc;
+    --white:#ffffff;
+    --danger:#e05252;
+    --shadow:0 12px 35px rgba(37,35,72,.08);
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:24px 16px;
+    z-index:20;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:4px 10px 28px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#7c5cff,#9c7cff);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    font-weight:800;
+    box-shadow:0 8px 20px rgba(109,74,255,.25);
+}
+
+.logo-text{
+    font-size:17px;
+    font-weight:800;
+}
+
+.logo-text span{
+    display:block;
+    color:var(--purple);
+}
+
+.nav-title{
+    font-size:11px;
+    font-weight:700;
+    color:#a0a6b5;
+    padding:0 12px;
+    margin-bottom:9px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#697286;
+    padding:11px 12px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-size:13px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.nav a:hover{
+    background:#f5f3ff;
+    color:var(--purple);
+}
+
+.nav a.active{
+    background:var(--purple-light);
+    color:var(--purple);
+}
+
+.nav-icon{
+    width:25px;
+    text-align:center;
+    font-size:17px;
+}
+
+.ai-card{
+    position:absolute;
+    bottom:20px;
+    left:16px;
+    right:16px;
+    background:linear-gradient(135deg,#f1edff,#eefbf7);
+    border:1px solid #e5e1ff;
+    border-radius:18px;
+    padding:15px;
+}
+
+.ai-card-title{
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.ai-card p{
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+/* TOPBAR */
+
+.topbar{
+    height:70px;
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 32px;
+    position:sticky;
+    top:0;
+    z-index:15;
+}
+
+.breadcrumb{
+    font-size:13px;
+    color:var(--muted);
+}
+
+.breadcrumb strong{
+    color:var(--text);
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--green-light);
+    color:#168b67;
+    padding:8px 13px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--green);
+}
+
+/* CONTENT */
+
+.content{
+    padding:32px;
+    max-width:1500px;
+    margin:auto;
+}
+
+/* HERO */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(135deg,#6845f5,#8465ff 55%,#9a7aff);
+    border-radius:25px;
+    padding:36px 40px;
+    color:white;
+    margin-bottom:25px;
+    box-shadow:0 18px 40px rgba(109,74,255,.18);
+}
+
+.hero:before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    border:55px solid rgba(255,255,255,.06);
+    right:-80px;
+    top:-120px;
+}
+
+.hero:after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:rgba(255,255,255,.06);
+    right:180px;
+    bottom:-100px;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:720px;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.2);
+    padding:7px 12px;
+    border-radius:30px;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:14px;
+}
+
+.hero h1{
+    font-size:31px;
+    line-height:1.2;
+    margin-bottom:10px;
+}
+
+.hero p{
+    font-size:14px;
+    line-height:1.7;
+    color:rgba(255,255,255,.84);
+}
+
+/* WORKSPACE */
+
+.workspace{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+.card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+}
+
+.card-header{
+    padding:22px 24px 15px;
+    border-bottom:1px solid #f0f1f5;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card-title{
+    font-size:15px;
+    font-weight:800;
+}
+
+.card-subtitle{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+/* UPLOAD */
+
+.upload-card{
+    min-height:510px;
+}
+
+.upload-area{
+    margin:22px 24px;
+    height:255px;
+    border:2px dashed #dcd8fa;
+    background:#faf9ff;
+    border-radius:19px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+    overflow:hidden;
+    position:relative;
+}
+
+.upload-area:hover{
+    border-color:var(--purple);
+    background:#f7f5ff;
+}
+
+.upload-icon{
+    width:66px;
+    height:66px;
+    border-radius:20px;
+    background:var(--purple-light);
+    color:var(--purple);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 14px;
+    font-size:29px;
+}
+
+.upload-text h3{
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+.upload-text p{
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.6;
+}
+
+.upload-text span{
+    color:var(--purple);
+    font-weight:700;
+}
+
+#imageInput{
+    display:none;
+}
+
+.preview-image{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:none;
+    background:#fff;
+}
+
+.image-info{
+    padding:0 24px 22px;
+    display:none;
+}
+
+.file-name{
+    font-size:12px;
+    font-weight:700;
+}
+
+.file-size{
+    font-size:10px;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.controls{
+    display:flex;
+    gap:10px;
+    padding:0 24px 22px;
+}
+
+.btn{
+    border:none;
+    border-radius:12px;
+    padding:11px 16px;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-primary{
+    background:var(--purple);
+    color:white;
+    box-shadow:0 7px 16px rgba(109,74,255,.2);
+}
+
+.btn-primary:hover{
+    background:var(--purple-dark);
+    transform:translateY(-1px);
+}
+
+.btn-secondary{
+    background:#f5f6fa;
+    color:#5e6678;
+}
+
+.btn-secondary:hover{
+    background:#eceef5;
+}
+
+.btn-green{
+    background:var(--green);
+    color:white;
+}
+
+/* OCR */
+
+.ocr-progress{
+    margin:0 24px 20px;
+    display:none;
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+    font-size:11px;
+    color:var(--muted);
+}
+
+.progress-bar{
+    height:7px;
+    background:#eeeef4;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,var(--purple),#9277ff);
+    border-radius:10px;
+    transition:.3s;
+}
+
+/* TEXT */
+
+.text-card{
+    min-height:510px;
+}
+
+.text-area-wrap{
+    padding:20px 24px;
+}
+
+textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:15px;
+    resize:vertical;
+    min-height:320px;
+    padding:16px;
+    font-family:inherit;
+    font-size:13px;
+    line-height:1.7;
+    outline:none;
+    color:var(--text);
+    background:#fbfbfd;
+}
+
+textarea:focus{
+    border-color:#b9adff;
+    box-shadow:0 0 0 4px rgba(109,74,255,.06);
+    background:white;
+}
+
+.text-actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:10px;
+}
+
+.word-count{
+    font-size:11px;
+    color:var(--muted);
+}
+
+/* SUMMARY */
+
+.summary-card{
+    margin-top:22px;
+}
+
+.summary-body{
+    padding:22px 24px;
+}
+
+.summary-output{
+    min-height:240px;
+    background:#fbfbfd;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:20px;
+    font-size:13px;
+    line-height:1.8;
+    color:#454d5e;
+}
+
+.summary-output.empty{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#a0a6b5;
+}
+
+.summary-output h3{
+    color:var(--purple);
+    font-size:15px;
+    margin:16px 0 7px;
+}
+
+.summary-output h3:first-child{
+    margin-top:0;
+}
+
+.summary-output ul{
+    padding-left:21px;
+}
+
+.summary-output li{
+    margin-bottom:5px;
+}
+
+.summary-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:9px;
+    margin-top:15px;
+}
+
+/* INFO CARDS */
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:22px;
+}
+
+.info-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:19px;
+}
+
+.info-icon{
+    width:36px;
+    height:36px;
+    border-radius:11px;
+    background:var(--purple-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:11px;
+}
+
+.info-card h4{
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.info-card p{
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.6;
+}
+
+/* LOADING */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(20,18,40,.48);
+    backdrop-filter:blur(5px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+}
+
+.loading-box{
+    width:320px;
+    background:white;
+    border-radius:22px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.18);
+}
+
+.loader{
+    width:46px;
+    height:46px;
+    border:4px solid #eceaff;
+    border-top-color:var(--purple);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:0 auto 17px;
+}
+
+.loading-box h3{
+    font-size:15px;
+    margin-bottom:6px;
+}
+
+.loading-box p{
+    color:var(--muted);
+    font-size:11px;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#202432;
+    color:white;
+    padding:13px 17px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+    opacity:0;
+    transform:translateY(15px);
+    pointer-events:none;
+    transition:.25s;
+    z-index:150;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+
+    .sidebar{
+        width:72px;
+        padding:20px 10px;
+    }
+
+    .main{
+        margin-left:72px;
+    }
+
+    .logo{
+        justify-content:center;
+        padding:4px 0 28px;
+    }
+
+    .logo-text,
+    .nav-title,
+    .nav a span:not(.nav-icon),
+    .ai-card{
+        display:none;
+    }
+
+    .nav a{
+        justify-content:center;
+        padding:12px;
+    }
+
+    .workspace{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .topbar{
+        padding:0 17px;
+    }
+
+    .content{
+        padding:18px;
+    }
+
+    .hero{
+        padding:27px 23px;
+    }
+
+    .hero h1{
+        font-size:25px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .status{
+        font-size:10px;
+        padding:7px 9px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">AI</div>
+
+        <div class="logo-text">
+            AI
+            <span>StudyLab</span>
+        </div>
+    </div>
+
+    <div class="nav-title">Learning Tools</div>
+
+    <nav class="nav">
+
+        <a href="../task-01-resume-builder/index.html">
+            <span class="nav-icon">📄</span>
+            <span>Resume Builder</span>
+        </a>
+
+        <a href="../task-02-notes-generator/index.html">
+            <span class="nav-icon">📝</span>
+            <span>Notes Generator</span>
+        </a>
+
+        <a href="../task-03-ppt-generator/index.html">
+            <span class="nav-icon">📊</span>
+            <span>Presentation</span>
+        </a>
+
+        <a href="../task-04-mind-map/index.html">
+            <span class="nav-icon">🧠</span>
+            <span>Mind Map</span>
+        </a>
+
+        <a href="../task-06-ai-quiz/index.html">
+            <span class="nav-icon">❓</span>
+            <span>AI Quiz</span>
+        </a>
+
+        <a href="../task-07-ai-chatbot/index.html">
+            <span class="nav-icon">💬</span>
+            <span>Doubt Solver</span>
+        </a>
+
+        <a href="../task-08-flashcards/index.html">
+            <span class="nav-icon">🎴</span>
+            <span>Flashcards</span>
+        </a>
+
+        <a href="../task-09-study-planner/index.html">
+            <span class="nav-icon">📅</span>
+            <span>Study Planner</span>
+        </a>
+
+        <a class="active" href="#">
+            <span class="nav-icon">📷</span>
+            <span>OCR Summarizer</span>
+        </a>
+
+    </nav>
+
+    <div class="ai-card">
+        <div class="ai-card-title">✨ AI Learning Assistant</div>
+        <p>
+            Convert your photographed notes
+            into clean, exam-ready summaries.
+        </p>
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="breadcrumb">
+            AI StudyLab / <strong>OCR + AI Summarizer</strong>
+        </div>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            AI Studio Ready
+        </div>
+
+    </header>
+
+
+    <section class="content">
+
+        <!-- HERO -->
+
+        <div class="hero">
+
+            <div class="hero-content">
+
+                <div class="badge">
+                    📷 OCR + 🤖 AI
+                </div>
+
+                <h1>
+                    Turn Notes Photos Into Smart Summaries
+                </h1>
+
+                <p>
+                    Upload a photo of your handwritten or printed
+                    study notes. AI extracts the text, cleans it,
+                    and transforms it into concise exam-friendly notes.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- WORKSPACE -->
+
+        <div class="workspace">
+
+            <!-- IMAGE -->
+
+            <div class="card upload-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <div class="card-title">
+                            📷 Upload Notes
+                        </div>
+
+                        <div class="card-subtitle">
+                            OCR will extract text from your image
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="upload-area"
+                    id="uploadArea"
+                    onclick="document.getElementById('imageInput').click()"
+                >
+
+                    <div class="upload-text" id="uploadContent">
+
+                        <div class="upload-icon">
+                            📸
+                        </div>
+
+                        <h3>
+                            Drop your notes image here
+                        </h3>
+
+                        <p>
+                            or <span>browse from your computer</span>
+                        </p>
+
+                        <p style="margin-top:7px;">
+                            JPG, PNG or JPEG
+                        </p>
+
+                    </div>
+
+                    <img
+                        id="previewImage"
+                        class="preview-image"
+                        alt="Notes preview"
+                    >
+
+                </div>
+
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/*"
+                >
+
+
+                <div class="image-info" id="imageInfo">
+
+                    <div class="file-name" id="fileName">
+                        —
+                    </div>
+
+                    <div class="file-size" id="fileSize">
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="ocr-progress" id="ocrProgress">
+
+                    <div class="progress-top">
+
+                        <span id="ocrStatus">
+                            Preparing OCR...
+                        </span>
+
+                        <span id="ocrPercent">
+                            0%
+                        </span>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            id="progressFill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="controls">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="runOCR()"
+                    >
+                        🔍 Extract Text
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="loadSample()"
+                    >
+                        ✨ Sample
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="clearAll()"
+                    >
+                        Clear
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- EXTRACTED TEXT -->
+
+            <div class="card text-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <div class="card-title">
+                            📄 Extracted Text
+                        </div>
+
+                        <div class="card-subtitle">
+                            Edit the OCR result before sending it to AI
+                        </div>
+                    </div>
+
+                    <div class="badge" style="
+                        margin:0;
+                        background:#f0edff;
+                        color:#6544ee;
+                        border:none;
+                    ">
+                        OCR
+                    </div>
+
+                </div>
+
+
+                <div class="text-area-wrap">
+
+                    <textarea
+                        id="extractedText"
+                        placeholder="Your extracted text will appear here..."
+                    ></textarea>
+
+
+                    <div class="text-actions">
+
+                        <span
+                            class="word-count"
+                            id="wordCount"
+                        >
+                            0 words
+                        </span>
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="copyExtracted()"
+                        >
+                            📋 Copy
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div style="padding:0 24px 22px;">
+
+                    <button
+                        class="btn btn-primary"
+                        style="width:100%;"
+                        onclick="generateSummary()"
+                    >
+                        ✨ Generate AI Summary
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="card summary-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <div class="card-title">
+                        🤖 AI Summary
+                    </div>
+
+                    <div class="card-subtitle">
+                        Clean, concise and exam-friendly study notes
+                    </div>
+
+                </div>
+
+                <div class="badge" style="
+                    margin:0;
+                    background:#e9faf4;
+                    color:#168b67;
+                    border:none;
+                ">
+                    AI Generated
+                </div>
+
+            </div>
+
+
+            <div class="summary-body">
+
+                <div
+                    class="summary-output empty"
+                    id="summaryOutput"
+                >
+                    <div>
+                        <div style="font-size:30px;margin-bottom:10px;">
+                            ✨
+                        </div>
+
+                        <strong>
+                            Your AI summary will appear here
+                        </strong>
+
+                        <p style="margin-top:5px;">
+                            Upload notes, extract the text,
+                            then generate a summary.
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="summary-footer">
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="copySummary()"
+                    >
+                        📋 Copy Summary
+                    </button>
+
+                    <button
+                        class="btn btn-green"
+                        onclick="downloadSummary()"
+                    >
+                        ⬇ Download
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INFO -->
+
+        <div class="info-grid">
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    📷
+                </div>
+
+                <h4>
+                    1. Upload
+                </h4>
+
+                <p>
+                    Upload a clear image of handwritten
+                    or printed notes.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    🔍
+                </div>
+
+                <h4>
+                    2. OCR
+                </h4>
+
+                <p>
+                    Tesseract.js detects and extracts
+                    readable text from the image.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    🤖
+                </div>
+
+                <h4>
+                    3. AI Summary
+                </h4>
+
+                <p>
+                    AI converts the extracted content
+                    into short revision-friendly notes.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- LOADING -->
+
+<div class="overlay" id="loadingOverlay">
+
+    <div class="loading-box">
+
+        <div class="loader"></div>
+
+        <h3 id="loadingTitle">
+            Creating AI Summary
+        </h3>
+
+        <p id="loadingText">
+            Please wait...
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div class="toast" id="toast">
+    Done!
+</div>
+
+
+<script>
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const imageInput =
+    document.getElementById("imageInput");
+
+const uploadArea =
+    document.getElementById("uploadArea");
+
+const uploadContent =
+    document.getElementById("uploadContent");
+
+const previewImage =
+    document.getElementById("previewImage");
+
+const imageInfo =
+    document.getElementById("imageInfo");
+
+const fileName =
+    document.getElementById("fileName");
+
+const fileSize =
+    document.getElementById("fileSize");
+
+const extractedText =
+    document.getElementById("extractedText");
+
+const wordCount =
+    document.getElementById("wordCount");
+
+const summaryOutput =
+    document.getElementById("summaryOutput");
+
+const ocrProgress =
+    document.getElementById("ocrProgress");
+
+const progressFill =
+    document.getElementById("progressFill");
+
+const ocrPercent =
+    document.getElementById("ocrPercent");
+
+const ocrStatus =
+    document.getElementById("ocrStatus");
+
+const loadingOverlay =
+    document.getElementById("loadingOverlay");
+
+const loadingTitle =
+    document.getElementById("loadingTitle");
+
+const loadingText =
+    document.getElementById("loadingText");
+
+let selectedFile = null;
+
+
+/* =========================
+   IMAGE UPLOAD
+========================= */
+
+imageInput.addEventListener("change", function(){
+
+    const file = this.files[0];
+
+    if(!file) return;
+
+    selectedFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        previewImage.src = e.target.result;
+
+        previewImage.style.display = "block";
+
+        uploadContent.style.display = "none";
+
+        imageInfo.style.display = "block";
+
+        fileName.textContent = file.name;
+
+        fileSize.textContent =
+            formatFileSize(file.size);
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+
+/* =========================
+   DRAG & DROP
+========================= */
+
+uploadArea.addEventListener("dragover", function(e){
+
+    e.preventDefault();
+
+    uploadArea.style.borderColor =
+        "var(--purple)";
+
+});
+
+
+uploadArea.addEventListener("dragleave", function(){
+
+    uploadArea.style.borderColor =
+        "#dcd8fa";
+
+});
+
+
+uploadArea.addEventListener("drop", function(e){
+
+    e.preventDefault();
+
+    uploadArea.style.borderColor =
+        "#dcd8fa";
+
+    const file =
+        e.dataTransfer.files[0];
+
+    if(!file || !file.type.startsWith("image/")){
+        showToast("Please select an image file.");
+        return;
+    }
+
+    selectedFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event){
+
+        previewImage.src =
+            event.target.result;
+
+        previewImage.style.display =
+            "block";
+
+        uploadContent.style.display =
+            "none";
+
+        imageInfo.style.display =
+            "block";
+
+        fileName.textContent =
+            file.name;
+
+        fileSize.textContent =
+            formatFileSize(file.size);
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+
+/* =========================
+   OCR
+========================= */
+
+async function runOCR(){
+
+    if(!selectedFile){
+
+        showToast(
+            "Please upload a notes image first."
+        );
+
+        return;
+    }
+
+    ocrProgress.style.display =
+        "block";
+
+    progressFill.style.width =
+        "0%";
+
+    ocrPercent.textContent =
+        "0%";
+
+    ocrStatus.textContent =
+        "Starting OCR...";
+
+    try{
+
+        const result =
+            await Tesseract.recognize(
+                selectedFile,
+                "eng",
+                {
+                    logger:function(message){
+
+                        if(
+                            message.status ===
+                            "recognizing text"
+                        ){
+
+                            const percent =
+                                Math.round(
+                                    message.progress * 100
+                                );
+
+                            progressFill.style.width =
+                                percent + "%";
+
+                            ocrPercent.textContent =
+                                percent + "%";
+
+                            ocrStatus.textContent =
+                                "Reading text from image...";
+
+                        }else{
+
+                            ocrStatus.textContent =
+                                message.status || "Processing...";
+
+                        }
+
+                    }
+                }
+            );
+
+        extractedText.value =
+            result.data.text.trim();
+
+        updateWordCount();
+
+        progressFill.style.width =
+            "100%";
+
+        ocrPercent.textContent =
+            "100%";
+
+        ocrStatus.textContent =
+            "OCR completed successfully";
+
+        showToast(
+            "Text extracted successfully!"
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "OCR failed. Please try a clearer image."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   WORD COUNT
+========================= */
+
+extractedText.addEventListener(
+    "input",
+    updateWordCount
+);
+
+
+function updateWordCount(){
+
+    const text =
+        extractedText.value.trim();
+
+    const words =
+        text
+        ? text.split(/\s+/).length
+        : 0;
+
+    wordCount.textContent =
+        words + (words === 1 ? " word" : " words");
+
+}
+
+
+/* =========================
+   AI SUMMARY
+========================= */
+
+function generateSummary(){
+
+    const text =
+        extractedText.value.trim();
+
+    if(!text){
+
+        showToast(
+            "Please extract or enter some text first."
+        );
+
+        return;
+    }
+
+    const prompt = `
+
+You are an AI study assistant.
+
+Summarize the following study material into
+short, clear and exam-friendly notes.
+
+Rules:
+- Create a suitable main heading.
+- Use important subheadings.
+- Use concise bullet points.
+- Highlight definitions and important concepts.
+- Remove unnecessary repetition.
+- Preserve important technical information.
+- Use simple student-friendly language.
+- Add an "Exam Points" section.
+- Do not invent information not present in the source.
+
+Study Material:
+
+${text}
+
+Return a structured summary.
+
+`;
+
+    console.log(
+        "AI Notes Summarizer Prompt:",
+        prompt
+    );
+
+
+    loadingOverlay.style.display =
+        "flex";
+
+    loadingTitle.textContent =
+        "Creating AI Summary";
+
+    loadingText.textContent =
+        "Analyzing your extracted notes...";
+
+
+    setTimeout(function(){
+
+        const summary =
+            createDemoSummary(text);
+
+        summaryOutput.classList.remove("empty");
+
+        summaryOutput.innerHTML =
+            summary;
+
+        loadingOverlay.style.display =
+            "none";
+
+        showToast(
+            "AI summary generated!"
+        );
+
+    },1400);
+
+}
+
+
+/* =========================
+   DEMO SUMMARY
+========================= */
+
+function createDemoSummary(text){
+
+    const lower =
+        text.toLowerCase();
+
+    if(
+        lower.includes("information security") ||
+        lower.includes("cryptography") ||
+        lower.includes("rsa")
+    ){
+
+        return `
+
+            <h3>Information Security</h3>
+
+            <p>
+                Information security focuses on protecting
+                information and systems from unauthorized
+                access, modification, disclosure and disruption.
+            </p>
+
+            <h3>Key Concepts</h3>
+
+            <ul>
+                <li>
+                    <strong>Confidentiality:</strong>
+                    Information should only be accessible
+                    to authorized users.
+                </li>
+
+                <li>
+                    <strong>Integrity:</strong>
+                    Information should remain accurate
+                    and protected from unauthorized changes.
+                </li>
+
+                <li>
+                    <strong>Availability:</strong>
+                    Authorized users should be able to
+                    access information when required.
+                </li>
+
+                <li>
+                    <strong>Cryptography:</strong>
+                    Uses mathematical techniques to protect
+                    information and secure communication.
+                </li>
+
+                <li>
+                    <strong>RSA:</strong>
+                    A public-key cryptographic algorithm
+                    based on mathematical operations involving
+                    large prime numbers.
+                </li>
+            </ul>
+
+            <h3>Exam Points</h3>
+
+            <ul>
+                <li>Remember the CIA Triad.</li>
+                <li>Understand the purpose of cryptography.</li>
+                <li>Differentiate symmetric and asymmetric encryption.</li>
+                <li>Know the basic concept of RSA.</li>
+            </ul>
+
+        `;
+
+    }
+
+
+    const words =
+        text
+        .split(/\s+/)
+        .filter(Boolean);
+
+    const shortText =
+        words.slice(0,35).join(" ");
+
+
+    return `
+
+        <h3>Study Material Summary</h3>
+
+        <p>
+            The uploaded study material discusses
+            the following important content:
+        </p>
+
+        <ul>
+            <li>
+                The material contains
+                <strong>${words.length}</strong>
+                extracted words.
+            </li>
+
+            <li>
+                Key information should be reviewed
+                from the extracted text.
+            </li>
+
+            <li>
+                Important definitions and concepts
+                can be revised from the original material.
+            </li>
+        </ul>
+
+        <h3>Quick Revision</h3>
+
+        <p>
+            ${escapeHTML(shortText)}
+            ${words.length > 35 ? "..." : ""}
+        </p>
+
+        <h3>Exam Points</h3>
+
+        <ul>
+            <li>Review important definitions.</li>
+            <li>Remember major concepts and keywords.</li>
+            <li>Practice questions based on the topic.</li>
+        </ul>
+
+    `;
+
+}
+
+
+/* =========================
+   SAMPLE
+========================= */
+
+function loadSample(){
+
+    extractedText.value = `
+
+Information Security
+
+Information security protects information
+from unauthorized access, use, disclosure,
+modification and destruction.
+
+CIA Triad
+
+Confidentiality ensures that information is
+accessible only to authorized users.
+
+Integrity ensures that information remains
+accurate and is not modified without
+authorization.
+
+Availability ensures that authorized users
+can access information when needed.
+
+Cryptography
+
+Cryptography uses mathematical techniques
+to protect information and secure communication.
+
+RSA
+
+RSA is a public-key cryptographic algorithm.
+It uses a public key and a private key.
+
+Digital signatures can be used to verify
+the authenticity and integrity of information.
+
+`;
+
+    updateWordCount();
+
+    showToast(
+        "Sample notes loaded!"
+    );
+
+}
+
+
+/* =========================
+   COPY EXTRACTED
+========================= */
+
+async function copyExtracted(){
+
+    const text =
+        extractedText.value.trim();
+
+    if(!text){
+
+        showToast("Nothing to copy.");
+
+        return;
+    }
+
+    await navigator.clipboard.writeText(text);
+
+    showToast(
+        "Extracted text copied!"
+    );
+
+}
+
+
+/* =========================
+   COPY SUMMARY
+========================= */
+
+async function copySummary(){
+
+    const text =
+        summaryOutput.innerText.trim();
+
+    if(
+        !text ||
+        summaryOutput.classList.contains("empty")
+    ){
+
+        showToast(
+            "Generate a summary first."
+        );
+
+        return;
+    }
+
+    await navigator.clipboard.writeText(text);
+
+    showToast(
+        "Summary copied!"
+    );
+
+}
+
+
+/* =========================
+   DOWNLOAD
+========================= */
+
+function downloadSummary(){
+
+    if(
+        summaryOutput.classList.contains("empty")
+    ){
+
+        showToast(
+            "Generate a summary first."
+        );
+
+        return;
+    }
+
+    const text =
+        summaryOutput.innerText.trim();
+
+    const blob =
+        new Blob(
+            [text],
+            {type:"text/plain"}
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "AI-Notes-Summary.txt";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+    showToast(
+        "Summary downloaded!"
+    );
+
+}
+
+
+/* =========================
+   CLEAR
+========================= */
+
+function clearAll(){
+
+    selectedFile = null;
+
+    imageInput.value = "";
+
+    previewImage.src = "";
+
+    previewImage.style.display =
+        "none";
+
+    uploadContent.style.display =
+        "block";
+
+    imageInfo.style.display =
+        "none";
+
+    extractedText.value =
+        "";
+
+    updateWordCount();
+
+    ocrProgress.style.display =
+        "none";
+
+    progressFill.style.width =
+        "0%";
+
+    summaryOutput.className =
+        "summary-output empty";
+
+    summaryOutput.innerHTML = `
+
+        <div>
+
+            <div style="font-size:30px;margin-bottom:10px;">
+                ✨
+            </div>
+
+            <strong>
+                Your AI summary will appear here
+            </strong>
+
+            <p style="margin-top:5px;">
+                Upload notes, extract the text,
+                then generate a summary.
+            </p>
+
+        </div>
+
+    `;
+
+    showToast(
+        "Workspace cleared."
+    );
+
+}
+
+
+/* =========================
+   FILE SIZE
+========================= */
+
+function formatFileSize(bytes){
+
+    if(bytes === 0)
+        return "0 Bytes";
+
+    const units =
+        ["Bytes","KB","MB","GB"];
+
+    const i =
+        Math.floor(
+            Math.log(bytes) /
+            Math.log(1024)
+        );
+
+    return (
+        parseFloat(
+            (bytes /
+            Math.pow(1024,i))
+            .toFixed(2)
+        )
+        + " "
+        + units[i]
+    );
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent =
+        message;
+
+    toast.classList.add("show");
+
+    setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2500);
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Builder</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #222;
+        }
+
+        header {
+            background: #3ca7c4;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #3e3cc4;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #5b3cc4;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #452ba3;
+        }
+
+        #downloadBtn {
+            background: #198754;
+            display: none;
+        }
+
+        #downloadBtn:hover {
+            background: #146c43;
+        }
+
+        #resumePreview {
+            line-height: 1.7;
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .resume-header h1 {
+            color: #5b3cc4;
+        }
+
+        .resume-section {
+            margin-top: 20px;
+        }
+
+        .resume-section h3 {
+            color: #5b3cc4;
+            border-bottom: 2px solid #5b3cc4;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            display: none;
+            color: #5b3cc4;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            header,
+            .form-card,
+            #downloadBtn {
+                display: none;
+            }
+
+            .container {
+                display: block;
+                width: 100%;
+                margin: 0;
+            }
+
+            .preview-card {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>AI Resume Builder</h1>
+    <p>Create a professional resume using AI</p>
+</header>
+
+<div class="container">
+
+    <!-- FORM -->
+    <div class="card form-card">
+
+        <h2>Enter Your Details</h2>
+
+        <form id="resumeForm">
+
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Enter your name" required>
+
+            <label>Contact</label>
+            <input type="text" id="contact" placeholder="Email | Phone | LinkedIn">
+
+            <label>Education</label>
+            <textarea id="education"
+                placeholder="Example: B.Tech Computer Science, XYZ University, 2027"></textarea>
+
+            <label>Skills</label>
+            <textarea id="skills"
+                placeholder="Java, HTML, CSS, JavaScript, Spring Boot"></textarea>
+
+            <label>Experience</label>
+            <textarea id="experience"
+                placeholder="Internship, projects, work experience..."></textarea>
+
+            <label>Career Objective</label>
+            <textarea id="objective"
+                placeholder="Write your career objective"></textarea>
+
+            <button type="submit">
+                Generate Resume
+            </button>
+
+            <div class="loading" id="loading">
+                Generating your resume...
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="card preview-card">
+
+        <h2>Resume Preview</h2>
+
+        <div id="resumePreview">
+
+            <div class="resume-header">
+                <h1>Your Name</h1>
+                <p>Your contact information</p>
+            </div>
+
+            <div class="resume-section">
+                <h3>Career Objective</h3>
+                <p>Your objective will appear here.</p>
+            </div>
+
+            <div class="resume-section">
+                <h3>Education</h3>
+                <p>Your education will appear here.</p>
+            </div>
+
+            <div class="resume-section">
+                <h3>Skills</h3>
+                <p>Your skills will appear here.</p>
+            </div>
+
+            <div class="resume-section">
+                <h3>Experience</h3>
+                <p>Your experience will appear here.</p>
+            </div>
+
+        </div>
+
+        <button id="downloadBtn" onclick="window.print()">
+            Download / Save as PDF
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+    const form = document.getElementById("resumeForm");
+    const preview = document.getElementById("resumePreview");
+    const loading = document.getElementById("loading");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    form.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        loading.style.display = "block";
+
+        const name = document.getElementById("name").value;
+        const contact = document.getElementById("contact").value;
+        const education = document.getElementById("education").value;
+        const skills = document.getElementById("skills").value;
+        const experience = document.getElementById("experience").value;
+        const objective = document.getElementById("objective").value;
+
+        /*
+         * AI PROMPT
+         *
+         * This prompt will later be sent to an AI API.
+         */
+
+        const prompt = `
+You are a professional resume writer.
+
+Create a polished professional resume using the following information.
+
+Name:
+${name}
+
+Contact:
+${contact}
+
+Education:
+${education}
+
+Skills:
+${skills}
+
+Experience:
+${experience}
+
+Career Objective:
+${objective}
+
+Make the resume concise, professional and suitable
+for a fresher/job applicant.
+        `;
+
+        console.log("AI Prompt:", prompt);
+
+        /*
+         * For now we generate the resume directly
+         * using the user's input.
+         *
+         * In the next step we will connect this
+         * website to an AI API.
+         */
+
+        setTimeout(function() {
+
+            preview.innerHTML = `
+
+                <div class="resume-header">
+                    <h1>${name}</h1>
+                    <p>${contact}</p>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Career Objective</h3>
+                    <p>${objective}</p>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Education</h3>
+                    <p>${education}</p>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Skills</h3>
+                    <p>${skills}</p>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Experience</h3>
+                    <p>${experience}</p>
+                </div>
+
+            `;
+
+            loading.style.display = "none";
+            downloadBtn.style.display = "inline-block";
+
+        }, 800);
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Doubt Solver | AI StudyLab</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --purple:#6d5dfc;
+    --purple-dark:#5545e8;
+    --green:#20c997;
+    --text:#20233a;
+    --muted:#73778c;
+    --bg:#f6f7fb;
+    --white:#ffffff;
+    --border:#e8e9f1;
+    --danger:#ef5b6d;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:25px 17px;
+    z-index:20;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:0 10px 28px;
+}
+
+.logo-icon{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#786cff,#5748e9);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+    box-shadow:0 8px 18px rgba(109,93,252,.25);
+}
+
+.logo-text{
+    font-size:17px;
+    font-weight:800;
+}
+
+.logo-text span{
+    color:var(--purple);
+}
+
+.section-label{
+    color:#a2a5b5;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.1px;
+    padding:0 12px;
+    margin-bottom:10px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#6d7082;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    border-radius:11px;
+    font-size:12px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.nav a:hover{
+    background:#f4f2ff;
+    color:var(--purple);
+}
+
+.nav a.active{
+    background:#efedff;
+    color:var(--purple);
+}
+
+.nav-icon{
+    width:25px;
+    text-align:center;
+    font-size:15px;
+}
+
+.assistant-card{
+    position:absolute;
+    bottom:22px;
+    left:17px;
+    right:17px;
+    background:linear-gradient(145deg,#f0edff,#effcf7);
+    border:1px solid #e5e1ff;
+    border-radius:17px;
+    padding:15px;
+}
+
+.assistant-card .small-icon{
+    width:33px;
+    height:33px;
+    background:#fff;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;
+}
+
+.assistant-card strong{
+    font-size:12px;
+    display:block;
+    margin-bottom:4px;
+}
+
+.assistant-card p{
+    font-size:10px;
+    color:#777b90;
+    line-height:1.5;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:rgba(255,255,255,.92);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 34px;
+    position:sticky;
+    top:0;
+    z-index:10;
+    backdrop-filter:blur(12px);
+}
+
+.breadcrumb{
+    font-size:12px;
+    color:#999caf;
+}
+
+.breadcrumb strong{
+    color:var(--text);
+}
+
+.ready{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 13px;
+    border:1px solid #d9f4eb;
+    background:#f2fffb;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    color:#159a73;
+}
+
+.ready-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#20c997;
+}
+
+/* HERO */
+
+.hero{
+    margin:30px 34px 20px;
+    min-height:190px;
+    border-radius:24px;
+    padding:34px 38px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 85% 15%,rgba(255,255,255,.18),transparent 28%),
+        linear-gradient(125deg,#6655ef,#7969fa 52%,#5dcbad);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:50%;
+    right:-90px;
+    bottom:-140px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:6px 10px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+    margin-bottom:13px;
+}
+
+.hero h1{
+    font-size:27px;
+    letter-spacing:-.7px;
+    margin-bottom:9px;
+}
+
+.hero p{
+    max-width:650px;
+    font-size:12px;
+    line-height:1.7;
+    opacity:.9;
+}
+
+/* CHAT AREA */
+
+.chat-layout{
+    margin:0 34px 35px;
+    display:grid;
+    grid-template-columns:1fr 290px;
+    gap:20px;
+}
+
+.chat-card,
+.side-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    box-shadow:0 8px 28px rgba(30,35,70,.04);
+}
+
+/* CHAT */
+
+.chat-card{
+    height:650px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+.chat-header{
+    padding:17px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.tutor-info{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.bot-avatar{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#7363ff,#20c997);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+}
+
+.tutor-info strong{
+    display:block;
+    font-size:13px;
+}
+
+.tutor-info span{
+    font-size:10px;
+    color:#20a87e;
+    font-weight:600;
+}
+
+.clear-btn{
+    border:1px solid var(--border);
+    background:#fff;
+    color:#777b8e;
+    padding:8px 12px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:10px;
+    font-weight:700;
+}
+
+.clear-btn:hover{
+    color:var(--danger);
+    border-color:#ffd4da;
+    background:#fff8f9;
+}
+
+.messages{
+    flex:1;
+    overflow-y:auto;
+    padding:23px;
+    background:#fafbfe;
+}
+
+.message{
+    display:flex;
+    margin-bottom:19px;
+    gap:10px;
+}
+
+.message.user{
+    justify-content:flex-end;
+}
+
+.avatar{
+    width:31px;
+    height:31px;
+    min-width:31px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    background:#eeeaff;
+    color:var(--purple);
+}
+
+.message.user .avatar{
+    order:2;
+    background:#dcfaf1;
+    color:#149b73;
+}
+
+.bubble{
+    max-width:75%;
+    padding:12px 14px;
+    border-radius:15px;
+    background:#fff;
+    border:1px solid var(--border);
+    color:#42465c;
+    font-size:12px;
+    line-height:1.65;
+    box-shadow:0 4px 12px rgba(30,35,70,.025);
+}
+
+.message.user .bubble{
+    background:var(--purple);
+    color:#fff;
+    border-color:var(--purple);
+    border-radius:15px 15px 4px 15px;
+}
+
+.message.bot .bubble{
+    border-radius:15px 15px 15px 4px;
+}
+
+.bubble strong{
+    color:inherit;
+}
+
+.bubble ul{
+    margin:7px 0 0 17px;
+}
+
+.bubble li{
+    margin:4px 0;
+}
+
+.message-time{
+    display:block;
+    margin-top:7px;
+    font-size:9px;
+    opacity:.55;
+}
+
+/* TYPING */
+
+.typing{
+    display:none;
+    gap:5px;
+    align-items:center;
+}
+
+.typing span{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#999;
+    animation:typing 1s infinite;
+}
+
+.typing span:nth-child(2){
+    animation-delay:.15s;
+}
+
+.typing span:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes typing{
+    0%,60%,100%{transform:translateY(0);opacity:.4}
+    30%{transform:translateY(-4px);opacity:1}
+}
+
+/* INPUT */
+
+.chat-input-area{
+    padding:15px;
+    border-top:1px solid var(--border);
+    background:#fff;
+}
+
+.input-row{
+    display:flex;
+    gap:9px;
+}
+
+.input-row textarea{
+    flex:1;
+    min-height:47px;
+    max-height:110px;
+    resize:none;
+    border:1px solid #dedfeb;
+    border-radius:13px;
+    padding:13px;
+    font-family:inherit;
+    font-size:11px;
+    outline:none;
+}
+
+.input-row textarea:focus{
+    border-color:var(--purple);
+    box-shadow:0 0 0 3px rgba(109,93,252,.08);
+}
+
+.send-btn{
+    width:48px;
+    border:none;
+    border-radius:13px;
+    background:var(--purple);
+    color:#fff;
+    cursor:pointer;
+    font-size:17px;
+    transition:.2s;
+}
+
+.send-btn:hover{
+    background:var(--purple-dark);
+    transform:translateY(-1px);
+}
+
+.input-hint{
+    margin-top:7px;
+    font-size:9px;
+    color:#a0a3b2;
+}
+
+/* RIGHT PANEL */
+
+.side-card{
+    padding:19px;
+    height:max-content;
+}
+
+.side-card h3{
+    font-size:13px;
+    margin-bottom:5px;
+}
+
+.side-card > p{
+    font-size:10px;
+    color:#9296a8;
+    line-height:1.5;
+    margin-bottom:15px;
+}
+
+.subject-label{
+    font-size:10px;
+    font-weight:700;
+    color:#777b8e;
+    margin-bottom:7px;
+    display:block;
+}
+
+.subject-select{
+    width:100%;
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#fff;
+    font-family:inherit;
+    font-size:11px;
+    outline:none;
+}
+
+.suggestions-title{
+    font-size:10px;
+    font-weight:800;
+    margin:22px 0 9px;
+}
+
+.suggestion{
+    width:100%;
+    text-align:left;
+    border:1px solid var(--border);
+    background:#fff;
+    padding:10px 11px;
+    border-radius:10px;
+    margin-bottom:7px;
+    cursor:pointer;
+    color:#606477;
+    font-family:inherit;
+    font-size:10px;
+    line-height:1.4;
+    transition:.2s;
+}
+
+.suggestion:hover{
+    border-color:#d9d3ff;
+    background:#f8f6ff;
+    color:var(--purple);
+}
+
+.tutor-rules{
+    margin-top:18px;
+    padding:13px;
+    background:#f8f7ff;
+    border-radius:12px;
+}
+
+.tutor-rules strong{
+    font-size:10px;
+    display:block;
+    margin-bottom:7px;
+}
+
+.rule{
+    font-size:9px;
+    color:#777b8e;
+    margin:5px 0;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#20233a;
+    color:#fff;
+    padding:11px 15px;
+    border-radius:10px;
+    font-size:10px;
+    opacity:0;
+    transform:translateY(10px);
+    pointer-events:none;
+    transition:.25s;
+    z-index:100;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+    .sidebar{
+        width:72px;
+        padding:20px 9px;
+    }
+
+    .logo{
+        justify-content:center;
+        padding:0 0 25px;
+    }
+
+    .logo-text,
+    .section-label,
+    .nav a span:not(.nav-icon),
+    .assistant-card{
+        display:none;
+    }
+
+    .nav a{
+        justify-content:center;
+        padding:12px;
+    }
+
+    .main{
+        margin-left:72px;
+    }
+
+    .chat-layout{
+        grid-template-columns:1fr;
+    }
+
+    .side-card{
+        order:-1;
+    }
+}
+
+@media(max-width:700px){
+    .main{
+        margin-left:0;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .topbar{
+        padding:0 17px;
+    }
+
+    .hero{
+        margin:18px 15px;
+        padding:25px;
+    }
+
+    .hero h1{
+        font-size:22px;
+    }
+
+    .chat-layout{
+        margin:0 15px 25px;
+    }
+
+    .chat-card{
+        height:600px;
+    }
+
+    .messages{
+        padding:15px;
+    }
+
+    .bubble{
+        max-width:84%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">✦</div>
+        <div class="logo-text">AI <span>StudyLab</span></div>
+    </div>
+
+    <div class="section-label">LEARNING TOOLS</div>
+
+    <nav class="nav">
+
+        <a href="../task-01-resume-builder/index.html">
+            <span class="nav-icon">📄</span>
+            <span>Resume Builder</span>
+        </a>
+
+        <a href="../task-02-notes-generator/index.html">
+            <span class="nav-icon">📝</span>
+            <span>Notes Generator</span>
+        </a>
+
+        <a href="../task-03-ppt-generator/index.html">
+            <span class="nav-icon">📊</span>
+            <span>Presentation</span>
+        </a>
+
+        <a href="../task-04-mind-map/index.html">
+            <span class="nav-icon">🧠</span>
+            <span>Mind Map</span>
+        </a>
+
+        <a href="../task-06-ai-quiz/index.html">
+            <span class="nav-icon">🎯</span>
+            <span>AI Quiz</span>
+        </a>
+
+        <a class="active" href="#">
+            <span class="nav-icon">🤖</span>
+            <span>Doubt Solver</span>
+        </a>
+
+        <a href="../task-08-flashcards/index.html">
+            <span class="nav-icon">🗂️</span>
+            <span>Flashcards</span>
+        </a>
+
+    </nav>
+
+    <div class="assistant-card">
+        <div class="small-icon">✨</div>
+        <strong>AI Learning Assistant</strong>
+        <p>Ask questions, understand concepts and learn at your own pace.</p>
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="breadcrumb">
+            Learning Tools &nbsp;/&nbsp;
+            <strong>Doubt Solver</strong>
+        </div>
+
+        <div class="ready">
+            <span class="ready-dot"></span>
+            AI Studio Ready
+        </div>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="badge">🤖 AI TUTOR</div>
+
+        <h1>Ask Anything. Understand Everything.</h1>
+
+        <p>
+            Get clear, student-friendly explanations for difficult concepts.
+            Your AI tutor explains topics step-by-step instead of simply giving
+            you the final answer.
+        </p>
+
+    </section>
+
+
+    <!-- CHAT -->
+
+    <section class="chat-layout">
+
+        <div class="chat-card">
+
+            <div class="chat-header">
+
+                <div class="tutor-info">
+
+                    <div class="bot-avatar">🤖</div>
+
+                    <div>
+                        <strong>AI Study Tutor</strong>
+                        <span>● Online & ready to help</span>
+                    </div>
+
+                </div>
+
+                <button class="clear-btn" onclick="clearChat()">
+                    🗑 Clear Chat
+                </button>
+
+            </div>
+
+
+            <div class="messages" id="messages">
+
+                <div class="message bot">
+
+                    <div class="avatar">🤖</div>
+
+                    <div class="bubble">
+
+                        <strong>Hello! I'm your AI Study Tutor 👋</strong>
+
+                        <p style="margin-top:7px;">
+                            Ask me any question about your subject.
+                            I'll explain it in simple language with examples
+                            and step-by-step reasoning.
+                        </p>
+
+                        <span class="message-time">
+                            AI Tutor • Just now
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="chat-input-area">
+
+                <div class="input-row">
+
+                    <textarea
+                        id="questionInput"
+                        placeholder="Type your doubt here... e.g. What is the CIA Triad?"
+                        onkeydown="handleKey(event)"
+                    ></textarea>
+
+                    <button
+                        class="send-btn"
+                        onclick="sendQuestion()"
+                        title="Send"
+                    >
+                        ➤
+                    </button>
+
+                </div>
+
+                <div class="input-hint">
+                    Press Enter to send • Shift + Enter for a new line
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <aside class="side-card">
+
+            <h3>Study Settings</h3>
+
+            <p>
+                Choose a subject and try one of the suggested questions.
+            </p>
+
+            <label class="subject-label">
+                SUBJECT
+            </label>
+
+            <select id="subject" class="subject-select">
+                <option>Information Security</option>
+                <option>Programming</option>
+                <option>Mathematics</option>
+                <option>Computer Networks</option>
+                <option>Database Management</option>
+                <option>General</option>
+            </select>
+
+
+            <div class="suggestions-title">
+                TRY ASKING
+            </div>
+
+            <button class="suggestion" onclick="useSuggestion('What is the CIA Triad in Information Security?')">
+                🔐 What is the CIA Triad?
+            </button>
+
+            <button class="suggestion" onclick="useSuggestion('Explain RSA encryption in simple words.')">
+                🔑 Explain RSA simply.
+            </button>
+
+            <button class="suggestion" onclick="useSuggestion('What is the difference between symmetric and asymmetric cryptography?')">
+                ⚡ Symmetric vs asymmetric cryptography?
+            </button>
+
+            <button class="suggestion" onclick="useSuggestion('Explain digital signatures with a real-world example.')">
+                ✍️ What are digital signatures?
+            </button>
+
+
+            <div class="tutor-rules">
+
+                <strong>✨ Tutor Style</strong>
+
+                <div class="rule">✓ Simple explanations</div>
+                <div class="rule">✓ Step-by-step reasoning</div>
+                <div class="rule">✓ Real-world examples</div>
+                <div class="rule">✓ Exam-friendly points</div>
+                <div class="rule">✓ Ask follow-up questions</div>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+</main>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+let conversationHistory = [];
+
+
+/* ESCAPE HTML */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* CURRENT TIME */
+
+function getTime(){
+
+    return new Date().toLocaleTimeString([],{
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+
+}
+
+
+/* SEND ON ENTER */
+
+function handleKey(event){
+
+    if(event.key === "Enter" && !event.shiftKey){
+
+        event.preventDefault();
+
+        sendQuestion();
+
+    }
+
+}
+
+
+/* SUGGESTION */
+
+function useSuggestion(question){
+
+    document.getElementById("questionInput").value = question;
+
+    document.getElementById("questionInput").focus();
+
+}
+
+
+/* ADD USER MESSAGE */
+
+function addUserMessage(text){
+
+    const messages =
+        document.getElementById("messages");
+
+    const div =
+        document.createElement("div");
+
+    div.className = "message user";
+
+    div.innerHTML = `
+
+        <div class="avatar">👤</div>
+
+        <div class="bubble">
+
+            ${escapeHTML(text)}
+
+            <span class="message-time">
+                You • ${getTime()}
+            </span>
+
+        </div>
+
+    `;
+
+    messages.appendChild(div);
+
+    messages.scrollTop = messages.scrollHeight;
+
+}
+
+
+/* ADD BOT MESSAGE */
+
+function addBotMessage(html){
+
+    const messages =
+        document.getElementById("messages");
+
+    const div =
+        document.createElement("div");
+
+    div.className = "message bot";
+
+    div.innerHTML = `
+
+        <div class="avatar">🤖</div>
+
+        <div class="bubble">
+
+            ${html}
+
+            <span class="message-time">
+                AI Tutor • ${getTime()}
+            </span>
+
+        </div>
+
+    `;
+
+    messages.appendChild(div);
+
+    messages.scrollTop = messages.scrollHeight;
+
+}
+
+
+/* TYPING INDICATOR */
+
+function showTyping(){
+
+    const messages =
+        document.getElementById("messages");
+
+    const div =
+        document.createElement("div");
+
+    div.className = "message bot";
+    div.id = "typingMessage";
+
+    div.innerHTML = `
+
+        <div class="avatar">🤖</div>
+
+        <div class="bubble">
+
+            <div class="typing" style="display:flex;">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    `;
+
+    messages.appendChild(div);
+
+    messages.scrollTop = messages.scrollHeight;
+
+}
+
+
+function hideTyping(){
+
+    const typing =
+        document.getElementById("typingMessage");
+
+    if(typing){
+
+        typing.remove();
+
+    }
+
+}
+
+
+/* AI PROMPT */
+
+function createTutorPrompt(question){
+
+    const subject =
+        document.getElementById("subject").value;
+
+    const history =
+        conversationHistory
+        .map(item =>
+            `${item.role}: ${item.content}`
+        )
+        .join("\n");
+
+    return `
+
+You are an AI Study Tutor.
+
+Subject:
+${subject}
+
+Student question:
+${question}
+
+Conversation history:
+${history}
+
+Teaching rules:
+
+1. Explain concepts in simple student-friendly language.
+2. Give step-by-step explanations when appropriate.
+3. Use examples whenever useful.
+4. Highlight important exam points.
+5. Do not unnecessarily complicate the answer.
+6. If the question is unclear, ask the student to clarify.
+7. Encourage understanding instead of blindly giving answers.
+8. Use headings and bullet points when useful.
+
+Answer the student's question as a helpful tutor.
+
+`;
+
+}
+
+
+/* DEMO AI */
+
+function generateDemoAnswer(question){
+
+    const q =
+        question.toLowerCase();
+
+    if(
+        q.includes("cia") ||
+        q.includes("triad")
+    ){
+
+        return `
+
+            <strong>🔐 CIA Triad</strong>
+
+            <p style="margin-top:7px;">
+            The CIA Triad is a basic model used in
+            Information Security. CIA stands for:
+            </p>
+
+            <ul>
+                <li><strong>Confidentiality</strong> – only authorized people can access information.</li>
+                <li><strong>Integrity</strong> – information should remain accurate and unchanged.</li>
+                <li><strong>Availability</strong> – information should be available when authorized users need it.</li>
+            </ul>
+
+            <p style="margin-top:7px;">
+            <strong>Example:</strong> In online banking,
+            confidentiality protects your account details,
+            integrity protects transaction information,
+            and availability ensures the banking service is accessible.
+            </p>
+
+        `;
+
+    }
+
+
+    if(
+        q.includes("rsa")
+    ){
+
+        return `
+
+            <strong>🔑 RSA Encryption</strong>
+
+            <p style="margin-top:7px;">
+            RSA is a public-key cryptographic algorithm.
+            It uses two related keys:
+            </p>
+
+            <ul>
+                <li><strong>Public key</strong> – can be shared with others.</li>
+                <li><strong>Private key</strong> – kept secret by the owner.</li>
+            </ul>
+
+            <p style="margin-top:7px;">
+            RSA is based on mathematical operations involving
+            large prime numbers and is commonly used for
+            secure communication and digital signatures.
+            </p>
+
+            <p style="margin-top:7px;">
+            <strong>Exam point:</strong> RSA belongs to
+            asymmetric/public-key cryptography.
+            </p>
+
+        `;
+
+    }
+
+
+    if(
+        q.includes("digital signature") ||
+        q.includes("signature")
+    ){
+
+        return `
+
+            <strong>✍️ Digital Signature</strong>
+
+            <p style="margin-top:7px;">
+            A digital signature is a cryptographic mechanism
+            used to verify the authenticity and integrity of
+            digital information.
+            </p>
+
+            <ul>
+                <li>It helps verify who sent the message.</li>
+                <li>It helps detect whether the message was changed.</li>
+                <li>It supports non-repudiation.</li>
+            </ul>
+
+            <p style="margin-top:7px;">
+            <strong>Simple example:</strong>
+            Think of it as a secure digital version of signing
+            a document, but based on cryptographic techniques.
+            </p>
+
+        `;
+
+    }
+
+
+    if(
+        q.includes("symmetric") ||
+        q.includes("asymmetric")
+    ){
+
+        return `
+
+            <strong>⚡ Symmetric vs Asymmetric Cryptography</strong>
+
+            <ul>
+
+                <li>
+                    <strong>Symmetric:</strong>
+                    generally uses the same secret key for
+                    encryption and decryption.
+                </li>
+
+                <li>
+                    <strong>Asymmetric:</strong>
+                    uses a public key and a private key.
+                </li>
+
+                <li>
+                    Symmetric methods are generally faster
+                    for processing large amounts of data.
+                </li>
+
+                <li>
+                    Asymmetric cryptography is useful for
+                    key exchange, authentication and digital signatures.
+                </li>
+
+            </ul>
+
+        `;
+
+    }
+
+
+    if(
+        q.includes("diffie") ||
+        q.includes("key exchange")
+    ){
+
+        return `
+
+            <strong>🔄 Diffie-Hellman Key Exchange</strong>
+
+            <p style="margin-top:7px;">
+            Diffie-Hellman is a method that allows two parties
+            to establish a shared secret over an insecure channel.
+            </p>
+
+            <p style="margin-top:7px;">
+            The important idea is that both parties exchange
+            public information and independently calculate
+            the same shared secret.
+            </p>
+
+            <p style="margin-top:7px;">
+            <strong>Exam point:</strong>
+            Diffie-Hellman is mainly used for establishing
+            a shared secret, not for directly encrypting
+            the entire message.
+            </p>
+
+        `;
+
+    }
+
+
+    if(
+        q.includes("normalization") ||
+        q.includes("database")
+    ){
+
+        return `
+
+            <strong>🗄️ Database Concept</strong>
+
+            <p style="margin-top:7px;">
+            Database concepts are easier to understand when
+            we break them into smaller ideas.
+            </p>
+
+            <ul>
+                <li>Tables store structured data.</li>
+                <li>Rows represent records.</li>
+                <li>Columns represent attributes.</li>
+                <li>Keys help identify and connect records.</li>
+            </ul>
+
+            <p style="margin-top:7px;">
+            Tell me the exact database concept you want
+            to understand and I can explain it step-by-step.
+            </p>
+
+        `;
+
+    }
+
+
+    return `
+
+        <strong>💡 Let's understand this step-by-step.</strong>
+
+        <p style="margin-top:7px;">
+        Your question is:
+        <em>${escapeHTML(question)}</em>
+        </p>
+
+        <p style="margin-top:7px;">
+        Start by identifying the main concept involved.
+        Then break it into its definition, working,
+        example and important points.
+        </p>
+
+        <p style="margin-top:7px;">
+        <strong>Study tip:</strong>
+        For exams, remember the definition first,
+        then learn the working process and one practical example.
+        </p>
+
+        <p style="margin-top:7px;">
+        You can also ask me to explain this
+        <strong>in simple words</strong>,
+        <strong>with an example</strong>, or
+        <strong>for exam preparation</strong>.
+        </p>
+
+    `;
+
+}
+
+
+/* SEND QUESTION */
+
+function sendQuestion(){
+
+    const input =
+        document.getElementById("questionInput");
+
+    const question =
+        input.value.trim();
+
+    if(!question){
+
+        showToast("Please type a question first.");
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    addUserMessage(question);
+
+    conversationHistory.push({
+        role:"student",
+        content:question
+    });
+
+    input.value = "";
+
+    showTyping();
+
+
+    const prompt =
+        createTutorPrompt(question);
+
+    console.log(
+        "AI Tutor Prompt:",
+        prompt
+    );
+
+
+    setTimeout(function(){
+
+        hideTyping();
+
+        const answer =
+            generateDemoAnswer(question);
+
+        addBotMessage(answer);
+
+        conversationHistory.push({
+            role:"tutor",
+            content:answer.replace(/<[^>]*>/g," ")
+        });
+
+    },1100);
+
+}
+
+
+/* CLEAR CHAT */
+
+function clearChat(){
+
+    const messages =
+        document.getElementById("messages");
+
+    messages.innerHTML = `
+
+        <div class="message bot">
+
+            <div class="avatar">🤖</div>
+
+            <div class="bubble">
+
+                <strong>Chat cleared! 👋</strong>
+
+                <p style="margin-top:7px;">
+                I'm ready for your next question.
+                What would you like to learn?
+                </p>
+
+                <span class="message-time">
+                    AI Tutor • ${getTime()}
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+    conversationHistory = [];
+
+    showToast("Chat cleared.");
+
+}
+
+
+/* TOAST */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2200);
+
+}
+
+</script>
+
+</body>
+</html>

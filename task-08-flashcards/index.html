@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Flashcards | AI StudyLab</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --purple:#6d5dfc;
+    --purple-dark:#5545e8;
+    --green:#20c997;
+    --text:#20233a;
+    --muted:#777b8f;
+    --bg:#f6f7fb;
+    --white:#fff;
+    --border:#e7e8f0;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:25px 17px;
+    z-index:20;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:0 10px 28px;
+}
+
+.logo-icon{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#786cff,#5748e9);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+    box-shadow:0 8px 18px rgba(109,93,252,.25);
+}
+
+.logo-text{
+    font-size:17px;
+    font-weight:800;
+}
+
+.logo-text span{
+    color:var(--purple);
+}
+
+.section-label{
+    color:#a2a5b5;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.1px;
+    padding:0 12px;
+    margin-bottom:10px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#6d7082;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    border-radius:11px;
+    font-size:12px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.nav a:hover{
+    background:#f4f2ff;
+    color:var(--purple);
+}
+
+.nav a.active{
+    background:#efedff;
+    color:var(--purple);
+}
+
+.nav-icon{
+    width:25px;
+    text-align:center;
+    font-size:15px;
+}
+
+.assistant-card{
+    position:absolute;
+    bottom:22px;
+    left:17px;
+    right:17px;
+    background:linear-gradient(145deg,#f0edff,#effcf7);
+    border:1px solid #e5e1ff;
+    border-radius:17px;
+    padding:15px;
+}
+
+.assistant-card .small-icon{
+    width:33px;
+    height:33px;
+    background:#fff;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;
+}
+
+.assistant-card strong{
+    font-size:12px;
+    display:block;
+    margin-bottom:4px;
+}
+
+.assistant-card p{
+    font-size:10px;
+    color:#777b90;
+    line-height:1.5;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:rgba(255,255,255,.92);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 34px;
+    position:sticky;
+    top:0;
+    z-index:10;
+    backdrop-filter:blur(12px);
+}
+
+.breadcrumb{
+    font-size:12px;
+    color:#999caf;
+}
+
+.breadcrumb strong{
+    color:var(--text);
+}
+
+.ready{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 13px;
+    border:1px solid #d9f4eb;
+    background:#f2fffb;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    color:#159a73;
+}
+
+.ready-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#20c997;
+}
+
+/* HERO */
+
+.hero{
+    margin:30px 34px 20px;
+    min-height:190px;
+    border-radius:24px;
+    padding:34px 38px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 85% 15%,rgba(255,255,255,.18),transparent 28%),
+        linear-gradient(125deg,#6655ef,#7969fa 52%,#5dcbad);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:50%;
+    right:-90px;
+    bottom:-140px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:6px 10px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+    margin-bottom:13px;
+}
+
+.hero h1{
+    font-size:27px;
+    letter-spacing:-.7px;
+    margin-bottom:9px;
+}
+
+.hero p{
+    max-width:650px;
+    font-size:12px;
+    line-height:1.7;
+    opacity:.9;
+}
+
+/* WORKSPACE */
+
+.workspace{
+    margin:0 34px 35px;
+    display:grid;
+    grid-template-columns:330px 1fr;
+    gap:20px;
+}
+
+/* INPUT CARD */
+
+.input-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:21px;
+    height:max-content;
+    box-shadow:0 8px 28px rgba(30,35,70,.04);
+}
+
+.card-title{
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.card-subtitle{
+    font-size:10px;
+    color:#9296a8;
+    line-height:1.6;
+    margin-bottom:17px;
+}
+
+label{
+    display:block;
+    font-size:10px;
+    font-weight:700;
+    color:#707487;
+    margin-bottom:7px;
+}
+
+textarea{
+    width:100%;
+    height:145px;
+    resize:none;
+    border:1px solid #dedfeb;
+    border-radius:12px;
+    padding:12px;
+    font-family:inherit;
+    font-size:11px;
+    line-height:1.6;
+    outline:none;
+}
+
+textarea:focus{
+    border-color:var(--purple);
+    box-shadow:0 0 0 3px rgba(109,93,252,.08);
+}
+
+.char-count{
+    text-align:right;
+    color:#a1a4b3;
+    font-size:9px;
+    margin-top:5px;
+}
+
+.controls{
+    margin-top:15px;
+}
+
+select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px;
+    background:#fff;
+    font-family:inherit;
+    font-size:10px;
+    outline:none;
+}
+
+.primary-btn{
+    width:100%;
+    border:none;
+    border-radius:11px;
+    background:var(--purple);
+    color:#fff;
+    padding:12px;
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:15px;
+    transition:.2s;
+}
+
+.primary-btn:hover{
+    background:var(--purple-dark);
+    transform:translateY(-1px);
+}
+
+.secondary-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:8px;
+}
+
+.secondary-btn{
+    border:1px solid var(--border);
+    background:#fff;
+    color:#65697d;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:10px;
+    font-weight:600;
+}
+
+.secondary-btn:hover{
+    border-color:#d7d1ff;
+    background:#f8f7ff;
+    color:var(--purple);
+}
+
+.tip{
+    margin-top:17px;
+    background:#f7f6ff;
+    border-radius:12px;
+    padding:13px;
+    font-size:9px;
+    color:#74788b;
+    line-height:1.6;
+}
+
+.tip strong{
+    display:block;
+    color:#5f55b9;
+    margin-bottom:4px;
+}
+
+/* FLASHCARD AREA */
+
+.flashcard-panel{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    min-height:570px;
+    padding:24px;
+    box-shadow:0 8px 28px rgba(30,35,70,.04);
+    display:flex;
+    flex-direction:column;
+}
+
+.panel-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:17px;
+}
+
+.panel-header h2{
+    font-size:14px;
+}
+
+.progress-info{
+    font-size:10px;
+    color:#9296a8;
+}
+
+.progress-bar{
+    width:100%;
+    height:5px;
+    background:#eeeeF4;
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.progress-fill{
+    width:10%;
+    height:100%;
+    background:linear-gradient(90deg,var(--purple),var(--green));
+    border-radius:10px;
+    transition:.3s;
+}
+
+/* 3D FLASHCARD */
+
+.card-stage{
+    flex:1;
+    min-height:355px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    perspective:1200px;
+}
+
+.flashcard{
+    width:min(100%,620px);
+    height:340px;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform .65s ease;
+    cursor:pointer;
+}
+
+.flashcard.flipped{
+    transform:rotateY(180deg);
+}
+
+.card-face{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    border-radius:23px;
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    overflow:hidden;
+}
+
+.card-front{
+    background:
+        radial-gradient(circle at 15% 15%,rgba(255,255,255,.18),transparent 25%),
+        linear-gradient(135deg,#6655ef,#8274ff);
+    color:#fff;
+    box-shadow:0 20px 45px rgba(91,76,225,.2);
+}
+
+.card-back{
+    background:
+        radial-gradient(circle at 85% 15%,rgba(255,255,255,.8),transparent 28%),
+        linear-gradient(135deg,#eafcf6,#f5f3ff);
+    color:var(--text);
+    transform:rotateY(180deg);
+    border:1px solid #dcece7;
+}
+
+.card-label{
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.2px;
+    opacity:.7;
+    margin-bottom:18px;
+}
+
+.card-face h2{
+    font-size:24px;
+    line-height:1.35;
+    max-width:520px;
+}
+
+.card-back h2{
+    font-size:20px;
+    color:#474a61;
+}
+
+.flip-hint{
+    position:absolute;
+    bottom:19px;
+    font-size:9px;
+    opacity:.65;
+}
+
+.answer-icon{
+    width:47px;
+    height:47px;
+    border-radius:15px;
+    background:rgba(109,93,252,.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    margin-bottom:17px;
+}
+
+/* NAVIGATION */
+
+.card-navigation{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-top:10px;
+}
+
+.nav-btn{
+    width:42px;
+    height:38px;
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+    color:#676b7e;
+}
+
+.nav-btn:hover{
+    border-color:#d7d1ff;
+    color:var(--purple);
+    background:#f8f7ff;
+}
+
+.shuffle-btn{
+    padding:10px 15px;
+    border:none;
+    background:#efedff;
+    color:var(--purple);
+    border-radius:10px;
+    font-family:inherit;
+    font-size:10px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.shuffle-btn:hover{
+    background:#e5e1ff;
+}
+
+/* EMPTY */
+
+.empty-state{
+    height:100%;
+    min-height:450px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:#85899c;
+}
+
+.empty-icon{
+    width:70px;
+    height:70px;
+    border-radius:20px;
+    background:#f0edff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:29px;
+    margin-bottom:15px;
+}
+
+.empty-state h3{
+    color:#45485d;
+    font-size:15px;
+    margin-bottom:6px;
+}
+
+.empty-state p{
+    max-width:350px;
+    font-size:10px;
+    line-height:1.6;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#20233a;
+    color:#fff;
+    padding:11px 15px;
+    border-radius:10px;
+    font-size:10px;
+    opacity:0;
+    transform:translateY(10px);
+    pointer-events:none;
+    transition:.25s;
+    z-index:100;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* LOADING */
+
+.loading-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.72);
+    backdrop-filter:blur(4px);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:200;
+}
+
+.loading-box{
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 15px 50px rgba(30,35,70,.12);
+    border-radius:18px;
+    padding:25px 30px;
+    text-align:center;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:3px solid #e9e7ff;
+    border-top-color:var(--purple);
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 12px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.loading-box strong{
+    display:block;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.loading-box span{
+    font-size:9px;
+    color:#9296a8;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+
+    .sidebar{
+        width:72px;
+        padding:20px 9px;
+    }
+
+    .logo{
+        justify-content:center;
+        padding:0 0 25px;
+    }
+
+    .logo-text,
+    .section-label,
+    .nav a span:not(.nav-icon),
+    .assistant-card{
+        display:none;
+    }
+
+    .nav a{
+        justify-content:center;
+        padding:12px;
+    }
+
+    .main{
+        margin-left:72px;
+    }
+
+    .workspace{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .topbar{
+        padding:0 17px;
+    }
+
+    .hero{
+        margin:18px 15px;
+        padding:25px;
+    }
+
+    .hero h1{
+        font-size:22px;
+    }
+
+    .workspace{
+        margin:0 15px 25px;
+    }
+
+    .flashcard-panel{
+        padding:16px;
+    }
+
+    .card-face{
+        padding:25px;
+    }
+
+    .card-face h2{
+        font-size:20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">✦</div>
+
+        <div class="logo-text">
+            AI <span>StudyLab</span>
+        </div>
+
+    </div>
+
+    <div class="section-label">
+        LEARNING TOOLS
+    </div>
+
+    <nav class="nav">
+
+        <a href="../task-01-resume-builder/index.html">
+            <span class="nav-icon">📄</span>
+            <span>Resume Builder</span>
+        </a>
+
+        <a href="../task-02-notes-generator/index.html">
+            <span class="nav-icon">📝</span>
+            <span>Notes Generator</span>
+        </a>
+
+        <a href="../task-03-ppt-generator/index.html">
+            <span class="nav-icon">📊</span>
+            <span>Presentation</span>
+        </a>
+
+        <a href="../task-04-mind-map/index.html">
+            <span class="nav-icon">🧠</span>
+            <span>Mind Map</span>
+        </a>
+
+        <a href="../task-06-ai-quiz/index.html">
+            <span class="nav-icon">🎯</span>
+            <span>AI Quiz</span>
+        </a>
+
+        <a href="../task-07-ai-chatbot/index.html">
+            <span class="nav-icon">🤖</span>
+            <span>Doubt Solver</span>
+        </a>
+
+        <a class="active" href="#">
+            <span class="nav-icon">🗂️</span>
+            <span>Flashcards</span>
+        </a>
+
+    </nav>
+
+    <div class="assistant-card">
+
+        <div class="small-icon">
+            ✨
+        </div>
+
+        <strong>
+            AI Learning Assistant
+        </strong>
+
+        <p>
+            Generate smart flashcards and revise
+            important concepts faster.
+        </p>
+
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="breadcrumb">
+            Learning Tools &nbsp;/&nbsp;
+            <strong>Flashcards</strong>
+        </div>
+
+        <div class="ready">
+            <span class="ready-dot"></span>
+            AI Studio Ready
+        </div>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="badge">
+            🗂️ AI FLASHCARDS
+        </div>
+
+        <h1>
+            Turn Any Chapter Into Smart Flashcards
+        </h1>
+
+        <p>
+            Generate question-and-answer cards from your study material
+            and use active recall to revise important concepts quickly.
+        </p>
+
+    </section>
+
+
+    <!-- WORKSPACE -->
+
+    <section class="workspace">
+
+        <!-- INPUT -->
+
+        <div class="input-card">
+
+            <div class="card-title">
+                Create Flashcards
+            </div>
+
+            <div class="card-subtitle">
+                Enter a topic, chapter or study material.
+                AI will turn it into revision-friendly cards.
+            </div>
+
+            <label>
+                TOPIC / CHAPTER
+            </label>
+
+            <textarea
+                id="topicInput"
+                maxlength="1000"
+                placeholder="Example: Information Security, Cryptography, RSA, Digital Signatures..."
+                oninput="updateCount()"
+            ></textarea>
+
+            <div class="char-count">
+                <span id="charCount">0</span>/1000
+            </div>
+
+            <div class="controls">
+
+                <label>
+                    NUMBER OF FLASHCARDS
+                </label>
+
+                <select id="cardCount">
+
+                    <option value="8">
+                        8 Flashcards
+                    </option>
+
+                    <option value="9">
+                        9 Flashcards
+                    </option>
+
+                    <option value="10" selected>
+                        10 Flashcards
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="generateFlashcards()"
+            >
+                ✨ Generate AI Flashcards
+            </button>
+
+
+            <div class="secondary-buttons">
+
+                <button
+                    class="secondary-btn"
+                    onclick="loadSample()"
+                >
+                    📚 Load Sample
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="clearAll()"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+
+            <div class="tip">
+
+                <strong>
+                    💡 Active Recall Tip
+                </strong>
+
+                Try answering the question yourself
+                before flipping the card. This helps
+                strengthen memory and understanding.
+
+            </div>
+
+        </div>
+
+
+        <!-- FLASHCARD -->
+
+        <div class="flashcard-panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    Revision Deck
+                </h2>
+
+                <div
+                    class="progress-info"
+                    id="progressInfo"
+                >
+                    No cards yet
+                </div>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    id="progressFill"
+                ></div>
+
+            </div>
+
+
+            <div id="emptyState" class="empty-state">
+
+                <div class="empty-icon">
+                    🗂️
+                </div>
+
+                <h3>
+                    Your flashcards will appear here
+                </h3>
+
+                <p>
+                    Enter a topic and click
+                    <strong>Generate AI Flashcards</strong>
+                    to create your revision deck.
+                </p>
+
+            </div>
+
+
+            <div
+                id="flashcardContent"
+                style="display:none;flex:1;flex-direction:column;"
+            >
+
+                <div class="card-stage">
+
+                    <div
+                        class="flashcard"
+                        id="flashcard"
+                        onclick="flipCard()"
+                    >
+
+                        <div class="card-face card-front">
+
+                            <div class="card-label">
+                                QUESTION
+                            </div>
+
+                            <h2 id="questionText">
+                                What is Information Security?
+                            </h2>
+
+                            <div class="flip-hint">
+                                Click the card to reveal the answer
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-face card-back">
+
+                            <div class="answer-icon">
+                                💡
+                            </div>
+
+                            <div class="card-label">
+                                ANSWER
+                            </div>
+
+                            <h2 id="answerText">
+                                Information Security protects
+                                information from unauthorized access,
+                                modification and disruption.
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-navigation">
+
+                    <button
+                        class="nav-btn"
+                        onclick="previousCard()"
+                        title="Previous"
+                    >
+                        ←
+                    </button>
+
+                    <button
+                        class="shuffle-btn"
+                        onclick="shuffleCards()"
+                    >
+                        🔀 Shuffle
+                    </button>
+
+                    <button
+                        class="nav-btn"
+                        onclick="nextCard()"
+                        title="Next"
+                    >
+                        →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<div class="toast" id="toast"></div>
+
+
+<div
+    class="loading-overlay"
+    id="loadingOverlay"
+>
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <strong>
+            Creating your flashcards...
+        </strong>
+
+        <span>
+            AI is organizing the important concepts
+        </span>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* DATA */
+
+let flashcards = [];
+
+let currentIndex = 0;
+
+
+/* DEMO INFORMATION SECURITY */
+
+const informationSecurityCards = [
+
+    {
+        question:"What is Information Security?",
+        answer:"Information Security is the practice of protecting information and information systems from unauthorized access, use, disclosure, disruption, modification or destruction."
+    },
+
+    {
+        question:"What does CIA stand for in Information Security?",
+        answer:"CIA stands for Confidentiality, Integrity and Availability. These three principles form the CIA Triad."
+    },
+
+    {
+        question:"What is Confidentiality?",
+        answer:"Confidentiality ensures that information is accessible only to authorized individuals or systems."
+    },
+
+    {
+        question:"What is Integrity?",
+        answer:"Integrity ensures that information remains accurate, complete and protected from unauthorized modification."
+    },
+
+    {
+        question:"What is Availability?",
+        answer:"Availability means that authorized users can access information and services whenever they are needed."
+    },
+
+    {
+        question:"What is Cryptography?",
+        answer:"Cryptography is the use of mathematical techniques to protect information through processes such as encryption, decryption and digital signatures."
+    },
+
+    {
+        question:"What is RSA?",
+        answer:"RSA is an asymmetric public-key cryptographic algorithm that uses a public key and a private key. It is based on mathematical properties involving large prime numbers."
+    },
+
+    {
+        question:"What is a Digital Signature?",
+        answer:"A digital signature is a cryptographic mechanism used to verify the authenticity and integrity of digital information."
+    },
+
+    {
+        question:"What is Diffie-Hellman?",
+        answer:"Diffie-Hellman is a key exchange method that allows two parties to establish a shared secret over an insecure communication channel."
+    },
+
+    {
+        question:"What is PKI?",
+        answer:"Public Key Infrastructure, or PKI, is a framework that manages public-key cryptography, digital certificates, keys and trust relationships."
+    }
+
+];
+
+
+/* CHARACTER COUNT */
+
+function updateCount(){
+
+    const value =
+        document.getElementById("topicInput").value;
+
+    document.getElementById("charCount")
+        .textContent = value.length;
+
+}
+
+
+/* LOAD SAMPLE */
+
+function loadSample(){
+
+    document.getElementById("topicInput").value =
+        "Information Security and Cryptography";
+
+    updateCount();
+
+    generateFlashcards(true);
+
+}
+
+
+/* GENERATE */
+
+function generateFlashcards(isSample=false){
+
+    const topic =
+        document.getElementById("topicInput")
+        .value
+        .trim();
+
+    const count =
+        Number(
+            document.getElementById("cardCount").value
+        );
+
+
+    if(!topic && !isSample){
+
+        showToast(
+            "Please enter a topic or chapter first."
+        );
+
+        document.getElementById("topicInput").focus();
+
+        return;
+
+    }
+
+
+    showLoading();
+
+
+    const prompt = `
+
+You are an AI study assistant.
+
+Create ${count} flashcards for the following
+study topic:
+
+${topic || "Information Security and Cryptography"}
+
+Requirements:
+
+- Return exactly ${count} flashcards.
+- Each flashcard must contain:
+  question
+  answer
+- Questions should test important concepts.
+- Answers should be short and exam-friendly.
+- Use simple student-friendly language.
+- Include definitions, concepts, examples and important facts.
+- Avoid unnecessary repetition.
+- Make the cards useful for active recall.
+- Return structured JSON.
+
+Expected format:
+
+[
+  {
+    "question": "Question here",
+    "answer": "Answer here"
+  }
+]
+
+`;
+
+    console.log(
+        "AI Flashcard Prompt:",
+        prompt
+    );
+
+
+    setTimeout(function(){
+
+        if(
+            isSample ||
+            topic.toLowerCase().includes("information security") ||
+            topic.toLowerCase().includes("cryptography") ||
+            topic.toLowerCase().includes("rsa")
+        ){
+
+            flashcards =
+                informationSecurityCards
+                .slice(0,count);
+
+        }else{
+
+            flashcards =
+                createGenericCards(topic,count);
+
+        }
+
+
+        currentIndex = 0;
+
+        displayFlashcards();
+
+        hideLoading();
+
+        showToast(
+            flashcards.length +
+            " flashcards generated!"
+        );
+
+    },1000);
+
+}
+
+
+/* GENERIC DEMO CARDS */
+
+function createGenericCards(topic,count){
+
+    const templates = [
+
+        {
+            question:`What is ${topic}?`,
+            answer:`${topic} is an important study concept. Start by understanding its definition, purpose and main characteristics.`
+        },
+
+        {
+            question:`Why is ${topic} important?`,
+            answer:`${topic} is important because it helps solve problems, organize concepts or perform important tasks related to the subject.`
+        },
+
+        {
+            question:`What are the main concepts of ${topic}?`,
+            answer:`The main concepts should be studied through definitions, components, working principles, examples and practical applications.`
+        },
+
+        {
+            question:`How does ${topic} work?`,
+            answer:`Understand ${topic} by breaking it into smaller steps: identify its input, process, important components and final result.`
+        },
+
+        {
+            question:`What is an important feature of ${topic}?`,
+            answer:`An important feature is the way ${topic} is designed to perform its main purpose efficiently and correctly.`
+        },
+
+        {
+            question:`Give an example related to ${topic}.`,
+            answer:`A practical example helps connect the theoretical concept of ${topic} with a real-world situation.`
+        },
+
+        {
+            question:`What are the advantages of ${topic}?`,
+            answer:`The advantages depend on the specific application, but generally include better organization, efficiency and problem solving.`
+        },
+
+        {
+            question:`What are the limitations of ${topic}?`,
+            answer:`Limitations depend on the implementation and use case. Understanding constraints is important when applying the concept.`
+        },
+
+        {
+            question:`What should you remember about ${topic} for exams?`,
+            answer:`Remember the definition, key components, working process, advantages, limitations and at least one example.`
+        },
+
+        {
+            question:`How can you revise ${topic}?`,
+            answer:`Use active recall: close your notes, answer questions from memory, check the answer and repeat the concepts you missed.`
+        }
+
+    ];
+
+
+    return templates.slice(0,count);
+
+}
+
+
+/* DISPLAY */
+
+function displayFlashcards(){
+
+    if(!flashcards.length){
+
+        document.getElementById("emptyState")
+            .style.display = "flex";
+
+        document.getElementById("flashcardContent")
+            .style.display = "none";
+
+        return;
+
+    }
+
+
+    document.getElementById("emptyState")
+        .style.display = "none";
+
+    document.getElementById("flashcardContent")
+        .style.display = "flex";
+
+
+    updateCard();
+
+}
+
+
+/* UPDATE CARD */
+
+function updateCard(){
+
+    if(!flashcards.length){
+        return;
+    }
+
+
+    const card =
+        flashcards[currentIndex];
+
+
+    const flashcard =
+        document.getElementById("flashcard");
+
+
+    flashcard.classList.remove("flipped");
+
+
+    document.getElementById("questionText")
+        .textContent = card.question;
+
+    document.getElementById("answerText")
+        .textContent = card.answer;
+
+
+    document.getElementById("progressInfo")
+        .textContent =
+        `Card ${currentIndex + 1} of ${flashcards.length}`;
+
+
+    const percentage =
+        ((currentIndex + 1) /
+        flashcards.length) * 100;
+
+
+    document.getElementById("progressFill")
+        .style.width = percentage + "%";
+
+}
+
+
+/* FLIP */
+
+function flipCard(){
+
+    document
+        .getElementById("flashcard")
+        .classList.toggle("flipped");
+
+}
+
+
+/* NEXT */
+
+function nextCard(){
+
+    if(!flashcards.length){
+        return;
+    }
+
+
+    currentIndex =
+        (currentIndex + 1)
+        % flashcards.length;
+
+
+    updateCard();
+
+}
+
+
+/* PREVIOUS */
+
+function previousCard(){
+
+    if(!flashcards.length){
+        return;
+    }
+
+
+    currentIndex =
+        (currentIndex - 1 + flashcards.length)
+        % flashcards.length;
+
+
+    updateCard();
+
+}
+
+
+/* SHUFFLE */
+
+function shuffleCards(){
+
+    if(!flashcards.length){
+        showToast("Generate flashcards first.");
+        return;
+    }
+
+
+    for(
+        let i = flashcards.length - 1;
+        i > 0;
+        i--
+    ){
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            flashcards[i],
+            flashcards[j]
+        ] =
+        [
+            flashcards[j],
+            flashcards[i]
+        ];
+
+    }
+
+
+    currentIndex = 0;
+
+    updateCard();
+
+    showToast("Flashcards shuffled!");
+
+}
+
+
+/* CLEAR */
+
+function clearAll(){
+
+    document.getElementById("topicInput").value = "";
+
+    updateCount();
+
+    flashcards = [];
+
+    currentIndex = 0;
+
+    document.getElementById("emptyState")
+        .style.display = "flex";
+
+    document.getElementById("flashcardContent")
+        .style.display = "none";
+
+    document.getElementById("progressInfo")
+        .textContent = "No cards yet";
+
+    document.getElementById("progressFill")
+        .style.width = "0%";
+
+    showToast("Flashcards cleared.");
+
+}
+
+
+/* LOADING */
+
+function showLoading(){
+
+    document.getElementById("loadingOverlay")
+        .style.display = "flex";
+
+}
+
+
+function hideLoading(){
+
+    document.getElementById("loadingOverlay")
+        .style.display = "none";
+
+}
+
+
+/* TOAST */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2200);
+
+}
+
+
+/* KEYBOARD */
+
+document.addEventListener("keydown",function(event){
+
+    if(!flashcards.length){
+        return;
+    }
+
+    if(event.key === "ArrowRight"){
+        nextCard();
+    }
+
+    if(event.key === "ArrowLeft"){
+        previousCard();
+    }
+
+    if(event.key === " " &&
+       document.activeElement.tagName !== "TEXTAREA" &&
+       document.activeElement.tagName !== "SELECT"){
+
+        event.preventDefault();
+
+        flipCard();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

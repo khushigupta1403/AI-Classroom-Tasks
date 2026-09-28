@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Study Planner | AI StudyLab</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --purple:#6d5dfc;
+    --purple-dark:#5545e8;
+    --green:#20c997;
+    --text:#20233a;
+    --muted:#777b8f;
+    --bg:#f6f7fb;
+    --white:#fff;
+    --border:#e7e8f0;
+    --blue:#4d8df7;
+    --orange:#f4a340;
+    --pink:#ed6b9b;
+    --teal:#23b8a5;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:25px 17px;
+    z-index:20;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:0 10px 28px;
+}
+
+.logo-icon{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#786cff,#5748e9);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+    box-shadow:0 8px 18px rgba(109,93,252,.25);
+}
+
+.logo-text{
+    font-size:17px;
+    font-weight:800;
+}
+
+.logo-text span{
+    color:var(--purple);
+}
+
+.section-label{
+    color:#a2a5b5;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.1px;
+    padding:0 12px;
+    margin-bottom:10px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.nav a{
+    text-decoration:none;
+    color:#6d7082;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    border-radius:11px;
+    font-size:12px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.nav a:hover{
+    background:#f4f2ff;
+    color:var(--purple);
+}
+
+.nav a.active{
+    background:#efedff;
+    color:var(--purple);
+}
+
+.nav-icon{
+    width:25px;
+    text-align:center;
+    font-size:15px;
+}
+
+.assistant-card{
+    position:absolute;
+    bottom:22px;
+    left:17px;
+    right:17px;
+    background:linear-gradient(145deg,#f0edff,#effcf7);
+    border:1px solid #e5e1ff;
+    border-radius:17px;
+    padding:15px;
+}
+
+.assistant-card .small-icon{
+    width:33px;
+    height:33px;
+    background:#fff;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;
+}
+
+.assistant-card strong{
+    font-size:12px;
+    display:block;
+    margin-bottom:4px;
+}
+
+.assistant-card p{
+    font-size:10px;
+    color:#777b90;
+    line-height:1.5;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:rgba(255,255,255,.92);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 34px;
+    position:sticky;
+    top:0;
+    z-index:10;
+    backdrop-filter:blur(12px);
+}
+
+.breadcrumb{
+    font-size:12px;
+    color:#999caf;
+}
+
+.breadcrumb strong{
+    color:var(--text);
+}
+
+.ready{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 13px;
+    border:1px solid #d9f4eb;
+    background:#f2fffb;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    color:#159a73;
+}
+
+.ready-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#20c997;
+}
+
+/* HERO */
+
+.hero{
+    margin:30px 34px 20px;
+    min-height:190px;
+    border-radius:24px;
+    padding:34px 38px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 85% 15%,rgba(255,255,255,.18),transparent 28%),
+        linear-gradient(125deg,#6655ef,#7969fa 52%,#5dcbad);
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:50%;
+    right:-90px;
+    bottom:-140px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:6px 10px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+    margin-bottom:13px;
+}
+
+.hero h1{
+    font-size:27px;
+    letter-spacing:-.7px;
+    margin-bottom:9px;
+}
+
+.hero p{
+    max-width:680px;
+    font-size:12px;
+    line-height:1.7;
+    opacity:.9;
+}
+
+/* INPUT AREA */
+
+.input-area{
+    margin:0 34px 20px;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:20px;
+}
+
+.card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:21px;
+    box-shadow:0 8px 28px rgba(30,35,70,.04);
+}
+
+.card-title{
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.card-subtitle{
+    color:#9296a8;
+    font-size:10px;
+    line-height:1.6;
+    margin-bottom:18px;
+}
+
+/* SUBJECTS */
+
+.subjects{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.subject-row{
+    display:grid;
+    grid-template-columns:1.5fr .7fr .9fr 40px;
+    gap:8px;
+    align-items:center;
+}
+
+.subject-row input{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:10px;
+    font-family:inherit;
+    font-size:10px;
+    outline:none;
+}
+
+.subject-row input:focus{
+    border-color:var(--purple);
+}
+
+.remove-btn{
+    width:34px;
+    height:34px;
+    border:1px solid #f0d9dd;
+    background:#fff8f9;
+    color:#df6575;
+    border-radius:9px;
+    cursor:pointer;
+}
+
+.add-btn{
+    margin-top:10px;
+    border:1px dashed #cfcaf9;
+    background:#faf9ff;
+    color:var(--purple);
+    border-radius:10px;
+    padding:9px;
+    width:100%;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:10px;
+    font-weight:700;
+}
+
+/* SETTINGS */
+
+.settings-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.field label{
+    display:block;
+    font-size:9px;
+    font-weight:700;
+    color:#707487;
+    margin-bottom:6px;
+}
+
+.field input,
+.field select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:10px;
+    background:#fff;
+    font-family:inherit;
+    font-size:10px;
+    outline:none;
+}
+
+.field input:focus,
+.field select:focus{
+    border-color:var(--purple);
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.generate-btn{
+    width:100%;
+    border:none;
+    background:var(--purple);
+    color:#fff;
+    border-radius:11px;
+    padding:12px;
+    margin-top:16px;
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.generate-btn:hover{
+    background:var(--purple-dark);
+    transform:translateY(-1px);
+}
+
+.secondary-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:8px;
+}
+
+.secondary-btn{
+    border:1px solid var(--border);
+    background:#fff;
+    color:#65697d;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:10px;
+    font-weight:600;
+}
+
+/* STATS */
+
+.stats{
+    margin:0 34px 20px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:13px;
+}
+
+.stat{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+}
+
+.stat-icon{
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f2f0ff;
+    border-radius:9px;
+    margin-bottom:10px;
+}
+
+.stat strong{
+    display:block;
+    font-size:18px;
+}
+
+.stat span{
+    font-size:9px;
+    color:#9498a9;
+}
+
+/* TIMETABLE */
+
+.schedule-card{
+    margin:0 34px 35px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:21px;
+    box-shadow:0 8px 28px rgba(30,35,70,.04);
+}
+
+.schedule-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:17px;
+}
+
+.schedule-header h2{
+    font-size:15px;
+}
+
+.schedule-header span{
+    color:#9699aa;
+    font-size:10px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+.timetable{
+    width:100%;
+    min-width:850px;
+    border-collapse:separate;
+    border-spacing:5px;
+}
+
+.timetable th{
+    font-size:9px;
+    color:#818598;
+    font-weight:700;
+    padding:9px 5px;
+}
+
+.timetable th:first-child{
+    width:100px;
+}
+
+.timetable td{
+    height:73px;
+    background:#fafafe;
+    border:1px solid #eeeef5;
+    border-radius:10px;
+    padding:7px;
+    vertical-align:top;
+}
+
+.time-cell{
+    background:#fff !important;
+    border:none !important;
+    color:#777b8e;
+    font-size:9px;
+    font-weight:700;
+    vertical-align:middle !important;
+    text-align:center;
+}
+
+.session{
+    height:100%;
+    border-radius:8px;
+    padding:8px;
+    background:#efedff;
+    border-left:3px solid var(--purple);
+}
+
+.session.green{
+    background:#eafbf5;
+    border-left-color:var(--green);
+}
+
+.session.blue{
+    background:#edf4ff;
+    border-left-color:var(--blue);
+}
+
+.session.orange{
+    background:#fff5e8;
+    border-left-color:var(--orange);
+}
+
+.session.pink{
+    background:#fff0f6;
+    border-left-color:var(--pink);
+}
+
+.session.teal{
+    background:#eafaf8;
+    border-left-color:var(--teal);
+}
+
+.session strong{
+    display:block;
+    font-size:9px;
+    color:#44475d;
+    margin-bottom:4px;
+}
+
+.session span{
+    font-size:8px;
+    color:#85899a;
+}
+
+/* BOTTOM */
+
+.bottom-grid{
+    margin:0 34px 35px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.info-box{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:20px;
+}
+
+.info-box h3{
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+.info-box p{
+    font-size:10px;
+    color:#85899a;
+    line-height:1.6;
+}
+
+.tip-list{
+    margin-top:12px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.tip-item{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    font-size:10px;
+    color:#65697b;
+}
+
+.tip-item span:first-child{
+    color:var(--green);
+}
+
+/* EMPTY */
+
+.empty-schedule{
+    padding:70px 20px;
+    text-align:center;
+    color:#9296a8;
+}
+
+.empty-schedule .icon{
+    font-size:35px;
+    margin-bottom:12px;
+}
+
+.empty-schedule h3{
+    font-size:14px;
+    color:#45485d;
+    margin-bottom:5px;
+}
+
+.empty-schedule p{
+    font-size:10px;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#20233a;
+    color:#fff;
+    padding:11px 15px;
+    border-radius:10px;
+    font-size:10px;
+    opacity:0;
+    transform:translateY(10px);
+    pointer-events:none;
+    transition:.25s;
+    z-index:100;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* LOADING */
+
+.loading-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.72);
+    backdrop-filter:blur(4px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+}
+
+.loading-box{
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:0 15px 50px rgba(30,35,70,.12);
+    border-radius:18px;
+    padding:25px 30px;
+    text-align:center;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:3px solid #e9e7ff;
+    border-top-color:var(--purple);
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 12px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.loading-box strong{
+    display:block;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.loading-box span{
+    font-size:9px;
+    color:#9296a8;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:72px;
+        padding:20px 9px;
+    }
+
+    .logo{
+        justify-content:center;
+        padding:0 0 25px;
+    }
+
+    .logo-text,
+    .section-label,
+    .nav a span:not(.nav-icon),
+    .assistant-card{
+        display:none;
+    }
+
+    .nav a{
+        justify-content:center;
+        padding:12px;
+    }
+
+    .main{
+        margin-left:72px;
+    }
+
+    .input-area{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:800px){
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .bottom-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .topbar{
+        padding:0 17px;
+    }
+
+    .hero{
+        margin:18px 15px;
+        padding:25px;
+    }
+
+    .hero h1{
+        font-size:22px;
+    }
+
+    .input-area,
+    .stats,
+    .schedule-card,
+    .bottom-grid{
+        margin-left:15px;
+        margin-right:15px;
+    }
+
+    .subject-row{
+        grid-template-columns:1fr 1fr 1fr 35px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">✦</div>
+
+        <div class="logo-text">
+            AI <span>StudyLab</span>
+        </div>
+
+    </div>
+
+    <div class="section-label">
+        LEARNING TOOLS
+    </div>
+
+    <nav class="nav">
+
+        <a href="../task-01-resume-builder/index.html">
+            <span class="nav-icon">📄</span>
+            <span>Resume Builder</span>
+        </a>
+
+        <a href="../task-02-notes-generator/index.html">
+            <span class="nav-icon">📝</span>
+            <span>Notes Generator</span>
+        </a>
+
+        <a href="../task-03-ppt-generator/index.html">
+            <span class="nav-icon">📊</span>
+            <span>Presentation</span>
+        </a>
+
+        <a href="../task-04-mind-map/index.html">
+            <span class="nav-icon">🧠</span>
+            <span>Mind Map</span>
+        </a>
+
+        <a href="../task-06-ai-quiz/index.html">
+            <span class="nav-icon">🎯</span>
+            <span>AI Quiz</span>
+        </a>
+
+        <a href="../task-07-ai-chatbot/index.html">
+            <span class="nav-icon">🤖</span>
+            <span>Doubt Solver</span>
+        </a>
+
+        <a href="../task-08-flashcards/index.html">
+            <span class="nav-icon">🗂️</span>
+            <span>Flashcards</span>
+        </a>
+
+        <a class="active" href="#">
+            <span class="nav-icon">📅</span>
+            <span>Study Planner</span>
+        </a>
+
+    </nav>
+
+    <div class="assistant-card">
+
+        <div class="small-icon">
+            ✨
+        </div>
+
+        <strong>
+            AI Learning Assistant
+        </strong>
+
+        <p>
+            Build a balanced study schedule
+            around your subjects and exams.
+        </p>
+
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="breadcrumb">
+            Learning Tools &nbsp;/&nbsp;
+            <strong>Study Planner</strong>
+        </div>
+
+        <div class="ready">
+            <span class="ready-dot"></span>
+            AI Studio Ready
+        </div>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="badge">
+            📅 AI STUDY PLANNER
+        </div>
+
+        <h1>
+            Build a Smarter Study Schedule
+        </h1>
+
+        <p>
+            Tell AI what you need to study, how much time you have,
+            and when your exams are. Get a structured weekly timetable
+            designed for focused and balanced revision.
+        </p>
+
+    </section>
+
+
+    <!-- INPUT AREA -->
+
+    <section class="input-area">
+
+        <!-- SUBJECTS -->
+
+        <div class="card">
+
+            <div class="card-title">
+                Your Subjects
+            </div>
+
+            <div class="card-subtitle">
+                Add your subjects and the number of hours
+                you want to study each week.
+            </div>
+
+            <div
+                class="subjects"
+                id="subjects"
+            >
+
+                <div class="subject-row">
+
+                    <input
+                        class="subject-name"
+                        value="Information Security"
+                        placeholder="Subject"
+                    >
+
+                    <input
+                        class="subject-hours"
+                        type="number"
+                        min="1"
+                        value="6"
+                        placeholder="Hours"
+                    >
+
+                    <input
+                        class="subject-exam"
+                        type="date"
+                        value="2026-10-15"
+                    >
+
+                    <button
+                        class="remove-btn"
+                        onclick="removeSubject(this)"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="subject-row">
+
+                    <input
+                        class="subject-name"
+                        value="Data Structures"
+                        placeholder="Subject"
+                    >
+
+                    <input
+                        class="subject-hours"
+                        type="number"
+                        min="1"
+                        value="7"
+                        placeholder="Hours"
+                    >
+
+                    <input
+                        class="subject-exam"
+                        type="date"
+                        value="2026-10-20"
+                    >
+
+                    <button
+                        class="remove-btn"
+                        onclick="removeSubject(this)"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="subject-row">
+
+                    <input
+                        class="subject-name"
+                        value="Database Management"
+                        placeholder="Subject"
+                    >
+
+                    <input
+                        class="subject-hours"
+                        type="number"
+                        min="1"
+                        value="5"
+                    >
+
+                    <input
+                        class="subject-exam"
+                        type="date"
+                        value="2026-10-25"
+                    >
+
+                    <button
+                        class="remove-btn"
+                        onclick="removeSubject(this)"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="add-btn"
+                onclick="addSubject()"
+            >
+                + Add Another Subject
+            </button>
+
+        </div>
+
+
+        <!-- SETTINGS -->
+
+        <div class="card">
+
+            <div class="card-title">
+                Study Preferences
+            </div>
+
+            <div class="card-subtitle">
+                Tell AI how you prefer to organize
+                your study time.
+            </div>
+
+            <div class="settings-grid">
+
+                <div class="field">
+
+                    <label>
+                        DAILY STUDY HOURS
+                    </label>
+
+                    <input
+                        id="dailyHours"
+                        type="number"
+                        min="1"
+                        max="12"
+                        value="4"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        STUDY DAYS
+                    </label>
+
+                    <select id="studyDays">
+
+                        <option value="5">
+                            5 Days
+                        </option>
+
+                        <option value="6" selected>
+                            6 Days
+                        </option>
+
+                        <option value="7">
+                            7 Days
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        PREFERRED SESSION
+                    </label>
+
+                    <select id="session">
+
+                        <option>
+                            Morning
+                        </option>
+
+                        <option selected>
+                            Morning + Evening
+                        </option>
+
+                        <option>
+                            Evening
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        BREAK TIME
+                    </label>
+
+                    <select id="breakTime">
+
+                        <option>
+                            10 minutes
+                        </option>
+
+                        <option selected>
+                            15 minutes
+                        </option>
+
+                        <option>
+                            20 minutes
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="generate-btn"
+                onclick="generatePlanner()"
+            >
+                ✨ Generate AI Timetable
+            </button>
+
+
+            <div class="secondary-row">
+
+                <button
+                    class="secondary-btn"
+                    onclick="loadSample()"
+                >
+                    📚 Load Sample
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="regenerate()"
+                >
+                    🔄 Regenerate
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <strong id="totalSubjects">
+                3
+            </strong>
+
+            <span>
+                Total Subjects
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ⏰
+            </div>
+
+            <strong id="totalHours">
+                18h
+            </strong>
+
+            <span>
+                Weekly Study Hours
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <strong id="studyDaysStat">
+                6
+            </strong>
+
+            <span>
+                Study Days
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🎯
+            </div>
+
+            <strong>
+                AI
+            </strong>
+
+            <span>
+                Personalized Planning
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- TIMETABLE -->
+
+    <section class="schedule-card">
+
+        <div class="schedule-header">
+
+            <div>
+                <h2>
+                    Weekly Study Timetable
+                </h2>
+
+                <span>
+                    AI-generated schedule based on your preferences
+                </span>
+            </div>
+
+        </div>
+
+
+        <div
+            id="scheduleContent"
+        >
+
+            <div class="table-wrap">
+
+                <table class="timetable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                TIME
+                            </th>
+
+                            <th>
+                                MON
+                            </th>
+
+                            <th>
+                                TUE
+                            </th>
+
+                            <th>
+                                WED
+                            </th>
+
+                            <th>
+                                THU
+                            </th>
+
+                            <th>
+                                FRI
+                            </th>
+
+                            <th>
+                                SAT
+                            </th>
+
+                            <th>
+                                SUN
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="timetableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BOTTOM -->
+
+    <section class="bottom-grid">
+
+        <div class="info-box">
+
+            <h3>
+                🧠 AI Study Strategy
+            </h3>
+
+            <p>
+                Your timetable balances difficult subjects,
+                revision and breaks so that you can study
+                consistently without unnecessary overload.
+            </p>
+
+            <div class="tip-list">
+
+                <div class="tip-item">
+                    <span>✓</span>
+                    Start difficult subjects when your concentration is highest.
+                </div>
+
+                <div class="tip-item">
+                    <span>✓</span>
+                    Use short revision sessions before exams.
+                </div>
+
+                <div class="tip-item">
+                    <span>✓</span>
+                    Keep one flexible session for unfinished work.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h3>
+                💡 Smart Study Tips
+            </h3>
+
+            <p>
+                A timetable works best when it is realistic
+                and followed consistently.
+            </p>
+
+            <div class="tip-list">
+
+                <div class="tip-item">
+                    <span>✓</span>
+                    Follow active recall for theory subjects.
+                </div>
+
+                <div class="tip-item">
+                    <span>✓</span>
+                    Practice problems instead of only reading notes.
+                </div>
+
+                <div class="tip-item">
+                    <span>✓</span>
+                    Review difficult topics at the end of each week.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<!-- LOADING -->
+
+<div
+    class="loading-overlay"
+    id="loadingOverlay"
+>
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <strong>
+            Building your timetable...
+        </strong>
+
+        <span>
+            AI is balancing subjects, study hours and exams
+        </span>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* COLORS */
+
+const colors = [
+    "purple",
+    "green",
+    "blue",
+    "orange",
+    "pink",
+    "teal"
+];
+
+
+/* ADD SUBJECT */
+
+function addSubject(){
+
+    const container =
+        document.getElementById("subjects");
+
+    const row =
+        document.createElement("div");
+
+    row.className = "subject-row";
+
+    row.innerHTML = `
+
+        <input
+            class="subject-name"
+            placeholder="Subject"
+        >
+
+        <input
+            class="subject-hours"
+            type="number"
+            min="1"
+            value="4"
+            placeholder="Hours"
+        >
+
+        <input
+            class="subject-exam"
+            type="date"
+        >
+
+        <button
+            class="remove-btn"
+            onclick="removeSubject(this)"
+        >
+            ×
+        </button>
+
+    `;
+
+    container.appendChild(row);
+
+    updateStats();
+
+}
+
+
+/* REMOVE SUBJECT */
+
+function removeSubject(button){
+
+    const rows =
+        document.querySelectorAll(".subject-row");
+
+    if(rows.length <= 1){
+
+        showToast(
+            "Keep at least one subject."
+        );
+
+        return;
+
+    }
+
+    button.parentElement.remove();
+
+    updateStats();
+
+}
+
+
+/* GET SUBJECTS */
+
+function getSubjects(){
+
+    const rows =
+        document.querySelectorAll(".subject-row");
+
+    const subjects = [];
+
+    rows.forEach(function(row){
+
+        const name =
+            row.querySelector(".subject-name")
+            .value
+            .trim();
+
+        const hours =
+            Number(
+                row.querySelector(".subject-hours")
+                .value
+            ) || 0;
+
+        const exam =
+            row.querySelector(".subject-exam")
+            .value;
+
+        if(name){
+
+            subjects.push({
+                name:name,
+                hours:hours,
+                exam:exam
+            });
+
+        }
+
+    });
+
+    return subjects;
+
+}
+
+
+/* UPDATE STATS */
+
+function updateStats(){
+
+    const subjects =
+        getSubjects();
+
+    const totalHours =
+        subjects.reduce(
+            function(total,item){
+                return total + item.hours;
+            },
+            0
+        );
+
+    document.getElementById("totalSubjects")
+        .textContent = subjects.length;
+
+    document.getElementById("totalHours")
+        .textContent = totalHours + "h";
+
+    document.getElementById("studyDaysStat")
+        .textContent =
+        document.getElementById("studyDays").value;
+
+}
+
+
+/* GENERATE */
+
+function generatePlanner(){
+
+    const subjects =
+        getSubjects();
+
+    if(!subjects.length){
+
+        showToast(
+            "Add at least one subject."
+        );
+
+        return;
+
+    }
+
+
+    const dailyHours =
+        Number(
+            document.getElementById("dailyHours")
+            .value
+        );
+
+    const studyDays =
+        document.getElementById("studyDays")
+        .value;
+
+    const session =
+        document.getElementById("session")
+        .value;
+
+    const breakTime =
+        document.getElementById("breakTime")
+        .value;
+
+
+    const prompt = `
+
+You are an AI Study Planner.
+
+Create a realistic weekly study timetable.
+
+Subjects:
+${JSON.stringify(subjects,null,2)}
+
+Student preferences:
+
+Daily study hours:
+${dailyHours}
+
+Study days:
+${studyDays}
+
+Preferred session:
+${session}
+
+Break time:
+${breakTime}
+
+Requirements:
+
+- Generate a weekly timetable.
+- Balance all subjects.
+- Give more attention to subjects with earlier exam dates.
+- Respect the available daily study hours.
+- Include revision sessions.
+- Include short breaks.
+- Avoid overloading a single day.
+- Keep at least one flexible/revision period.
+- Return structured JSON.
+- Include day, time, subject and activity.
+
+Example format:
+
+[
+    {
+        "day":"Monday",
+        "time":"7:00 AM - 8:00 AM",
+        "subject":"Data Structures",
+        "activity":"Practice problems"
+    }
+]
+
+`;
+
+    console.log(
+        "AI Study Planner Prompt:",
+        prompt
+    );
+
+
+    showLoading();
+
+
+    setTimeout(function(){
+
+        createDemoSchedule(subjects);
+
+        updateStats();
+
+        hideLoading();
+
+        showToast(
+            "AI timetable generated!"
+        );
+
+    },1000);
+
+}
+
+
+/* DEMO SCHEDULE */
+
+function createDemoSchedule(subjects){
+
+    const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ];
+
+    const times = [
+        "7:00 - 8:00",
+        "8:15 - 9:15",
+        "6:00 - 7:00",
+        "7:15 - 8:15"
+    ];
+
+
+    const body =
+        document.getElementById("timetableBody");
+
+    body.innerHTML = "";
+
+
+    for(let rowIndex = 0; rowIndex < 4; rowIndex++){
+
+        const tr =
+            document.createElement("tr");
+
+
+        const time =
+            document.createElement("td");
+
+        time.className = "time-cell";
+
+        time.textContent =
+            times[rowIndex];
+
+        tr.appendChild(time);
+
+
+        days.forEach(function(day,dayIndex){
+
+            const td =
+                document.createElement("td");
+
+
+            /*
+             * Sunday contains lighter revision
+             * and planning sessions.
+             */
+
+            if(dayIndex === 6){
+
+                if(rowIndex === 0){
+
+                    td.innerHTML = `
+                        <div class="session green">
+
+                            <strong>Weekly Revision</strong>
+
+                            <span>
+                                Review important concepts
+                            </span>
+
+                        </div>
+                    `;
+
+                }else if(rowIndex === 1){
+
+                    td.innerHTML = `
+                        <div class="session teal">
+
+                            <strong>Mock Test</strong>
+
+                            <span>
+                                Practice & self-assessment
+                            </span>
+
+                        </div>
+                    `;
+
+                }else{
+
+                    td.innerHTML = `
+                        <div class="session">
+
+                            <strong>Free / Rest</strong>
+
+                            <span>
+                                Flexible study time
+                            </span>
+
+                        </div>
+                    `;
+
+                }
+
+                tr.appendChild(td);
+
+                return;
+
+            }
+
+
+            const subject =
+                subjects[
+                    (dayIndex + rowIndex)
+                    % subjects.length
+                ];
+
+
+            const color =
+                colors[
+                    (dayIndex + rowIndex)
+                    % colors.length
+                ];
+
+
+            let activity =
+                "Concept Study";
+
+
+            if(rowIndex === 1){
+                activity = "Practice";
+            }
+
+            if(rowIndex === 2){
+                activity = "Revision";
+            }
+
+            if(rowIndex === 3){
+                activity = "Questions & Notes";
+            }
+
+
+            td.innerHTML = `
+
+                <div class="session ${color}">
+
+                    <strong>
+                        ${escapeHTML(subject.name)}
+                    </strong>
+
+                    <span>
+                        ${activity}
+                    </span>
+
+                </div>
+
+            `;
+
+
+            tr.appendChild(td);
+
+        });
+
+
+        body.appendChild(tr);
+
+    }
+
+}
+
+
+/* SAMPLE */
+
+function loadSample(){
+
+    const container =
+        document.getElementById("subjects");
+
+    container.innerHTML = `
+
+        <div class="subject-row">
+
+            <input
+                class="subject-name"
+                value="Information Security"
+            >
+
+            <input
+                class="subject-hours"
+                type="number"
+                value="6"
+            >
+
+            <input
+                class="subject-exam"
+                type="date"
+                value="2026-10-15"
+            >
+
+            <button
+                class="remove-btn"
+                onclick="removeSubject(this)"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="subject-row">
+
+            <input
+                class="subject-name"
+                value="Data Structures"
+            >
+
+            <input
+                class="subject-hours"
+                type="number"
+                value="7"
+            >
+
+            <input
+                class="subject-exam"
+                type="date"
+                value="2026-10-20"
+            >
+
+            <button
+                class="remove-btn"
+                onclick="removeSubject(this)"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="subject-row">
+
+            <input
+                class="subject-name"
+                value="Database Management"
+            >
+
+            <input
+                class="subject-hours"
+                type="number"
+                value="5"
+            >
+
+            <input
+                class="subject-exam"
+                type="date"
+                value="2026-10-25"
+            >
+
+            <button
+                class="remove-btn"
+                onclick="removeSubject(this)"
+            >
+                ×
+            </button>
+
+        </div>
+
+    `;
+
+
+    document.getElementById("dailyHours")
+        .value = 4;
+
+    document.getElementById("studyDays")
+        .value = 6;
+
+    updateStats();
+
+    createDemoSchedule(
+        getSubjects()
+    );
+
+    showToast(
+        "Sample timetable loaded!"
+    );
+
+}
+
+
+/* REGENERATE */
+
+function regenerate(){
+
+    if(!getSubjects().length){
+
+        showToast(
+            "Add subjects first."
+        );
+
+        return;
+
+    }
+
+    generatePlanner();
+
+}
+
+
+/* ESCAPE HTML */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* LOADING */
+
+function showLoading(){
+
+    document.getElementById("loadingOverlay")
+        .style.display = "flex";
+
+}
+
+
+function hideLoading(){
+
+    document.getElementById("loadingOverlay")
+        .style.display = "none";
+
+}
+
+
+/* TOAST */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(function(){
+
+        toast.classList.remove("show");
+
+    },2200);
+
+}
+
+
+/* UPDATE WHEN STUDY DAYS CHANGES */
+
+document.getElementById("studyDays")
+    .addEventListener(
+        "change",
+        updateStats
+    );
+
+
+/* INITIAL DATA */
+
+updateStats();
+
+createDemoSchedule(
+    getSubjects()
+);
+
+</script>
+
+</body>
+</html>

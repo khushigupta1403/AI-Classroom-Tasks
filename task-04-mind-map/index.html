@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MindFlow AI — Mind Map Generator</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --purple: #7355e6;
+    --purple-dark: #5e43c7;
+    --purple-light: #f0edff;
+    --green: #28a77a;
+    --green-light: #eaf9f3;
+    --text: #25233a;
+    --muted: #858195;
+    --border: #e9e7f0;
+    --bg: #f7f8fc;
+    --white: #ffffff;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    min-height: 100vh;
+    display: flex;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: 250px;
+    background: white;
+    border-right: 1px solid var(--border);
+    position: fixed;
+    inset: 0 auto 0 0;
+    padding: 24px 18px;
+    z-index: 50;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 5px 10px 32px;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #7556e6, #a184f4);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    box-shadow: 0 8px 22px rgba(115,85,230,.25);
+}
+
+.logo h2 {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.logo h2 span {
+    color: var(--purple);
+}
+
+.menu-title {
+    padding: 0 12px 11px;
+    font-size: 9px;
+    letter-spacing: 1.2px;
+    color: #aaa7b5;
+    font-weight: 800;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 13px;
+    border-radius: 12px;
+    color: #777386;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.nav-item:hover {
+    background: #f7f5fc;
+    color: var(--purple);
+}
+
+.nav-item.active {
+    background: var(--purple-light);
+    color: var(--purple-dark);
+}
+
+.nav-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.sidebar-footer {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 22px;
+}
+
+.ai-mini-card {
+    padding: 16px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, #f1edff, #faf8ff);
+    border: 1px solid #e6deff;
+}
+
+.ai-mini-card .mini-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 9px;
+    margin-bottom: 10px;
+}
+
+.ai-mini-card strong {
+    font-size: 11px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.ai-mini-card p {
+    font-size: 9px;
+    color: #888397;
+    line-height: 1.5;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar {
+    height: 70px;
+    background: rgba(255,255,255,.92);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    backdrop-filter: blur(15px);
+}
+
+.breadcrumb {
+    font-size: 12px;
+    color: #a09cac;
+}
+
+.breadcrumb strong {
+    color: #3b384c;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ai-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    color: #777386;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #36bf8a;
+    box-shadow: 0 0 0 4px #e9f8f2;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+    max-width: 1500px;
+    padding: 30px 35px 40px;
+    margin: auto;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 220px;
+    border-radius: 26px;
+    padding: 35px 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,.2), transparent 22%),
+        radial-gradient(circle at 75% 100%, rgba(55,210,155,.18), transparent 28%),
+        linear-gradient(125deg, #6246d1, #8769ed 55%, #9879ed);
+    box-shadow: 0 20px 45px rgba(95,69,195,.18);
+    margin-bottom: 25px;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 45px solid rgba(255,255,255,.06);
+    right: -100px;
+    top: -130px;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 30px solid rgba(255,255,255,.05);
+    right: 180px;
+    bottom: -100px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.14);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    margin-bottom: 17px;
+}
+
+.hero h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.1;
+    margin-bottom: 11px;
+}
+
+.hero p {
+    max-width: 650px;
+    color: rgba(255,255,255,.82);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* =========================
+   WORKSPACE
+========================= */
+
+.workspace {
+    display: grid;
+    grid-template-columns: 335px 1fr;
+    gap: 22px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: 0 10px 35px rgba(40,35,70,.045);
+}
+
+/* =========================
+   INPUT PANEL
+========================= */
+
+.input-panel {
+    height: fit-content;
+    overflow: hidden;
+}
+
+.panel-head {
+    padding: 20px 22px;
+    border-bottom: 1px solid #efedf4;
+}
+
+.panel-head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-head h2 {
+    font-size: 15px;
+}
+
+.panel-head p {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 5px;
+}
+
+.icon-box {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--purple-light);
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    padding: 21px 22px;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #4c485c;
+}
+
+.char-count {
+    color: #aaa6b4;
+    font-size: 9px;
+}
+
+textarea {
+    width: 100%;
+    height: 215px;
+    resize: none;
+    border: 1px solid #dfdde7;
+    border-radius: 14px;
+    background: #fcfcfe;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 11px;
+    color: #393649;
+    outline: none;
+    transition: .2s;
+    line-height: 1.7;
+}
+
+textarea:focus {
+    border-color: #8a70eb;
+    box-shadow: 0 0 0 4px #efebff;
+}
+
+.example {
+    margin-top: 12px;
+    padding: 12px 13px;
+    border-radius: 13px;
+    background: #f8f7fb;
+    border: 1px solid #efedf5;
+}
+
+.example-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #777287;
+    font-size: 9px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.example p {
+    color: #898495;
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+.generate-btn {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 14px;
+    color: white;
+    background: linear-gradient(135deg,#7153e3,#9272ef);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(113,83,227,.2);
+    transition: .2s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(113,83,227,.27);
+}
+
+.action-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 9px;
+}
+
+.secondary-btn {
+    flex: 1;
+    border: none;
+    border-radius: 10px;
+    background: #f2f1f6;
+    color: #625d70;
+    padding: 11px;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.secondary-btn:hover {
+    background: #eae7f0;
+}
+
+/* =========================
+   MAP PANEL
+========================= */
+
+.map-panel {
+    min-height: 650px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-head {
+    padding: 18px 22px;
+    border-bottom: 1px solid #efedf4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.map-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.map-title-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-title h2 {
+    font-size: 14px;
+}
+
+.map-title p {
+    color: var(--muted);
+    font-size: 9px;
+    margin-top: 4px;
+}
+
+.topic-badge {
+    background: var(--green-light);
+    color: var(--green);
+    border: 1px solid #d8f0e6;
+    padding: 7px 11px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+    background:
+        linear-gradient(rgba(115,85,230,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(115,85,230,.025) 1px, transparent 1px),
+        #fbfbfd;
+    background-size: 24px 24px;
+}
+
+.map-canvas {
+    width: 1000px;
+    height: 560px;
+    position: relative;
+    transform-origin: center top;
+    transition: transform .25s;
+}
+
+.map-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    pointer-events: none;
+}
+
+.map-lines path {
+    fill: none;
+    stroke: #d7d1e8;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+/* =========================
+   NODES
+========================= */
+
+.node {
+    position: absolute;
+    z-index: 3;
+    min-width: 125px;
+    padding: 13px 18px;
+    border-radius: 14px;
+    text-align: center;
+    background: white;
+    border: 1px solid #dfdbe9;
+    box-shadow: 0 9px 22px rgba(50,45,75,.08);
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    color: #4e4a5d;
+    transition: .25s;
+}
+
+.node:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(50,45,75,.14);
+}
+
+.node small {
+    display: block;
+    margin-top: 4px;
+    font-size: 8px;
+    color: #9c98a7;
+    font-weight: 500;
+}
+
+.root-node {
+    left: 50%;
+    top: 40px;
+    transform: translateX(-50%);
+    min-width: 190px;
+    padding: 17px 24px;
+    border: none;
+    color: white;
+    background: linear-gradient(135deg,#7152df,#9271ee);
+    box-shadow: 0 14px 30px rgba(105,76,211,.25);
+    font-size: 13px;
+}
+
+.root-node:hover {
+    transform: translateX(-50%) translateY(-4px) scale(1.02);
+}
+
+.level-one {
+    background: #f0edff;
+    border-color: #ddd5ff;
+    color: #6248c8;
+}
+
+.level-two {
+    background: #edf9f5;
+    border-color: #d5eee4;
+    color: #247b61;
+}
+
+/* =========================
+   INSIGHT BAR
+========================= */
+
+.insights {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid #efedf4;
+}
+
+.insight {
+    padding: 11px;
+    border-radius: 11px;
+    background: #f9f8fc;
+    border: 1px solid #efedf4;
+}
+
+.insight span {
+    display: block;
+    font-size: 8px;
+    color: #a09bab;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.insight strong {
+    font-size: 12px;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.toolbar {
+    padding: 13px 20px;
+    border-top: 1px solid #efedf4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toolbar-text {
+    color: #9894a4;
+    font-size: 9px;
+}
+
+.tool-buttons {
+    display: flex;
+    gap: 7px;
+}
+
+.tool-btn {
+    width: 33px;
+    height: 31px;
+    border: none;
+    border-radius: 9px;
+    background: #f1eff6;
+    color: #5f5a6d;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+.tool-btn:hover {
+    background: #e8e4f1;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading {
+    position: absolute;
+    inset: 0;
+    background: rgba(251,251,253,.94);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 20;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e8e4f5;
+    border-top-color: var(--purple);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 14px;
+}
+
+.loading strong {
+    font-size: 12px;
+}
+
+.loading p {
+    margin-top: 5px;
+    font-size: 9px;
+    color: var(--muted);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1050px) {
+
+    .sidebar {
+        width: 205px;
+    }
+
+    .main {
+        margin-left: 205px;
+        width: calc(100% - 205px);
+    }
+
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .input-panel {
+        width: 100%;
+    }
+}
+
+@media(max-width:700px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+
+    .hero {
+        padding: 28px;
+    }
+
+    .insights {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            ✦
+        </div>
+
+        <h2>
+            AI <span>StudyLab</span>
+        </h2>
+
+    </div>
+
+
+    <div class="menu-title">
+        STUDY TOOLS
+    </div>
+
+
+    <nav class="nav">
+
+        <div class="nav-item">
+            <div class="nav-icon">📄</div>
+            Resume Builder
+        </div>
+
+        <div class="nav-item">
+            <div class="nav-icon">📝</div>
+            Notes Generator
+        </div>
+
+        <div class="nav-item">
+            <div class="nav-icon">📊</div>
+            Presentation
+        </div>
+
+        <div class="nav-item active">
+            <div class="nav-icon">🧠</div>
+            Mind Map
+        </div>
+
+        <div class="nav-item">
+            <div class="nav-icon">❓</div>
+            AI Quiz
+        </div>
+
+        <div class="nav-item">
+            <div class="nav-icon">💬</div>
+            Doubt Solver
+        </div>
+
+        <div class="nav-item">
+            <div class="nav-icon">🗂️</div>
+            Flashcards
+        </div>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+        <div class="ai-mini-card">
+
+            <div class="mini-icon">
+                ✨
+            </div>
+
+            <strong>
+                AI Learning Assistant
+            </strong>
+
+            <p>
+                Turn complex study material
+                into simple visual structures.
+            </p>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+
+<!-- TOPBAR -->
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+        Study Tools / <strong>AI Mind Map</strong>
+    </div>
+
+    <div class="top-actions">
+
+        <div class="ai-status">
+            <span class="status-dot"></span>
+            AI Studio Ready
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- CONTENT -->
+
+<section class="content">
+
+
+<!-- HERO -->
+
+<div class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            🧠 AI MIND MAP GENERATOR
+        </div>
+
+        <h1>
+            Visualize Your Knowledge
+        </h1>
+
+        <p>
+            Transform your syllabus, chapters and study material
+            into beautiful hierarchical mind maps that make
+            complex subjects easier to understand and revise.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- WORKSPACE -->
+
+<div class="workspace">
+
+
+<!-- INPUT -->
+
+<div class="card input-panel">
+
+    <div class="panel-head">
+
+        <div class="panel-head-row">
+
+            <div>
+
+                <h2>
+                    Create Mind Map
+                </h2>
+
+                <p>
+                    Add your syllabus or study content.
+                </p>
+
+            </div>
+
+            <div class="icon-box">
+                🧠
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="form">
+
+        <div class="label-row">
+
+            <label>
+                SYLLABUS / TOPIC
+            </label>
+
+            <span
+                class="char-count"
+                id="charCount"
+            >
+                0 characters
+            </span>
+
+        </div>
+
+
+        <textarea
+            id="syllabus"
+            oninput="updateCount()"
+            placeholder="Example:
+
+Information Security
+
+Cryptography
+Digital Signatures
+DES
+RSA
+PGP
+
+Key Management
+Diffie-Hellman
+Needham-Schroeder
+PKI"
+        ></textarea>
+
+
+        <div class="example">
+
+            <div class="example-title">
+                💡 HOW IT WORKS
+            </div>
+
+            <p>
+                Enter your syllabus or chapter names.
+                AI will organize them into a visual
+                topic hierarchy.
+            </p>
+
+        </div>
+
+
+        <button
+            class="generate-btn"
+            onclick="generateMindMap()"
+        >
+            ✨ Generate AI Mind Map
+        </button>
+
+
+        <div class="action-row">
+
+            <button
+                class="secondary-btn"
+                onclick="loadSample()"
+            >
+                Load Sample
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="clearMap()"
+            >
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MAP -->
+
+<div class="card map-panel">
+
+
+    <div class="map-head">
+
+        <div class="map-title">
+
+            <div class="map-title-icon">
+                🌐
+            </div>
+
+            <div>
+
+                <h2>
+                    Knowledge Map
+                </h2>
+
+                <p>
+                    Explore your topics visually
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="topic-badge"
+            id="topicBadge"
+        >
+            0 Topics
+        </div>
+
+    </div>
+
+
+    <div
+        class="map-wrapper"
+        id="mapWrapper"
+    >
+
+        <div
+            class="map-canvas"
+            id="mapCanvas"
+        >
+
+            <div
+                style="
+                position:absolute;
+                top:210px;
+                left:50%;
+                transform:translateX(-50%);
+                text-align:center;
+                width:300px;
+                color:#aaa6b6;
+                "
+            >
+
+                <div
+                    style="
+                    width:68px;
+                    height:68px;
+                    background:#f0eef6;
+                    border-radius:21px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:30px;
+                    margin:0 auto 15px;
+                    "
+                >
+                    🧠
+                </div>
+
+                <h3 style="
+                    font-size:14px;
+                    margin-bottom:7px;
+                    color:#716d7e;
+                ">
+                    Your knowledge map starts here
+                </h3>
+
+                <p style="
+                    font-size:10px;
+                    line-height:1.5;
+                ">
+                    Enter your syllabus and generate
+                    your visual learning map.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="loading"
+            id="loading"
+        >
+
+            <div class="spinner"></div>
+
+            <strong>
+                Creating your knowledge map
+            </strong>
+
+            <p>
+                Organizing topics and relationships...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- INSIGHTS -->
+
+    <div class="insights">
+
+        <div class="insight">
+
+            <span>
+                MAIN TOPIC
+            </span>
+
+            <strong id="mainTopic">
+                —
+            </strong>
+
+        </div>
+
+
+        <div class="insight">
+
+            <span>
+                MAIN BRANCHES
+            </span>
+
+            <strong id="branchCount">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="insight">
+
+            <span>
+                SUBTOPICS
+            </span>
+
+            <strong id="subtopicCount">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOOLBAR -->
+
+    <div class="toolbar">
+
+        <div class="toolbar-text">
+            Use + / − to zoom the knowledge map
+        </div>
+
+        <div class="tool-buttons">
+
+            <button
+                class="tool-btn"
+                onclick="zoomIn()"
+                title="Zoom in"
+            >
+                +
+            </button>
+
+            <button
+                class="tool-btn"
+                onclick="zoomOut()"
+                title="Zoom out"
+            >
+                −
+            </button>
+
+            <button
+                class="tool-btn"
+                onclick="resetZoom()"
+                title="Reset"
+            >
+                ⟳
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<script>
+
+let scale = 1;
+
+
+/* =========================
+   CHARACTER COUNT
+========================= */
+
+function updateCount() {
+
+    const text =
+        document.getElementById("syllabus").value;
+
+    document.getElementById("charCount")
+        .textContent =
+        `${text.length} characters`;
+
+}
+
+
+/* =========================
+   SAMPLE
+========================= */
+
+function loadSample() {
+
+    const textarea =
+        document.getElementById("syllabus");
+
+    textarea.value = `
+Information Security
+
+Cryptography
+Digital Signatures
+DES
+RSA
+PGP
+
+Key Management
+Diffie-Hellman
+Needham-Schroeder
+PKI
+
+Security Threats
+Malware
+Phishing
+Social Engineering
+`;
+
+    updateCount();
+
+}
+
+
+/* =========================
+   CLEAR
+========================= */
+
+function clearMap() {
+
+    document.getElementById("syllabus").value = "";
+
+    updateCount();
+
+    document.getElementById("topicBadge")
+        .textContent = "0 Topics";
+
+    document.getElementById("mainTopic")
+        .textContent = "—";
+
+    document.getElementById("branchCount")
+        .textContent = "0";
+
+    document.getElementById("subtopicCount")
+        .textContent = "0";
+
+
+    document.getElementById("mapCanvas").innerHTML = `
+
+        <div
+            style="
+            position:absolute;
+            top:210px;
+            left:50%;
+            transform:translateX(-50%);
+            text-align:center;
+            width:300px;
+            color:#aaa6b6;
+            "
+        >
+
+            <div
+                style="
+                width:68px;
+                height:68px;
+                background:#f0eef6;
+                border-radius:21px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:30px;
+                margin:0 auto 15px;
+                "
+            >
+                🧠
+            </div>
+
+            <h3 style="
+                font-size:14px;
+                margin-bottom:7px;
+                color:#716d7e;
+            ">
+                Your knowledge map starts here
+            </h3>
+
+            <p style="
+                font-size:10px;
+                line-height:1.5;
+            ">
+                Enter your syllabus and generate
+                your visual learning map.
+            </p>
+
+        </div>
+    `;
+
+}
+
+
+/* =========================
+   GENERATE
+========================= */
+
+function generateMindMap() {
+
+    const text =
+        document.getElementById("syllabus")
+        .value
+        .trim();
+
+    if (!text) {
+
+        alert("Please enter your syllabus or topic.");
+
+        return;
+
+    }
+
+
+    const prompt = `
+Create a hierarchical mind map from:
+
+${text}
+
+Organize the content as:
+
+Main Topic
+→ Main Branches
+→ Subtopics
+
+Return structured JSON.
+`;
+
+    console.log("AI Prompt:", prompt);
+
+
+    document.getElementById("loading")
+        .style.display = "flex";
+
+
+    setTimeout(() => {
+
+        createDemoMap();
+
+        document.getElementById("loading")
+            .style.display = "none";
+
+    }, 1300);
+
+}
+
+
+/* =========================
+   CREATE MAP
+========================= */
+
+function createDemoMap() {
+
+    const canvas =
+        document.getElementById("mapCanvas");
+
+
+    canvas.innerHTML = `
+
+        <svg
+            class="map-lines"
+            viewBox="0 0 1000 560"
+        >
+
+            <path d="M500 105 C500 145 170 145 170 210"/>
+            <path d="M500 105 C500 150 500 165 500 210"/>
+            <path d="M500 105 C500 145 830 145 830 210"/>
+
+            <path d="M170 260 C170 300 85 310 85 365"/>
+            <path d="M170 260 C170 310 255 310 255 365"/>
+
+            <path d="M500 260 C500 300 415 310 415 365"/>
+            <path d="M500 260 C500 310 585 310 585 365"/>
+
+            <path d="M830 260 C830 300 745 310 745 365"/>
+            <path d="M830 260 C830 310 915 310 915 365"/>
+
+        </svg>
+
+
+        <!-- ROOT -->
+
+        <div
+            class="node root-node"
+            onclick="showTopic('Information Security')"
+        >
+            🛡️ Information Security
+            <small style="color:rgba(255,255,255,.7)">
+                Main Subject
+            </small>
+        </div>
+
+
+        <!-- LEVEL 1 -->
+
+        <div
+            class="node level-one"
+            style="left:105px;top:205px;"
+            onclick="showTopic('Cryptography')"
+        >
+            🔐 Cryptography
+            <small>Security Methods</small>
+        </div>
+
+
+        <div
+            class="node level-one"
+            style="left:435px;top:205px;"
+            onclick="showTopic('Algorithms')"
+        >
+            ⚙️ Algorithms
+            <small>Core Techniques</small>
+        </div>
+
+
+        <div
+            class="node level-one"
+            style="left:765px;top:205px;"
+            onclick="showTopic('Key Management')"
+        >
+            🔑 Key Management
+            <small>Key Exchange</small>
+        </div>
+
+
+        <!-- LEVEL 2 -->
+
+        <div
+            class="node level-two"
+            style="left:25px;top:360px;"
+            onclick="showTopic('Digital Signatures')"
+        >
+            Digital Signatures
+        </div>
+
+
+        <div
+            class="node level-two"
+            style="left:195px;top:360px;"
+            onclick="showTopic('PGP')"
+        >
+            PGP
+        </div>
+
+
+        <div
+            class="node level-two"
+            style="left:350px;top:360px;"
+            onclick="showTopic('DES')"
+        >
+            DES
+        </div>
+
+
+        <div
+            class="node level-two"
+            style="left:530px;top:360px;"
+            onclick="showTopic('RSA')"
+        >
+            RSA
+        </div>
+
+
+        <div
+            class="node level-two"
+            style="left:675px;top:360px;"
+            onclick="showTopic('Diffie-Hellman')"
+        >
+            Diffie-Hellman
+        </div>
+
+
+        <div
+            class="node level-two"
+            style="left:850px;top:360px;"
+            onclick="showTopic('PKI')"
+        >
+            PKI
+        </div>
+
+    `;
+
+
+    document.getElementById("topicBadge")
+        .textContent = "10 Topics";
+
+
+    document.getElementById("mainTopic")
+        .textContent = "Information Security";
+
+
+    document.getElementById("branchCount")
+        .textContent = "3";
+
+
+    document.getElementById("subtopicCount")
+        .textContent = "6";
+
+
+    resetZoom();
+
+}
+
+
+/* =========================
+   TOPIC CLICK
+========================= */
+
+function showTopic(topic) {
+
+    alert(
+        "📚 " + topic +
+        "\n\nAI explanation for this topic can be connected here."
+    );
+
+}
+
+
+/* =========================
+   ZOOM
+========================= */
+
+function zoomIn() {
+
+    if (scale < 1.5) {
+
+        scale += .1;
+
+        applyZoom();
+
+    }
+
+}
+
+
+function zoomOut() {
+
+    if (scale > .6) {
+
+        scale -= .1;
+
+        applyZoom();
+
+    }
+
+}
+
+
+function resetZoom() {
+
+    scale = 1;
+
+    applyZoom();
+
+}
+
+
+function applyZoom() {
+
+    document.getElementById("mapCanvas")
+        .style.transform =
+        `scale(${scale})`;
+
+}
+
+
+/* =========================
+   INITIAL COUNT
+========================= */
+
+updateCount();
+
+</script>
+
+</body>
+</html>

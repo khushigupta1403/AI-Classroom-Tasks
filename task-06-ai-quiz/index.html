@@ -1,0 +1,3290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>AI Quiz Generator | AI StudyLab</title>
+
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --purple:#7657e8;
+    --purple-dark:#6246d2;
+    --purple-light:#f1edff;
+
+    --green:#28b681;
+    --green-light:#eafaf4;
+
+    --red:#e45d6a;
+    --red-light:#fff0f2;
+
+    --blue:#4e8ee8;
+    --orange:#ef9b45;
+
+    --text:#202033;
+    --muted:#77768a;
+
+    --border:#e7e5ef;
+
+    --bg:#f7f7fb;
+    --white:#ffffff;
+}
+
+body{
+
+    font-family:"Inter",sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+}
+
+button,
+input,
+select,
+textarea{
+
+    font-family:inherit;
+
+}
+
+button{
+
+    cursor:pointer;
+
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    width:250px;
+    height:100vh;
+
+    background:white;
+
+    border-right:
+        1px solid var(--border);
+
+    padding:25px 16px;
+
+    z-index:20;
+
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+    padding:
+        0 10px 28px;
+
+}
+
+.logo-icon{
+
+    width:40px;
+    height:40px;
+
+    border-radius:13px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+
+    font-size:20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8669f3,
+            #6245d1
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(118,87,232,.25);
+
+}
+
+.logo strong{
+
+    font-size:18px;
+
+}
+
+.logo span{
+
+    color:var(--purple);
+
+}
+
+.menu-title{
+
+    padding:
+        0 12px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+    color:#aaa9b8;
+
+    margin-bottom:9px;
+
+}
+
+.nav-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:12px 13px;
+
+    border-radius:12px;
+
+    color:#656579;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:4px;
+
+    transition:.2s;
+
+}
+
+.nav-item:hover{
+
+    background:#f6f3ff;
+
+    color:var(--purple);
+
+}
+
+.nav-item.active{
+
+    background:var(--purple-light);
+
+    color:var(--purple);
+
+}
+
+.nav-icon{
+
+    width:28px;
+
+    text-align:center;
+
+    font-size:17px;
+
+}
+
+.assistant-card{
+
+    position:absolute;
+
+    left:16px;
+    right:16px;
+    bottom:22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f2eeff,
+            #ecfaf5
+        );
+
+    border:
+        1px solid #e4defd;
+
+    border-radius:18px;
+
+    padding:17px;
+
+}
+
+.assistant-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-bottom:9px;
+
+}
+
+.assistant-avatar{
+
+    width:33px;
+    height:33px;
+
+    border-radius:10px;
+
+    background:white;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+}
+
+.assistant-card strong{
+
+    font-size:12px;
+
+}
+
+.assistant-card p{
+
+    color:#76758a;
+
+    font-size:11px;
+
+    line-height:1.6;
+
+}
+
+
+/* ================= MAIN ================= */
+
+.main{
+
+    margin-left:250px;
+
+    min-height:100vh;
+
+}
+
+.topbar{
+
+    height:70px;
+
+    background:
+        rgba(255,255,255,.9);
+
+    border-bottom:
+        1px solid var(--border);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        0 34px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:10;
+
+    backdrop-filter:
+        blur(10px);
+
+}
+
+.breadcrumb{
+
+    font-size:13px;
+
+    color:var(--muted);
+
+}
+
+.breadcrumb strong{
+
+    color:var(--text);
+
+}
+
+.status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    background:var(--green-light);
+
+    color:#1a9365;
+
+    padding:
+        8px 13px;
+
+    border-radius:20px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+}
+
+.status-dot{
+
+    width:7px;
+    height:7px;
+
+    background:var(--green);
+
+    border-radius:50%;
+
+}
+
+
+/* ================= CONTENT ================= */
+
+.content{
+
+    padding:
+        30px 34px 45px;
+
+    max-width:1450px;
+
+    margin:auto;
+
+}
+
+
+/* ================= HERO ================= */
+
+.hero{
+
+    background:
+
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(255,255,255,.18),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            135deg,
+            #7657e8,
+            #684bd4 55%,
+            #5f46c7
+        );
+
+    color:white;
+
+    border-radius:26px;
+
+    padding:
+        38px 42px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    margin-bottom:24px;
+
+}
+
+.hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:230px;
+    height:230px;
+
+    border:
+        35px solid
+        rgba(255,255,255,.08);
+
+    border-radius:50%;
+
+    right:-70px;
+    top:-90px;
+
+}
+
+.hero-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    padding:
+        7px 12px;
+
+    border-radius:20px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+.hero h1{
+
+    font-size:31px;
+
+    line-height:1.2;
+
+    margin-bottom:10px;
+
+    max-width:750px;
+
+}
+
+.hero p{
+
+    font-size:14px;
+
+    line-height:1.7;
+
+    color:
+        rgba(255,255,255,.83);
+
+    max-width:750px;
+
+}
+
+
+/* ================= WORKSPACE ================= */
+
+.workspace{
+
+    display:grid;
+
+    grid-template-columns:
+        340px
+        minmax(0,1fr);
+
+    gap:20px;
+
+}
+
+
+/* ================= CARD ================= */
+
+.card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(39,35,65,.035);
+
+}
+
+
+/* ================= INPUT PANEL ================= */
+
+.input-card{
+
+    padding:23px;
+
+}
+
+.card-heading{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:21px;
+
+}
+
+.card-heading h2{
+
+    font-size:16px;
+
+}
+
+.card-heading p{
+
+    color:var(--muted);
+
+    font-size:10px;
+
+    margin-top:5px;
+
+}
+
+.ai-label{
+
+    background:var(--purple-light);
+
+    color:var(--purple);
+
+    padding:
+        7px 9px;
+
+    border-radius:9px;
+
+    font-size:9px;
+
+    font-weight:800;
+
+}
+
+.field{
+
+    margin-bottom:17px;
+
+}
+
+.field label{
+
+    display:block;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    margin-bottom:7px;
+
+}
+
+.field textarea{
+
+    width:100%;
+
+    min-height:175px;
+
+    resize:vertical;
+
+    border:
+        1px solid var(--border);
+
+    background:#fbfbfd;
+
+    border-radius:12px;
+
+    padding:12px;
+
+    font-size:11px;
+
+    line-height:1.6;
+
+    outline:none;
+
+}
+
+.field textarea:focus{
+
+    border-color:#9d89ef;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(118,87,232,.08);
+
+    background:white;
+
+}
+
+.select-row{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px;
+
+}
+
+.field select{
+
+    width:100%;
+
+    border:
+        1px solid var(--border);
+
+    background:#fbfbfd;
+
+    border-radius:11px;
+
+    padding:11px;
+
+    font-size:10px;
+
+    outline:none;
+
+}
+
+.field select:focus{
+
+    border-color:#9d89ef;
+
+}
+
+.generate-btn{
+
+    width:100%;
+
+    border:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c5bea,
+            #6548d2
+        );
+
+    color:white;
+
+    border-radius:12px;
+
+    padding:13px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    box-shadow:
+        0 8px 20px
+        rgba(105,76,215,.2);
+
+}
+
+.generate-btn:hover{
+
+    transform:translateY(-1px);
+
+}
+
+.small-actions{
+
+    display:flex;
+
+    gap:8px;
+
+    margin-top:9px;
+
+}
+
+.small-btn{
+
+    flex:1;
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    color:#646377;
+
+    border-radius:10px;
+
+    padding:9px;
+
+    font-size:10px;
+
+    font-weight:700;
+
+}
+
+.small-btn:hover{
+
+    color:var(--purple);
+
+    background:#faf9ff;
+
+}
+
+.example{
+
+    margin-top:18px;
+
+    background:#faf9fd;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:12px;
+
+    padding:13px;
+
+}
+
+.example-title{
+
+    font-size:10px;
+
+    font-weight:800;
+
+    margin-bottom:7px;
+
+}
+
+.example p{
+
+    font-size:9px;
+
+    line-height:1.6;
+
+    color:var(--muted);
+
+}
+
+
+/* ================= QUIZ PANEL ================= */
+
+.quiz-card{
+
+    padding:25px;
+
+    min-width:0;
+
+}
+
+.quiz-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.quiz-header h2{
+
+    font-size:16px;
+
+}
+
+.question-counter{
+
+    background:var(--purple-light);
+
+    color:var(--purple);
+
+    padding:
+        7px 10px;
+
+    border-radius:9px;
+
+    font-size:10px;
+
+    font-weight:800;
+
+}
+
+
+/* ================= PROGRESS ================= */
+
+.progress-area{
+
+    margin-bottom:23px;
+
+}
+
+.progress-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:10px;
+
+    color:var(--muted);
+
+    margin-bottom:7px;
+
+}
+
+.progress{
+
+    height:7px;
+
+    background:#eeecf4;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+}
+
+.progress-bar{
+
+    height:100%;
+
+    width:0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7657e8,
+            #28b681
+        );
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+
+/* ================= QUESTION ================= */
+
+.question-box{
+
+    background:
+        linear-gradient(
+            135deg,
+            #faf9ff,
+            #f9fcfb
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:22px;
+
+    margin-bottom:16px;
+
+}
+
+.question-label{
+
+    display:inline-block;
+
+    color:var(--purple);
+
+    background:var(--purple-light);
+
+    padding:
+        6px 9px;
+
+    border-radius:8px;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    margin-bottom:13px;
+
+}
+
+.question-box h3{
+
+    font-size:18px;
+
+    line-height:1.5;
+
+}
+
+
+/* ================= OPTIONS ================= */
+
+.options{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:12px;
+
+}
+
+.option{
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    border-radius:13px;
+
+    padding:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+    text-align:left;
+
+    transition:.2s;
+
+}
+
+.option:hover{
+
+    border-color:#a797eb;
+
+    background:#fbfaff;
+
+    transform:translateY(-1px);
+
+}
+
+.option-letter{
+
+    width:30px;
+    height:30px;
+
+    border-radius:9px;
+
+    background:#f1eff7;
+
+    color:#69677a;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    flex-shrink:0;
+
+}
+
+.option-text{
+
+    font-size:11px;
+
+    font-weight:600;
+
+    line-height:1.4;
+
+}
+
+.option.correct{
+
+    background:var(--green-light);
+
+    border-color:#7bd6b5;
+
+}
+
+.option.correct .option-letter{
+
+    background:var(--green);
+
+    color:white;
+
+}
+
+.option.wrong{
+
+    background:var(--red-light);
+
+    border-color:#f0a2aa;
+
+}
+
+.option.wrong .option-letter{
+
+    background:var(--red);
+
+    color:white;
+
+}
+
+
+/* ================= FEEDBACK ================= */
+
+.feedback{
+
+    display:none;
+
+    border-radius:13px;
+
+    padding:13px 15px;
+
+    margin-top:16px;
+
+    font-size:10px;
+
+    line-height:1.6;
+
+}
+
+.feedback.show{
+
+    display:block;
+
+}
+
+.feedback.correct{
+
+    background:var(--green-light);
+
+    color:#187951;
+
+}
+
+.feedback.wrong{
+
+    background:var(--red-light);
+
+    color:#a23e4a;
+
+}
+
+
+/* ================= QUIZ ACTION ================= */
+
+.quiz-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:9px;
+
+    margin-top:17px;
+
+}
+
+.next-btn{
+
+    border:0;
+
+    background:var(--purple);
+
+    color:white;
+
+    border-radius:10px;
+
+    padding:
+        11px 17px;
+
+    font-size:10px;
+
+    font-weight:800;
+
+}
+
+.next-btn:disabled{
+
+    opacity:.45;
+
+    cursor:not-allowed;
+
+}
+
+
+/* ================= EMPTY STATE ================= */
+
+.empty-state{
+
+    min-height:460px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:30px;
+
+}
+
+.empty-icon{
+
+    width:70px;
+    height:70px;
+
+    border-radius:22px;
+
+    background:var(--purple-light);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:31px;
+
+    margin:
+        0 auto 15px;
+
+}
+
+.empty-state h3{
+
+    font-size:17px;
+
+    margin-bottom:7px;
+
+}
+
+.empty-state p{
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    line-height:1.7;
+
+    max-width:390px;
+
+}
+
+
+/* ================= RESULT ================= */
+
+.result{
+
+    display:none;
+
+    text-align:center;
+
+    padding:35px 25px;
+
+}
+
+.result.show{
+
+    display:block;
+
+}
+
+.score-circle{
+
+    width:130px;
+    height:130px;
+
+    border-radius:50%;
+
+    margin:
+        0 auto 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7657e8,
+            #28b681
+        );
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+
+    box-shadow:
+        0 15px 35px
+        rgba(118,87,232,.22);
+
+}
+
+.score-circle strong{
+
+    font-size:30px;
+
+}
+
+.score-circle span{
+
+    font-size:9px;
+
+    opacity:.8;
+
+}
+
+.result h2{
+
+    font-size:22px;
+
+    margin-bottom:7px;
+
+}
+
+.result p{
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    line-height:1.6;
+
+}
+
+.restart-btn{
+
+    margin-top:20px;
+
+    border:0;
+
+    background:var(--purple);
+
+    color:white;
+
+    border-radius:11px;
+
+    padding:
+        11px 18px;
+
+    font-size:10px;
+
+    font-weight:800;
+
+}
+
+
+/* ================= LOADING ================= */
+
+.loading{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(255,255,255,.78);
+
+    backdrop-filter:
+        blur(5px);
+
+    z-index:100;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.loading.show{
+
+    display:flex;
+
+}
+
+.loading-card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:28px 35px;
+
+    text-align:center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(30,25,55,.15);
+
+}
+
+.spinner{
+
+    width:38px;
+    height:38px;
+
+    border:
+        4px solid #eeeafa;
+
+    border-top-color:
+        var(--purple);
+
+    border-radius:50%;
+
+    animation:
+        spin .8s linear infinite;
+
+    margin:
+        0 auto 13px;
+
+}
+
+.loading-card strong{
+
+    font-size:13px;
+
+}
+
+.loading-card p{
+
+    font-size:10px;
+
+    color:var(--muted);
+
+    margin-top:5px;
+
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* ================= TOAST ================= */
+
+.toast{
+
+    position:fixed;
+
+    right:25px;
+    bottom:25px;
+
+    background:#222132;
+
+    color:white;
+
+    padding:
+        12px 17px;
+
+    border-radius:11px;
+
+    font-size:11px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.2);
+
+    transform:
+        translateY(80px);
+
+    opacity:0;
+
+    transition:.3s;
+
+    z-index:110;
+
+}
+
+.toast.show{
+
+    transform:
+        translateY(0);
+
+    opacity:1;
+
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1000px){
+
+    .workspace{
+
+        grid-template-columns:
+            300px
+            minmax(0,1fr);
+
+    }
+
+    .options{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:850px){
+
+    .sidebar{
+
+        width:72px;
+
+        padding:
+            20px 9px;
+
+    }
+
+    .logo{
+
+        justify-content:center;
+
+        padding:
+            0 0 25px;
+
+    }
+
+    .logo strong,
+    .menu-title,
+    .nav-item span,
+    .assistant-card{
+
+        display:none;
+
+    }
+
+    .nav-item{
+
+        justify-content:center;
+
+        padding:
+            12px 5px;
+
+    }
+
+    .main{
+
+        margin-left:72px;
+
+    }
+
+    .workspace{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .topbar{
+
+        padding:
+            0 16px;
+
+    }
+
+    .content{
+
+        padding:
+            18px 14px 35px;
+
+    }
+
+    .hero{
+
+        padding:
+            27px 24px;
+
+        border-radius:20px;
+
+    }
+
+    .hero h1{
+
+        font-size:24px;
+
+    }
+
+    .select-row{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .options{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            ✦
+        </div>
+
+        <strong>
+            AI <span>StudyLab</span>
+        </strong>
+
+    </div>
+
+
+    <div class="menu-title">
+        AI Learning
+    </div>
+
+
+    <a
+        class="nav-item"
+        href="../task-01-resume-builder/index.html"
+    >
+
+        <div class="nav-icon">
+            📄
+        </div>
+
+        <span>
+            Resume Builder
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-02-notes-generator/index.html"
+    >
+
+        <div class="nav-icon">
+            📝
+        </div>
+
+        <span>
+            Notes Generator
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-03-ppt-generator/index.html"
+    >
+
+        <div class="nav-icon">
+            📊
+        </div>
+
+        <span>
+            Presentation
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-04-mind-map/index.html"
+    >
+
+        <div class="nav-icon">
+            🧠
+        </div>
+
+        <span>
+            Mind Map
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-05-google-sheets/index.html"
+    >
+
+        <div class="nav-icon">
+            📋
+        </div>
+
+        <span>
+            Google Sheets
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item active"
+        href="#"
+    >
+
+        <div class="nav-icon">
+            ❓
+        </div>
+
+        <span>
+            AI Quiz
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-07-ai-chatbot/index.html"
+    >
+
+        <div class="nav-icon">
+            💬
+        </div>
+
+        <span>
+            Doubt Solver
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-08-flashcards/index.html"
+    >
+
+        <div class="nav-icon">
+            🎴
+        </div>
+
+        <span>
+            Flashcards
+        </span>
+
+    </a>
+
+
+    <div class="assistant-card">
+
+        <div class="assistant-top">
+
+            <div class="assistant-avatar">
+                🤖
+            </div>
+
+            <strong>
+                AI Quiz Assistant
+            </strong>
+
+        </div>
+
+        <p>
+            Turn your study material
+            into interactive MCQs and
+            test your knowledge.
+        </p>
+
+    </div>
+
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+
+<header class="topbar">
+
+
+    <div class="breadcrumb">
+
+        AI StudyLab
+        &nbsp;/&nbsp;
+
+        <strong>
+            AI Quiz Generator
+        </strong>
+
+    </div>
+
+
+    <div class="status">
+
+        <div class="status-dot"></div>
+
+        AI Studio Ready
+
+    </div>
+
+
+</header>
+
+
+<section class="content">
+
+
+<!-- ================= HERO ================= -->
+
+<div class="hero">
+
+
+    <div class="hero-badge">
+        ✨ AI-Powered Learning
+    </div>
+
+
+    <h1>
+        Turn Your Study Material
+        Into an Interactive Quiz
+    </h1>
+
+
+    <p>
+        Enter a topic or paste your notes.
+        AI creates multiple-choice questions
+        so you can practice, get instant
+        feedback and track your score.
+    </p>
+
+
+</div>
+
+
+<!-- ================= WORKSPACE ================= -->
+
+<div class="workspace">
+
+
+<!-- ================= INPUT ================= -->
+
+<div class="card input-card">
+
+
+    <div class="card-heading">
+
+
+        <div>
+
+            <h2>
+                Create Your Quiz
+            </h2>
+
+            <p>
+                Give AI your study material.
+            </p>
+
+        </div>
+
+
+        <div class="ai-label">
+            AI GENERATOR
+        </div>
+
+
+    </div>
+
+
+    <div class="field">
+
+
+        <label>
+            Topic / Study Material
+        </label>
+
+
+        <textarea
+            id="topic"
+            placeholder="Example: Explain the CIA Triad, cryptography, DES, RSA and digital signatures..."
+        ></textarea>
+
+
+    </div>
+
+
+    <div class="select-row">
+
+
+        <div class="field">
+
+            <label>
+                Questions
+            </label>
+
+            <select id="questionCount">
+
+                <option value="5">
+                    5 Questions
+                </option>
+
+                <option value="8">
+                    8 Questions
+                </option>
+
+                <option value="10">
+                    10 Questions
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Difficulty
+            </label>
+
+            <select id="difficulty">
+
+                <option value="Easy">
+                    Easy
+                </option>
+
+                <option value="Medium" selected>
+                    Medium
+                </option>
+
+                <option value="Hard">
+                    Hard
+                </option>
+
+            </select>
+
+        </div>
+
+
+    </div>
+
+
+    <button
+        class="generate-btn"
+        onclick="generateQuiz()"
+    >
+        ✨ Generate AI Quiz
+    </button>
+
+
+    <div class="small-actions">
+
+
+        <button
+            class="small-btn"
+            onclick="loadSample()"
+        >
+            Load Sample
+        </button>
+
+
+        <button
+            class="small-btn"
+            onclick="clearQuiz()"
+        >
+            Clear
+        </button>
+
+
+    </div>
+
+
+    <div class="example">
+
+
+        <div class="example-title">
+            💡 Example
+        </div>
+
+
+        <p>
+            Try entering:
+            "Information Security —
+            CIA Triad, DES, RSA, digital
+            signatures and key management."
+        </p>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= QUIZ ================= -->
+
+<div class="card quiz-card">
+
+
+    <div id="emptyState"
+         class="empty-state">
+
+        <div>
+
+            <div class="empty-icon">
+                🧠
+            </div>
+
+
+            <h3>
+                Your AI Quiz Will Appear Here
+            </h3>
+
+
+            <p>
+                Enter your topic on the left
+                and click Generate AI Quiz.
+                You will receive interactive
+                MCQs with instant feedback.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div id="quizArea"
+         style="display:none;">
+
+
+        <div class="quiz-header">
+
+
+            <h2>
+                Practice Quiz
+            </h2>
+
+
+            <div
+                class="question-counter"
+                id="questionCounter"
+            >
+                Question 1 of 5
+            </div>
+
+
+        </div>
+
+
+        <div class="progress-area">
+
+
+            <div class="progress-top">
+
+                <span>
+                    Your Progress
+                </span>
+
+                <span id="progressText">
+                    0%
+                </span>
+
+            </div>
+
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    id="progressBar"
+                ></div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="question-box">
+
+
+            <div class="question-label">
+                QUESTION
+            </div>
+
+
+            <h3 id="questionText">
+                Question will appear here
+            </h3>
+
+
+        </div>
+
+
+        <div
+            class="options"
+            id="options"
+        ></div>
+
+
+        <div
+            class="feedback"
+            id="feedback"
+        ></div>
+
+
+        <div class="quiz-actions">
+
+
+            <button
+                class="next-btn"
+                id="nextBtn"
+                onclick="nextQuestion()"
+                disabled
+            >
+                Next Question →
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+    <div
+        class="result"
+        id="result"
+    >
+
+
+        <div class="score-circle">
+
+            <strong id="score">
+                0/5
+            </strong>
+
+            <span>
+                SCORE
+            </span>
+
+        </div>
+
+
+        <h2>
+            Quiz Completed! 🎉
+        </h2>
+
+
+        <p id="resultMessage">
+            Great work!
+        </p>
+
+
+        <button
+            class="restart-btn"
+            onclick="restartQuiz()"
+        >
+            ↻ Restart Quiz
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+</main>
+
+
+<!-- ================= LOADING ================= -->
+
+<div
+    class="loading"
+    id="loading"
+>
+
+
+    <div class="loading-card">
+
+
+        <div class="spinner"></div>
+
+
+        <strong>
+            AI is generating your quiz...
+        </strong>
+
+
+        <p>
+            Creating questions and answers
+        </p>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+
+/* ==================================================
+   QUIZ DATA
+================================================== */
+
+let quizData = [];
+
+let currentQuestion = 0;
+
+let score = 0;
+
+let answered = false;
+
+
+/* ==================================================
+   GENERATE QUIZ
+================================================== */
+
+function generateQuiz(){
+
+    const topic =
+        document
+            .getElementById("topic")
+            .value
+            .trim();
+
+
+    const count =
+        Number(
+            document
+                .getElementById("questionCount")
+                .value
+        );
+
+
+    const difficulty =
+        document
+            .getElementById("difficulty")
+            .value;
+
+
+    if(!topic){
+
+        showToast(
+            "Please enter a topic or study material."
+        );
+
+        return;
+
+    }
+
+
+    const prompt = `
+
+Create an interactive multiple-choice quiz.
+
+Topic:
+${topic}
+
+Requirements:
+
+- Generate ${count} questions.
+- Difficulty: ${difficulty}.
+- Each question must have exactly 4 options.
+- Only one option should be correct.
+- Include a short explanation.
+- Questions should test understanding.
+- Avoid duplicate questions.
+- Keep language clear and student-friendly.
+- Return structured JSON.
+
+Required format:
+
+[
+  {
+    "question": "Question text",
+    "options": [
+      "Option A",
+      "Option B",
+      "Option C",
+      "Option D"
+    ],
+    "answer": 0,
+    "explanation": "Short explanation"
+  }
+]
+
+`;
+
+
+    console.log(
+        "AI Quiz Prompt:",
+        prompt
+    );
+
+
+    showLoading(true);
+
+
+    setTimeout(
+        function(){
+
+            quizData =
+                createDemoQuiz(
+                    topic,
+                    count
+                );
+
+
+            currentQuestion = 0;
+
+            score = 0;
+
+            answered = false;
+
+
+            showLoading(false);
+
+            startQuiz();
+
+        },
+        1100
+    );
+
+}
+
+
+/* ==================================================
+   DEMO QUIZ
+================================================== */
+
+function createDemoQuiz(
+    topic,
+    count
+){
+
+    const informationSecurityQuiz = [
+
+        {
+            question:
+                "Which three principles form the CIA Triad?",
+
+            options:[
+                "Confidentiality, Integrity and Availability",
+                "Control, Inspection and Authentication",
+                "Confidentiality, Inspection and Authorization",
+                "Control, Integrity and Authentication"
+            ],
+
+            answer:0,
+
+            explanation:
+                "The CIA Triad represents Confidentiality, Integrity and Availability."
+        },
+
+
+        {
+            question:
+                "What is the main purpose of encryption?",
+
+            options:[
+                "To increase file size",
+                "To protect information from unauthorized access",
+                "To remove duplicate data",
+                "To improve internet speed"
+            ],
+
+            answer:1,
+
+            explanation:
+                "Encryption transforms readable information into protected ciphertext."
+        },
+
+
+        {
+            question:
+                "Which algorithm is a symmetric-key algorithm?",
+
+            options:[
+                "RSA",
+                "Diffie-Hellman",
+                "DES",
+                "DSA"
+            ],
+
+            answer:2,
+
+            explanation:
+                "DES is a symmetric-key block cipher."
+        },
+
+
+        {
+            question:
+                "RSA is primarily based on which mathematical problem?",
+
+            options:[
+                "Integer factorization",
+                "Sorting",
+                "Matrix multiplication",
+                "Linear regression"
+            ],
+
+            answer:0,
+
+            explanation:
+                "RSA security is based on the difficulty of factoring large composite integers."
+        },
+
+
+        {
+            question:
+                "What does a digital signature primarily provide?",
+
+            options:[
+                "More storage",
+                "Authentication and integrity",
+                "Faster downloads",
+                "Data compression"
+            ],
+
+            answer:1,
+
+            explanation:
+                "Digital signatures help verify the sender and detect modification of signed data."
+        },
+
+
+        {
+            question:
+                "Which protocol is used for secure key exchange?",
+
+            options:[
+                "Diffie-Hellman",
+                "HTML",
+                "FTP",
+                "CSS"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Diffie-Hellman allows parties to establish a shared secret over an insecure channel."
+        },
+
+
+        {
+            question:
+                "What is PGP commonly used for?",
+
+            options:[
+                "Image editing",
+                "Email and file encryption",
+                "Database indexing",
+                "Web page styling"
+            ],
+
+            answer:1,
+
+            explanation:
+                "PGP is commonly used to protect email communication and files."
+        },
+
+
+        {
+            question:
+                "What does PKI stand for?",
+
+            options:[
+                "Private Key Integration",
+                "Public Key Infrastructure",
+                "Protected Knowledge Interface",
+                "Public Knowledge Internet"
+            ],
+
+            answer:1,
+
+            explanation:
+                "PKI stands for Public Key Infrastructure."
+        },
+
+
+        {
+            question:
+                "Which security property ensures data is not changed without authorization?",
+
+            options:[
+                "Availability",
+                "Confidentiality",
+                "Integrity",
+                "Scalability"
+            ],
+
+            answer:2,
+
+            explanation:
+                "Integrity ensures that information remains accurate and unaltered."
+        },
+
+
+        {
+            question:
+                "Which security property ensures authorized users can access systems when needed?",
+
+            options:[
+                "Availability",
+                "Integrity",
+                "Confidentiality",
+                "Encryption"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Availability means systems and information are accessible when required."
+        }
+
+    ];
+
+
+    if(
+        topic
+            .toLowerCase()
+            .includes("security")
+        ||
+        topic
+            .toLowerCase()
+            .includes("crypt")
+        ||
+        topic
+            .toLowerCase()
+            .includes("rsa")
+        ||
+        topic
+            .toLowerCase()
+            .includes("cia")
+    ){
+
+        return informationSecurityQuiz
+            .slice(0,count);
+
+    }
+
+
+    return createGenericQuiz(
+        topic,
+        count
+    );
+
+}
+
+
+/* ==================================================
+   GENERIC DEMO QUIZ
+================================================== */
+
+function createGenericQuiz(
+    topic,
+    count
+){
+
+    const questions = [
+
+        {
+            question:
+                `Which statement best describes ${topic}?`,
+
+            options:[
+                `${topic} is a concept used to understand and solve problems.`,
+                `${topic} is only used for entertainment.`,
+                `${topic} cannot be applied in real situations.`,
+                `${topic} is unrelated to learning.`
+            ],
+
+            answer:0,
+
+            explanation:
+                `${topic} can be studied as a concept and applied to relevant problems.`
+        },
+
+
+        {
+            question:
+                `What is an important goal when studying ${topic}?`,
+
+            options:[
+                "Memorizing without understanding",
+                "Understanding important concepts and applications",
+                "Ignoring examples",
+                "Avoiding practice"
+            ],
+
+            answer:1,
+
+            explanation:
+                "Understanding concepts and applications makes learning more useful."
+        },
+
+
+        {
+            question:
+                `Which approach is useful for learning ${topic}?`,
+
+            options:[
+                "Practice and revision",
+                "Never reviewing",
+                "Ignoring difficult concepts",
+                "Only reading the title"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Practice and revision help reinforce learning."
+        },
+
+
+        {
+            question:
+                `Why are examples useful when learning ${topic}?`,
+
+            options:[
+                "They make concepts easier to understand",
+                "They remove the need to study",
+                "They make all answers identical",
+                "They prevent practice"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Examples connect theoretical ideas with practical understanding."
+        },
+
+
+        {
+            question:
+                `What should a student do when a concept in ${topic} is unclear?`,
+
+            options:[
+                "Skip the entire subject",
+                "Review the concept and ask questions",
+                "Stop practicing",
+                "Ignore the problem"
+            ],
+
+            answer:1,
+
+            explanation:
+                "Reviewing the concept and asking questions helps resolve doubts."
+        },
+
+
+        {
+            question:
+                `Which method can help remember important ideas from ${topic}?`,
+
+            options:[
+                "Revision",
+                "Ignoring notes",
+                "Avoiding questions",
+                "Never practicing"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Regular revision helps strengthen memory."
+        },
+
+
+        {
+            question:
+                `What is the benefit of testing yourself on ${topic}?`,
+
+            options:[
+                "It identifies areas that need more practice",
+                "It removes the need for learning",
+                "It guarantees every answer is correct",
+                "It prevents revision"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Self-testing helps identify strengths and areas that need improvement."
+        },
+
+
+        {
+            question:
+                `Which activity can improve understanding of ${topic}?`,
+
+            options:[
+                "Applying concepts to examples",
+                "Avoiding examples",
+                "Skipping difficult topics",
+                "Only reading once"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Applying concepts to examples improves practical understanding."
+        },
+
+
+        {
+            question:
+                `What is a useful study habit for ${topic}?`,
+
+            options:[
+                "Consistent practice",
+                "Last-minute learning only",
+                "Never revising",
+                "Avoiding questions"
+            ],
+
+            answer:0,
+
+            explanation:
+                "Consistent practice is useful for building understanding."
+        },
+
+
+        {
+            question:
+                `What is the purpose of a quiz about ${topic}?`,
+
+            options:[
+                "To test understanding",
+                "To replace all studying",
+                "To avoid learning",
+                "To make every answer random"
+            ],
+
+            answer:0,
+
+            explanation:
+                "A quiz provides a way to test understanding and identify gaps."
+        }
+
+    ];
+
+
+    return questions.slice(
+        0,
+        count
+    );
+
+}
+
+
+/* ==================================================
+   START QUIZ
+================================================== */
+
+function startQuiz(){
+
+    document
+        .getElementById("emptyState")
+        .style.display = "none";
+
+
+    document
+        .getElementById("result")
+        .classList.remove("show");
+
+
+    document
+        .getElementById("quizArea")
+        .style.display = "block";
+
+
+    showQuestion();
+
+}
+
+
+/* ==================================================
+   SHOW QUESTION
+================================================== */
+
+function showQuestion(){
+
+    const question =
+        quizData[currentQuestion];
+
+
+    answered = false;
+
+
+    document
+        .getElementById("questionCounter")
+        .textContent =
+            `Question ${currentQuestion + 1} of ${quizData.length}`;
+
+
+    document
+        .getElementById("questionText")
+        .textContent =
+            question.question;
+
+
+    const progress =
+        Math.round(
+            (
+                currentQuestion /
+                quizData.length
+            ) * 100
+        );
+
+
+    document
+        .getElementById("progressBar")
+        .style.width =
+            progress + "%";
+
+
+    document
+        .getElementById("progressText")
+        .textContent =
+            progress + "%";
+
+
+    const options =
+        document
+            .getElementById("options");
+
+
+    options.innerHTML = "";
+
+
+    const letters =
+        ["A","B","C","D"];
+
+
+    question.options.forEach(
+        function(option,index){
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "option";
+
+
+            button.innerHTML = `
+
+                <span class="option-letter">
+                    ${letters[index]}
+                </span>
+
+                <span class="option-text">
+                    ${escapeHTML(option)}
+                </span>
+
+            `;
+
+
+            button.onclick =
+                function(){
+
+                    selectAnswer(
+                        index,
+                        button
+                    );
+
+                };
+
+
+            options.appendChild(
+                button
+            );
+
+        }
+    );
+
+
+    const feedback =
+        document.getElementById(
+            "feedback"
+        );
+
+
+    feedback.className =
+        "feedback";
+
+
+    feedback.textContent = "";
+
+
+    document
+        .getElementById("nextBtn")
+        .disabled = true;
+
+
+    document
+        .getElementById("nextBtn")
+        .textContent =
+            currentQuestion ===
+            quizData.length - 1
+                ? "Finish Quiz →"
+                : "Next Question →";
+
+}
+
+
+/* ==================================================
+   SELECT ANSWER
+================================================== */
+
+function selectAnswer(
+    selected,
+    selectedButton
+){
+
+    if(answered){
+        return;
+    }
+
+
+    answered = true;
+
+
+    const question =
+        quizData[currentQuestion];
+
+
+    const optionButtons =
+        document.querySelectorAll(
+            ".option"
+        );
+
+
+    optionButtons.forEach(
+        function(button,index){
+
+            button.disabled = true;
+
+
+            if(
+                index === question.answer
+            ){
+
+                button.classList.add(
+                    "correct"
+                );
+
+            }
+
+        }
+    );
+
+
+    const feedback =
+        document.getElementById(
+            "feedback"
+        );
+
+
+    if(
+        selected ===
+        question.answer
+    ){
+
+        score++;
+
+
+        selectedButton.classList.add(
+            "correct"
+        );
+
+
+        feedback.className =
+            "feedback correct show";
+
+
+        feedback.innerHTML =
+            `<strong>✓ Correct!</strong><br>${escapeHTML(question.explanation)}`;
+
+    }
+    else{
+
+        selectedButton.classList.add(
+            "wrong"
+        );
+
+
+        feedback.className =
+            "feedback wrong show";
+
+
+        feedback.innerHTML =
+            `<strong>✕ Incorrect.</strong><br>${escapeHTML(question.explanation)}`;
+
+    }
+
+
+    document
+        .getElementById("nextBtn")
+        .disabled = false;
+
+}
+
+
+/* ==================================================
+   NEXT QUESTION
+================================================== */
+
+function nextQuestion(){
+
+    if(!answered){
+        return;
+    }
+
+
+    if(
+        currentQuestion <
+        quizData.length - 1
+    ){
+
+        currentQuestion++;
+
+        showQuestion();
+
+        return;
+
+    }
+
+
+    finishQuiz();
+
+}
+
+
+/* ==================================================
+   FINISH QUIZ
+================================================== */
+
+function finishQuiz(){
+
+    document
+        .getElementById("quizArea")
+        .style.display = "none";
+
+
+    const result =
+        document.getElementById(
+            "result"
+        );
+
+
+    result.classList.add(
+        "show"
+    );
+
+
+    document
+        .getElementById("score")
+        .textContent =
+            `${score}/${quizData.length}`;
+
+
+    const percentage =
+        Math.round(
+            (
+                score /
+                quizData.length
+            ) * 100
+        );
+
+
+    let message;
+
+
+    if(percentage >= 80){
+
+        message =
+            `Excellent work! You scored ${percentage}%. Your understanding is strong.`;
+
+    }
+    else if(percentage >= 50){
+
+        message =
+            `Good effort! You scored ${percentage}%. Review the missed questions and try again.`;
+
+    }
+    else{
+
+        message =
+            `Keep practicing! You scored ${percentage}%. Review the topic and attempt the quiz again.`;
+
+    }
+
+
+    document
+        .getElementById("resultMessage")
+        .textContent =
+            message;
+
+}
+
+
+/* ==================================================
+   RESTART
+================================================== */
+
+function restartQuiz(){
+
+    currentQuestion = 0;
+
+    score = 0;
+
+    answered = false;
+
+    startQuiz();
+
+}
+
+
+/* ==================================================
+   LOAD SAMPLE
+================================================== */
+
+function loadSample(){
+
+    document
+        .getElementById("topic")
+        .value =
+        `Information Security: CIA Triad, cryptography, DES, RSA, digital signatures, Diffie-Hellman, PGP and PKI.`;
+
+
+    document
+        .getElementById("questionCount")
+        .value = "5";
+
+
+    document
+        .getElementById("difficulty")
+        .value = "Medium";
+
+
+    showToast(
+        "Sample topic loaded."
+    );
+
+}
+
+
+/* ==================================================
+   CLEAR
+================================================== */
+
+function clearQuiz(){
+
+    document
+        .getElementById("topic")
+        .value = "";
+
+
+    quizData = [];
+
+    currentQuestion = 0;
+
+    score = 0;
+
+    answered = false;
+
+
+    document
+        .getElementById("quizArea")
+        .style.display = "none";
+
+
+    document
+        .getElementById("result")
+        .classList.remove("show");
+
+
+    document
+        .getElementById("emptyState")
+        .style.display = "flex";
+
+
+    showToast(
+        "Quiz cleared."
+    );
+
+}
+
+
+/* ==================================================
+   LOADING
+================================================== */
+
+function showLoading(show){
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+
+    if(show){
+
+        loading.classList.add(
+            "show"
+        );
+
+    }
+    else{
+
+        loading.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   TOAST
+================================================== */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function(){
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        3000
+    );
+
+}
+
+
+/* ==================================================
+   ESCAPE HTML
+================================================== */
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>
