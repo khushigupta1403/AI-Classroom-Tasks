@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Classroom Tasks</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f5ff;
+            color: #25223a;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6d4aff, #8b5cf6);
+            color: white;
+            text-align: center;
+            padding: 65px 20px;
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            font-size: 42px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 18px;
+            opacity: 0.92;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .tasks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e7e2ff;
+            border-radius: 20px;
+            padding: 26px;
+            box-shadow: 0 8px 25px rgba(50, 40, 100, 0.08);
+        }
+
+        .number {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #eee9ff;
+            color: #6846ed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 17px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin: 0 0 10px;
+        }
+
+        .card p {
+            color: #6d6980;
+            line-height: 1.6;
+            min-height: 52px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            background: #6d4aff;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #5837df;
+        }
+
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            color: #77728a;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 32px;
+            }
+
+            header p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>AI Classroom Tasks</h1>
+    <p>
+        10 practical AI-powered websites built with HTML, CSS, JavaScript and Gemini AI
+    </p>
+</header>
+
+<div class="container">
+
+    <div class="tasks">
+
+        <div class="card">
+            <div class="number">01</div>
+            <h2>AI Resume Builder</h2>
+            <p>Create a professional resume using Gemini AI.</p>
+            <a class="btn" href="./task-01-resume-builder/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">02</div>
+            <h2>AI Notes Generator</h2>
+            <p>Convert topics and chapters into structured notes.</p>
+            <a class="btn" href="./task-02-notes-generator/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">03</div>
+            <h2>AI PPT Generator</h2>
+            <p>Generate presentation slides using Gemini AI.</p>
+            <a class="btn" href="./task-03-ppt-generator/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">04</div>
+            <h2>AI Mind Map</h2>
+            <p>Turn syllabus topics into interactive mind maps.</p>
+            <a class="btn" href="./task-04-mind-map/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">05</div>
+            <h2>Google Sheets Backend</h2>
+            <p>Use Google Sheets as a live backend database.</p>
+            <a class="btn" href="./task-05-google-sheets/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">06</div>
+            <h2>AI Quiz Generator</h2>
+            <p>Generate interactive MCQ quizzes with AI.</p>
+            <a class="btn" href="./task-06-ai-quiz/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">07</div>
+            <h2>AI Doubt Solver</h2>
+            <p>Ask subject questions and receive AI explanations.</p>
+            <a class="btn" href="./task-07-ai-chatbot/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">08</div>
+            <h2>AI Flashcards</h2>
+            <p>Create interactive flashcards for revision.</p>
+            <a class="btn" href="./task-08-flashcards/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">09</div>
+            <h2>AI Study Planner</h2>
+            <p>Generate a personalized study timetable.</p>
+            <a class="btn" href="./task-09-study-planner/">Open Task</a>
+        </div>
+
+        <div class="card">
+            <div class="number">10</div>
+            <h2>OCR Notes Summarizer</h2>
+            <p>Extract text from photos and summarize it with AI.</p>
+            <a class="btn" href="./task-10-ocr-summarizer/">Open Task</a>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    AI Classroom Tasks • Built with Gemini AI
+</footer>
+
+</body>
+</html>
