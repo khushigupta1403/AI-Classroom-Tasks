@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1636,7 +1636,7 @@ button{
     <div class="logo">
 
         <div class="logo-icon">
-            ✦
+            âœ¦
         </div>
 
         <strong>
@@ -1657,7 +1657,7 @@ button{
     >
 
         <div class="nav-icon">
-            📄
+            ðŸ“„
         </div>
 
         <span>
@@ -1673,7 +1673,7 @@ button{
     >
 
         <div class="nav-icon">
-            📝
+            ðŸ“
         </div>
 
         <span>
@@ -1689,7 +1689,7 @@ button{
     >
 
         <div class="nav-icon">
-            📊
+            ðŸ“Š
         </div>
 
         <span>
@@ -1705,7 +1705,7 @@ button{
     >
 
         <div class="nav-icon">
-            🧠
+            ðŸ§ 
         </div>
 
         <span>
@@ -1721,7 +1721,7 @@ button{
     >
 
         <div class="nav-icon">
-            📋
+            ðŸ“‹
         </div>
 
         <span>
@@ -1737,7 +1737,7 @@ button{
     >
 
         <div class="nav-icon">
-            ❓
+            â“
         </div>
 
         <span>
@@ -1753,7 +1753,7 @@ button{
     >
 
         <div class="nav-icon">
-            💬
+            ðŸ’¬
         </div>
 
         <span>
@@ -1769,7 +1769,7 @@ button{
     >
 
         <div class="nav-icon">
-            🎴
+            ðŸŽ´
         </div>
 
         <span>
@@ -1784,7 +1784,7 @@ button{
         <div class="assistant-top">
 
             <div class="assistant-avatar">
-                🤖
+                ðŸ¤–
             </div>
 
             <strong>
@@ -1846,7 +1846,7 @@ button{
 
 
     <div class="hero-badge">
-        ✨ AI-Powered Learning
+        âœ¨ AI-Powered Learning
     </div>
 
 
@@ -1979,7 +1979,7 @@ button{
         id="generateBtn"
         onclick="generateQuiz()"
     >
-        ✨ Generate AI Quiz
+        âœ¨ Generate AI Quiz
     </button>
 
 
@@ -2011,13 +2011,13 @@ button{
 
 
         <div class="example-title">
-            💡 Example
+            ðŸ’¡ Example
         </div>
 
 
         <p>
             Try entering:
-            "Information Security —
+            "Information Security â€”
             CIA Triad, DES, RSA, digital
             signatures and key management."
         </p>
@@ -2040,7 +2040,7 @@ button{
         <div>
 
             <div class="empty-icon">
-                🧠
+                ðŸ§ 
             </div>
 
 
@@ -2150,7 +2150,7 @@ button{
                 onclick="nextQuestion()"
                 disabled
             >
-                Next Question →
+                Next Question â†’
             </button>
 
 
@@ -2180,7 +2180,7 @@ button{
 
 
         <h2>
-            Quiz Completed! 🎉
+            Quiz Completed! ðŸŽ‰
         </h2>
 
 
@@ -2194,7 +2194,7 @@ button{
             type="button"
             onclick="restartQuiz()"
         >
-            ↻ Restart Quiz
+            â†» Restart Quiz
         </button>
 
 
@@ -2258,7 +2258,7 @@ button{
 ================================================== */
 
 const GEMINI_API_URL =
-    "http://localhost:10000/api/gemini";
+    "https://ai-classroom-tasks.onrender.com/api/gemini";
 
 
 /* ==================================================
@@ -2396,7 +2396,7 @@ EXACT JSON FORMAT:
     generateButton.disabled = true;
 
     generateButton.textContent =
-        "⏳ Generating Quiz...";
+        "â³ Generating Quiz...";
 
 
     try{
@@ -2551,7 +2551,7 @@ EXACT JSON FORMAT:
         generateButton.disabled = false;
 
         generateButton.textContent =
-            "✨ Generate AI Quiz";
+            "âœ¨ Generate AI Quiz";
 
     }
 
@@ -3023,8 +3023,8 @@ function showQuestion(){
     nextButton.textContent =
         currentQuestion ===
         quizData.length - 1
-            ? "Finish Quiz →"
-            : "Next Question →";
+            ? "Finish Quiz â†’"
+            : "Next Question â†’";
 
 }
 
@@ -3115,7 +3115,7 @@ function selectAnswer(
 
         feedback.innerHTML =
             `
-            <strong>✓ Correct!</strong><br>
+            <strong>âœ“ Correct!</strong><br>
             ${escapeHTML(
                 question.explanation
             )}
@@ -3148,7 +3148,7 @@ function selectAnswer(
 
         feedback.innerHTML =
             `
-            <strong>✕ Incorrect.</strong><br>
+            <strong>âœ• Incorrect.</strong><br>
             Correct answer: <strong>${correctLetter}</strong><br>
             ${escapeHTML(
                 question.explanation

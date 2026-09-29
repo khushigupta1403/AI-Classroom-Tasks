@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AI StudyLab — Mind Map Generator</title>
+<title>AI StudyLab â€” Mind Map Generator</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1013,7 +1013,7 @@ textarea:focus{
 <aside class="sidebar">
 
     <div class="logo">
-        <div class="logo-icon">✦</div>
+        <div class="logo-icon">âœ¦</div>
         <h2>AI <span>StudyLab</span></h2>
     </div>
 
@@ -1022,37 +1022,37 @@ textarea:focus{
     <nav class="nav">
 
         <div class="nav-item">
-            <div class="nav-icon">📄</div>
+            <div class="nav-icon">ðŸ“„</div>
             Resume Builder
         </div>
 
         <div class="nav-item">
-            <div class="nav-icon">📝</div>
+            <div class="nav-icon">ðŸ“</div>
             Notes Generator
         </div>
 
         <div class="nav-item">
-            <div class="nav-icon">📊</div>
+            <div class="nav-icon">ðŸ“Š</div>
             Presentation
         </div>
 
         <div class="nav-item active">
-            <div class="nav-icon">🧠</div>
+            <div class="nav-icon">ðŸ§ </div>
             Mind Map
         </div>
 
         <div class="nav-item">
-            <div class="nav-icon">❓</div>
+            <div class="nav-icon">â“</div>
             AI Quiz
         </div>
 
         <div class="nav-item">
-            <div class="nav-icon">💬</div>
+            <div class="nav-icon">ðŸ’¬</div>
             Doubt Solver
         </div>
 
         <div class="nav-item">
-            <div class="nav-icon">🗂️</div>
+            <div class="nav-icon">ðŸ—‚ï¸</div>
             Flashcards
         </div>
 
@@ -1062,7 +1062,7 @@ textarea:focus{
 
         <div class="ai-mini-card">
 
-            <div class="mini-icon">✨</div>
+            <div class="mini-icon">âœ¨</div>
 
             <strong>AI Learning Assistant</strong>
 
@@ -1107,7 +1107,7 @@ textarea:focus{
     <div class="hero-content">
 
         <div class="hero-badge">
-            🧠 REAL GEMINI AI MIND MAP
+            ðŸ§  REAL GEMINI AI MIND MAP
         </div>
 
         <h1>Visualize Your Knowledge</h1>
@@ -1139,7 +1139,7 @@ textarea:focus{
                 <p>Add your syllabus or study content.</p>
             </div>
 
-            <div class="icon-box">🧠</div>
+            <div class="icon-box">ðŸ§ </div>
 
         </div>
 
@@ -1201,7 +1201,7 @@ PKI"
         <div class="example">
 
             <div class="example-title">
-                💡 HOW IT WORKS
+                ðŸ’¡ HOW IT WORKS
             </div>
 
             <p>
@@ -1217,7 +1217,7 @@ PKI"
             id="generateBtn"
             onclick="generateMindMap()"
         >
-            ✨ Generate AI Mind Map
+            âœ¨ Generate AI Mind Map
         </button>
 
         <div class="action-row">
@@ -1251,7 +1251,7 @@ PKI"
         <div class="map-title">
 
             <div class="map-title-icon">
-                🌐
+                ðŸŒ
             </div>
 
             <div>
@@ -1288,7 +1288,7 @@ PKI"
                 <div class="empty-state">
 
                     <div class="empty-icon">
-                        🧠
+                        ðŸ§ 
                     </div>
 
                     <h3>Your knowledge map starts here</h3>
@@ -1327,7 +1327,7 @@ PKI"
 
         <div class="insight">
             <span>MAIN TOPIC</span>
-            <strong id="mainTopic">—</strong>
+            <strong id="mainTopic">â€”</strong>
         </div>
 
         <div class="insight">
@@ -1352,7 +1352,7 @@ PKI"
     <div class="toolbar">
 
         <div class="toolbar-text">
-            Drag to pan • Mouse wheel to zoom • Click a node for AI explanation
+            Drag to pan â€¢ Mouse wheel to zoom â€¢ Click a node for AI explanation
         </div>
 
         <div class="tool-buttons">
@@ -1370,7 +1370,7 @@ PKI"
                 onclick="zoomOut()"
                 title="Zoom out"
             >
-                −
+                âˆ’
             </button>
 
             <button
@@ -1378,7 +1378,7 @@ PKI"
                 onclick="resetView()"
                 title="Reset view"
             >
-                ⟳
+                âŸ³
             </button>
 
             <button
@@ -1386,7 +1386,7 @@ PKI"
                 onclick="fitMap()"
                 title="Fit map"
             >
-                ⛶
+                â›¶
             </button>
 
             <button
@@ -1438,13 +1438,13 @@ PKI"
 
         <div class="modal-head">
 
-            <h2>✨ AI Topic Explanation</h2>
+            <h2>âœ¨ AI Topic Explanation</h2>
 
             <button
                 class="close-btn"
                 onclick="closeModal()"
             >
-                ×
+                Ã—
             </button>
 
         </div>
@@ -1503,7 +1503,7 @@ PKI"
 ========================================= */
 
 const GEMINI_API_URL =
-    "http://localhost:10000/api/gemini";
+    "https://ai-classroom-tasks.onrender.com/api/gemini";
 
 
 /* =========================================
@@ -1596,7 +1596,7 @@ function clearMap(){
         .textContent = "0 Topics";
 
     document.getElementById("mainTopic")
-        .textContent = "—";
+        .textContent = "â€”";
 
     document.getElementById("branchCount")
         .textContent = "0";
@@ -1608,7 +1608,7 @@ function clearMap(){
         <div class="empty-state">
 
             <div class="empty-icon">
-                🧠
+                ðŸ§ 
             </div>
 
             <h3>Your knowledge map starts here</h3>
@@ -2342,7 +2342,7 @@ async function showTopic(
 
     document.getElementById("explanationText")
         .textContent =
-        "✨ Gemini is preparing an explanation...";
+        "âœ¨ Gemini is preparing an explanation...";
 
     document.getElementById("explanationModal")
         .classList.add("show");

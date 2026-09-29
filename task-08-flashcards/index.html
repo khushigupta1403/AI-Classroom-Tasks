@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1784,7 +1784,7 @@ button{
     <div class="logo">
 
         <div class="logo-icon">
-            ✦
+            âœ¦
         </div>
 
         <strong>
@@ -1805,7 +1805,7 @@ button{
     >
 
         <div class="nav-icon">
-            📄
+            ðŸ“„
         </div>
 
         <span>
@@ -1821,7 +1821,7 @@ button{
     >
 
         <div class="nav-icon">
-            📝
+            ðŸ“
         </div>
 
         <span>
@@ -1837,7 +1837,7 @@ button{
     >
 
         <div class="nav-icon">
-            📊
+            ðŸ“Š
         </div>
 
         <span>
@@ -1853,7 +1853,7 @@ button{
     >
 
         <div class="nav-icon">
-            🧠
+            ðŸ§ 
         </div>
 
         <span>
@@ -1869,7 +1869,7 @@ button{
     >
 
         <div class="nav-icon">
-            📋
+            ðŸ“‹
         </div>
 
         <span>
@@ -1885,7 +1885,7 @@ button{
     >
 
         <div class="nav-icon">
-            ❓
+            â“
         </div>
 
         <span>
@@ -1901,7 +1901,7 @@ button{
     >
 
         <div class="nav-icon">
-            💬
+            ðŸ’¬
         </div>
 
         <span>
@@ -1917,7 +1917,7 @@ button{
     >
 
         <div class="nav-icon">
-            🎴
+            ðŸŽ´
         </div>
 
         <span>
@@ -1932,7 +1932,7 @@ button{
         <div class="assistant-top">
 
             <div class="assistant-avatar">
-                🤖
+                ðŸ¤–
             </div>
 
             <strong>
@@ -1998,7 +1998,7 @@ button{
 
 
     <div class="hero-badge">
-        ✨ AI-Powered Revision
+        âœ¨ AI-Powered Revision
     </div>
 
 
@@ -2067,7 +2067,7 @@ button{
 
         <textarea
             id="topic"
-            placeholder="Example: Java OOP — classes, objects, inheritance, polymorphism and abstraction..."
+            placeholder="Example: Java OOP â€” classes, objects, inheritance, polymorphism and abstraction..."
         ></textarea>
 
 
@@ -2133,7 +2133,7 @@ button{
         id="generateBtn"
         onclick="generateFlashcards()"
     >
-        ✨ Generate AI Flashcards
+        âœ¨ Generate AI Flashcards
     </button>
 
 
@@ -2165,12 +2165,12 @@ button{
 
 
         <div class="example-title">
-            💡 Example Topic
+            ðŸ’¡ Example Topic
         </div>
 
 
         <p>
-            Try: "Information Security —
+            Try: "Information Security â€”
             CIA Triad, DES, RSA, digital
             signatures, Diffie-Hellman and PKI."
         </p>
@@ -2251,7 +2251,7 @@ button{
         <div>
 
             <div class="empty-icon">
-                🎴
+                ðŸŽ´
             </div>
 
 
@@ -2295,7 +2295,7 @@ button{
 
 
                 <div class="flash-label">
-                    ❓ QUESTION
+                    â“ QUESTION
                 </div>
 
 
@@ -2320,7 +2320,7 @@ button{
 
 
                 <div class="flash-label">
-                    ✓ ANSWER
+                    âœ“ ANSWER
                 </div>
 
 
@@ -2357,7 +2357,7 @@ button{
             id="previousBtn"
             onclick="previousCard()"
         >
-            ← Previous
+            â† Previous
         </button>
 
 
@@ -2366,7 +2366,7 @@ button{
             type="button"
             onclick="flipCard()"
         >
-            ↻ Flip Card
+            â†» Flip Card
         </button>
 
 
@@ -2376,7 +2376,7 @@ button{
             id="nextBtn"
             onclick="nextCard()"
         >
-            Next →
+            Next â†’
         </button>
 
 
@@ -2394,7 +2394,7 @@ button{
             type="button"
             onclick="shuffleCards()"
         >
-            🔀 Shuffle
+            ðŸ”€ Shuffle
         </button>
 
 
@@ -2403,7 +2403,7 @@ button{
             type="button"
             onclick="copyAnswer()"
         >
-            📋 Copy Answer
+            ðŸ“‹ Copy Answer
         </button>
 
 
@@ -2421,7 +2421,7 @@ button{
         <div>
 
             <div class="completed-icon">
-                🎉
+                ðŸŽ‰
             </div>
 
 
@@ -2440,7 +2440,7 @@ button{
                 type="button"
                 onclick="restartCards()"
             >
-                ↻ Review Again
+                â†» Review Again
             </button>
 
         </div>
@@ -2510,7 +2510,7 @@ button{
 ================================================== */
 
 const GEMINI_API_URL =
-    "http://localhost:10000/api/gemini";
+    "https://ai-classroom-tasks.onrender.com/api/gemini";
 
 
 /* ==================================================
@@ -2642,7 +2642,7 @@ EXACT JSON FORMAT:
 
 
     generateButton.textContent =
-        "⏳ Generating Flashcards...";
+        "â³ Generating Flashcards...";
 
 
     try{
@@ -2808,7 +2808,7 @@ EXACT JSON FORMAT:
 
 
         generateButton.textContent =
-            "✨ Generate AI Flashcards";
+            "âœ¨ Generate AI Flashcards";
 
     }
 
@@ -3173,8 +3173,8 @@ function showCard(){
         .textContent =
             currentCard ===
             flashcards.length - 1
-                ? "Finish →"
-                : "Next →";
+                ? "Finish â†’"
+                : "Next â†’";
 
 }
 
