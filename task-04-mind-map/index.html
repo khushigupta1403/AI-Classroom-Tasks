@@ -4,805 +4,1003 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MindFlow AI — Mind Map Generator</title>
+<title>AI StudyLab — Mind Map Generator</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-:root {
-    --purple: #7355e6;
-    --purple-dark: #5e43c7;
-    --purple-light: #f0edff;
-    --green: #28a77a;
-    --green-light: #eaf9f3;
-    --text: #25233a;
-    --muted: #858195;
-    --border: #e9e7f0;
-    --bg: #f7f8fc;
-    --white: #ffffff;
+:root{
+    --purple:#7355e6;
+    --purple-dark:#5e43c7;
+    --purple-light:#f0edff;
+    --green:#28a77a;
+    --green-light:#eaf9f3;
+    --text:#25233a;
+    --muted:#858195;
+    --border:#e9e7f0;
+    --bg:#f7f8fc;
+    --white:#fff;
 }
 
-body {
-    font-family: "Inter", sans-serif;
-    background: var(--bg);
-    color: var(--text);
+body{
+    font-family:"Inter",sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
-/* =========================
-   APP
-========================= */
-
-.app {
-    min-height: 100vh;
-    display: flex;
+button,
+textarea{
+    font-family:inherit;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
-
-.sidebar {
-    width: 250px;
-    background: white;
-    border-right: 1px solid var(--border);
-    position: fixed;
-    inset: 0 auto 0 0;
-    padding: 24px 18px;
-    z-index: 50;
+.app{
+    min-height:100vh;
+    display:flex;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 5px 10px 32px;
+/* SIDEBAR */
+
+.sidebar{
+    width:250px;
+    background:#fff;
+    border-right:1px solid var(--border);
+    position:fixed;
+    inset:0 auto 0 0;
+    padding:24px 18px;
+    z-index:50;
 }
 
-.logo-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
-    background: linear-gradient(135deg, #7556e6, #a184f4);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 19px;
-    box-shadow: 0 8px 22px rgba(115,85,230,.25);
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:5px 10px 32px;
 }
 
-.logo h2 {
-    font-size: 17px;
-    font-weight: 800;
+.logo-icon{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#7556e6,#a184f4);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+    box-shadow:0 8px 22px rgba(115,85,230,.25);
 }
 
-.logo h2 span {
-    color: var(--purple);
+.logo h2{
+    font-size:17px;
+    font-weight:800;
 }
 
-.menu-title {
-    padding: 0 12px 11px;
-    font-size: 9px;
-    letter-spacing: 1.2px;
-    color: #aaa7b5;
-    font-weight: 800;
+.logo h2 span{
+    color:var(--purple);
 }
 
-.nav {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+.menu-title{
+    padding:0 12px 11px;
+    font-size:9px;
+    letter-spacing:1.2px;
+    color:#aaa7b5;
+    font-weight:800;
 }
 
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 13px;
-    border-radius: 12px;
-    color: #777386;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: .2s;
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
 }
 
-.nav-item:hover {
-    background: #f7f5fc;
-    color: var(--purple);
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 13px;
+    border-radius:12px;
+    color:#777386;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
 }
 
-.nav-item.active {
-    background: var(--purple-light);
-    color: var(--purple-dark);
+.nav-item:hover{
+    background:#f7f5fc;
+    color:var(--purple);
 }
 
-.nav-icon {
-    width: 22px;
-    text-align: center;
-    font-size: 15px;
+.nav-item.active{
+    background:var(--purple-light);
+    color:var(--purple-dark);
 }
 
-.sidebar-footer {
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    bottom: 22px;
+.nav-icon{
+    width:22px;
+    text-align:center;
+    font-size:15px;
 }
 
-.ai-mini-card {
-    padding: 16px;
-    border-radius: 17px;
-    background: linear-gradient(135deg, #f1edff, #faf8ff);
-    border: 1px solid #e6deff;
+.sidebar-footer{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:22px;
 }
 
-.ai-mini-card .mini-icon {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    border-radius: 9px;
-    margin-bottom: 10px;
+.ai-mini-card{
+    padding:16px;
+    border-radius:17px;
+    background:linear-gradient(135deg,#f1edff,#faf8ff);
+    border:1px solid #e6deff;
 }
 
-.ai-mini-card strong {
-    font-size: 11px;
-    display: block;
-    margin-bottom: 5px;
+.mini-icon{
+    width:30px;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    border-radius:9px;
+    margin-bottom:10px;
 }
 
-.ai-mini-card p {
-    font-size: 9px;
-    color: #888397;
-    line-height: 1.5;
+.ai-mini-card strong{
+    font-size:11px;
+    display:block;
+    margin-bottom:5px;
 }
 
-/* =========================
-   MAIN
-========================= */
-
-.main {
-    margin-left: 250px;
-    width: calc(100% - 250px);
+.ai-mini-card p{
+    font-size:9px;
+    color:#888397;
+    line-height:1.5;
 }
 
-/* =========================
-   TOPBAR
-========================= */
+/* MAIN */
 
-.topbar {
-    height: 70px;
-    background: rgba(255,255,255,.92);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 36px;
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    backdrop-filter: blur(15px);
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
 }
 
-.breadcrumb {
-    font-size: 12px;
-    color: #a09cac;
+/* TOPBAR */
+
+.topbar{
+    height:70px;
+    background:rgba(255,255,255,.92);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 36px;
+    position:sticky;
+    top:0;
+    z-index:40;
+    backdrop-filter:blur(15px);
 }
 
-.breadcrumb strong {
-    color: #3b384c;
+.breadcrumb{
+    font-size:12px;
+    color:#a09cac;
 }
 
-.top-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.breadcrumb strong{
+    color:#3b384c;
 }
 
-.ai-status {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 10px;
-    color: #777386;
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:15px;
 }
 
-.status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #36bf8a;
-    box-shadow: 0 0 0 4px #e9f8f2;
+.ai-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:10px;
+    color:#777386;
 }
 
-/* =========================
-   CONTENT
-========================= */
-
-.content {
-    max-width: 1500px;
-    padding: 30px 35px 40px;
-    margin: auto;
+.status-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#36bf8a;
+    box-shadow:0 0 0 4px #e9f8f2;
 }
 
-/* =========================
-   HERO
-========================= */
+/* CONTENT */
 
-.hero {
-    min-height: 220px;
-    border-radius: 26px;
-    padding: 35px 40px;
-    color: white;
-    position: relative;
-    overflow: hidden;
+.content{
+    max-width:1500px;
+    padding:30px 35px 40px;
+    margin:auto;
+}
+
+/* HERO */
+
+.hero{
+    min-height:220px;
+    border-radius:26px;
+    padding:35px 40px;
+    color:white;
+    position:relative;
+    overflow:hidden;
     background:
-        radial-gradient(circle at 85% 20%, rgba(255,255,255,.2), transparent 22%),
-        radial-gradient(circle at 75% 100%, rgba(55,210,155,.18), transparent 28%),
-        linear-gradient(125deg, #6246d1, #8769ed 55%, #9879ed);
-    box-shadow: 0 20px 45px rgba(95,69,195,.18);
-    margin-bottom: 25px;
+        radial-gradient(circle at 85% 20%,rgba(255,255,255,.2),transparent 22%),
+        radial-gradient(circle at 75% 100%,rgba(55,210,155,.18),transparent 28%),
+        linear-gradient(125deg,#6246d1,#8769ed 55%,#9879ed);
+    box-shadow:0 20px 45px rgba(95,69,195,.18);
+    margin-bottom:25px;
 }
 
-.hero::before {
-    content: "";
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    border: 45px solid rgba(255,255,255,.06);
-    right: -100px;
-    top: -130px;
+.hero::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    border:45px solid rgba(255,255,255,.06);
+    right:-100px;
+    top:-130px;
 }
 
-.hero::after {
-    content: "";
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    border: 30px solid rgba(255,255,255,.05);
-    right: 180px;
-    bottom: -100px;
+.hero::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    border:30px solid rgba(255,255,255,.05);
+    right:180px;
+    bottom:-100px;
 }
 
-.hero-content {
-    position: relative;
-    z-index: 2;
+.hero-content{
+    position:relative;
+    z-index:2;
 }
 
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 12px;
-    border-radius: 30px;
-    background: rgba(255,255,255,.14);
-    border: 1px solid rgba(255,255,255,.14);
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: .7px;
-    margin-bottom: 17px;
+.hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 12px;
+    border-radius:30px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.14);
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.7px;
+    margin-bottom:17px;
 }
 
-.hero h1 {
-    font-size: clamp(28px, 4vw, 42px);
-    line-height: 1.1;
-    margin-bottom: 11px;
+.hero h1{
+    font-size:clamp(28px,4vw,42px);
+    line-height:1.1;
+    margin-bottom:11px;
 }
 
-.hero p {
-    max-width: 650px;
-    color: rgba(255,255,255,.82);
-    font-size: 12px;
-    line-height: 1.7;
+.hero p{
+    max-width:700px;
+    color:rgba(255,255,255,.82);
+    font-size:12px;
+    line-height:1.7;
 }
 
-/* =========================
-   WORKSPACE
-========================= */
+/* WORKSPACE */
 
-.workspace {
-    display: grid;
-    grid-template-columns: 335px 1fr;
-    gap: 22px;
+.workspace{
+    display:grid;
+    grid-template-columns:335px 1fr;
+    gap:22px;
 }
 
-/* =========================
-   CARD
-========================= */
-
-.card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    box-shadow: 0 10px 35px rgba(40,35,70,.045);
+.card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:22px;
+    box-shadow:0 10px 35px rgba(40,35,70,.045);
 }
 
-/* =========================
-   INPUT PANEL
-========================= */
+/* INPUT */
 
-.input-panel {
-    height: fit-content;
-    overflow: hidden;
+.input-panel{
+    height:fit-content;
+    overflow:hidden;
 }
 
-.panel-head {
-    padding: 20px 22px;
-    border-bottom: 1px solid #efedf4;
+.panel-head{
+    padding:20px 22px;
+    border-bottom:1px solid #efedf4;
 }
 
-.panel-head-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.panel-head-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.panel-head h2 {
-    font-size: 15px;
+.panel-head h2{
+    font-size:15px;
 }
 
-.panel-head p {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 5px;
+.panel-head p{
+    font-size:10px;
+    color:var(--muted);
+    margin-top:5px;
 }
 
-.icon-box {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    background: var(--purple-light);
-    color: var(--purple);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.icon-box{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    background:var(--purple-light);
+    color:var(--purple);
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.form {
-    padding: 21px 22px;
+.form{
+    padding:21px 22px;
 }
 
-.label-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
+.label-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
 }
 
-label {
-    font-size: 10px;
-    font-weight: 800;
-    color: #4c485c;
+label{
+    font-size:10px;
+    font-weight:800;
+    color:#4c485c;
 }
 
-.char-count {
-    color: #aaa6b4;
-    font-size: 9px;
+.char-count{
+    color:#aaa6b4;
+    font-size:9px;
 }
 
-textarea {
-    width: 100%;
-    height: 215px;
-    resize: none;
-    border: 1px solid #dfdde7;
-    border-radius: 14px;
-    background: #fcfcfe;
-    padding: 14px;
-    font-family: inherit;
-    font-size: 11px;
-    color: #393649;
-    outline: none;
-    transition: .2s;
-    line-height: 1.7;
+textarea{
+    width:100%;
+    height:215px;
+    resize:vertical;
+    min-height:160px;
+    border:1px solid #dfdde7;
+    border-radius:14px;
+    background:#fcfcfe;
+    padding:14px;
+    font-size:11px;
+    color:#393649;
+    outline:none;
+    transition:.2s;
+    line-height:1.7;
 }
 
-textarea:focus {
-    border-color: #8a70eb;
-    box-shadow: 0 0 0 4px #efebff;
+textarea:focus{
+    border-color:#8a70eb;
+    box-shadow:0 0 0 4px #efebff;
 }
 
-.example {
-    margin-top: 12px;
-    padding: 12px 13px;
-    border-radius: 13px;
-    background: #f8f7fb;
-    border: 1px solid #efedf5;
+.options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:12px;
 }
 
-.example-title {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #777287;
-    font-size: 9px;
-    font-weight: 800;
-    margin-bottom: 6px;
+.option{
+    border:1px solid #e9e6f0;
+    border-radius:11px;
+    padding:9px;
+    background:#faf9fc;
 }
 
-.example p {
-    color: #898495;
-    font-size: 9px;
-    line-height: 1.5;
+.option label{
+    display:block;
+    font-size:8px;
+    margin-bottom:5px;
 }
 
-.generate-btn {
-    width: 100%;
-    border: none;
-    border-radius: 12px;
-    padding: 14px;
-    margin-top: 14px;
-    color: white;
-    background: linear-gradient(135deg,#7153e3,#9272ef);
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(113,83,227,.2);
-    transition: .2s;
+.option select{
+    width:100%;
+    border:none;
+    background:transparent;
+    outline:none;
+    font-size:9px;
+    color:#555164;
 }
 
-.generate-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(113,83,227,.27);
+.example{
+    margin-top:12px;
+    padding:12px 13px;
+    border-radius:13px;
+    background:#f8f7fb;
+    border:1px solid #efedf5;
 }
 
-.action-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 9px;
+.example-title{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#777287;
+    font-size:9px;
+    font-weight:800;
+    margin-bottom:6px;
 }
 
-.secondary-btn {
-    flex: 1;
-    border: none;
-    border-radius: 10px;
-    background: #f2f1f6;
-    color: #625d70;
-    padding: 11px;
-    font-family: inherit;
-    font-size: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s;
+.example p{
+    color:#898495;
+    font-size:9px;
+    line-height:1.5;
 }
 
-.secondary-btn:hover {
-    background: #eae7f0;
+.generate-btn{
+    width:100%;
+    border:none;
+    border-radius:12px;
+    padding:14px;
+    margin-top:14px;
+    color:white;
+    background:linear-gradient(135deg,#7153e3,#9272ef);
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(113,83,227,.2);
+    transition:.2s;
 }
 
-/* =========================
-   MAP PANEL
-========================= */
-
-.map-panel {
-    min-height: 650px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+.generate-btn:hover{
+    transform:translateY(-2px);
 }
 
-.map-head {
-    padding: 18px 22px;
-    border-bottom: 1px solid #efedf4;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.generate-btn:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+    transform:none;
 }
 
-.map-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.action-row{
+    display:flex;
+    gap:8px;
+    margin-top:9px;
 }
 
-.map-title-icon {
-    width: 36px;
-    height: 36px;
-    background: var(--green-light);
-    color: var(--green);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.secondary-btn{
+    flex:1;
+    border:none;
+    border-radius:10px;
+    background:#f2f1f6;
+    color:#625d70;
+    padding:11px;
+    font-size:10px;
+    font-weight:700;
+    cursor:pointer;
 }
 
-.map-title h2 {
-    font-size: 14px;
+.secondary-btn:hover{
+    background:#eae7f0;
 }
 
-.map-title p {
-    color: var(--muted);
-    font-size: 9px;
-    margin-top: 4px;
+/* MAP */
+
+.map-panel{
+    min-height:650px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
 }
 
-.topic-badge {
-    background: var(--green-light);
-    color: var(--green);
-    border: 1px solid #d8f0e6;
-    padding: 7px 11px;
-    border-radius: 20px;
-    font-size: 9px;
-    font-weight: 800;
+.map-head{
+    padding:18px 22px;
+    border-bottom:1px solid #efedf4;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-/* =========================
-   MAP
-========================= */
+.map-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
 
-.map-wrapper {
-    flex: 1;
-    position: relative;
-    overflow: auto;
+.map-title-icon{
+    width:36px;
+    height:36px;
+    background:var(--green-light);
+    color:var(--green);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.map-title h2{
+    font-size:14px;
+}
+
+.map-title p{
+    color:var(--muted);
+    font-size:9px;
+    margin-top:4px;
+}
+
+.topic-badge{
+    background:var(--green-light);
+    color:var(--green);
+    border:1px solid #d8f0e6;
+    padding:7px 11px;
+    border-radius:20px;
+    font-size:9px;
+    font-weight:800;
+}
+
+/* MAP AREA */
+
+.map-wrapper{
+    flex:1;
+    position:relative;
+    overflow:hidden;
+    cursor:grab;
     background:
-        linear-gradient(rgba(115,85,230,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(115,85,230,.025) 1px, transparent 1px),
+        linear-gradient(rgba(115,85,230,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(115,85,230,.025) 1px,transparent 1px),
         #fbfbfd;
-    background-size: 24px 24px;
+    background-size:24px 24px;
 }
 
-.map-canvas {
-    width: 1000px;
-    height: 560px;
-    position: relative;
-    transform-origin: center top;
-    transition: transform .25s;
+.map-wrapper.dragging{
+    cursor:grabbing;
 }
 
-.map-lines {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    inset: 0;
-    pointer-events: none;
+.map-viewport{
+    position:absolute;
+    left:50%;
+    top:30px;
+    width:1200px;
+    height:650px;
+    transform-origin:top left;
 }
 
-.map-lines path {
-    fill: none;
-    stroke: #d7d1e8;
-    stroke-width: 2.5;
-    stroke-linecap: round;
+.map-canvas{
+    width:1200px;
+    height:650px;
+    position:relative;
 }
 
-/* =========================
-   NODES
-========================= */
-
-.node {
-    position: absolute;
-    z-index: 3;
-    min-width: 125px;
-    padding: 13px 18px;
-    border-radius: 14px;
-    text-align: center;
-    background: white;
-    border: 1px solid #dfdbe9;
-    box-shadow: 0 9px 22px rgba(50,45,75,.08);
-    cursor: pointer;
-    font-size: 10px;
-    font-weight: 700;
-    color: #4e4a5d;
-    transition: .25s;
+.map-lines{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    overflow:visible;
 }
 
-.node:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(50,45,75,.14);
+.map-lines path{
+    fill:none;
+    stroke:#d7d1e8;
+    stroke-width:2.5;
+    stroke-linecap:round;
 }
 
-.node small {
-    display: block;
-    margin-top: 4px;
-    font-size: 8px;
-    color: #9c98a7;
-    font-weight: 500;
+/* NODES */
+
+.node{
+    position:absolute;
+    z-index:3;
+    min-width:130px;
+    max-width:180px;
+    padding:12px 15px;
+    border-radius:14px;
+    text-align:center;
+    background:white;
+    border:1px solid #dfdbe9;
+    box-shadow:0 9px 22px rgba(50,45,75,.08);
+    cursor:pointer;
+    font-size:10px;
+    font-weight:700;
+    color:#4e4a5d;
+    transition:.2s;
+    user-select:none;
 }
 
-.root-node {
-    left: 50%;
-    top: 40px;
-    transform: translateX(-50%);
-    min-width: 190px;
-    padding: 17px 24px;
-    border: none;
-    color: white;
-    background: linear-gradient(135deg,#7152df,#9271ee);
-    box-shadow: 0 14px 30px rgba(105,76,211,.25);
-    font-size: 13px;
+.node:hover{
+    transform:translateY(-4px) scale(1.03);
+    box-shadow:0 15px 30px rgba(50,45,75,.14);
 }
 
-.root-node:hover {
-    transform: translateX(-50%) translateY(-4px) scale(1.02);
+.node small{
+    display:block;
+    margin-top:4px;
+    font-size:8px;
+    color:#9c98a7;
+    font-weight:500;
+    line-height:1.4;
 }
 
-.level-one {
-    background: #f0edff;
-    border-color: #ddd5ff;
-    color: #6248c8;
+.root-node{
+    min-width:210px;
+    max-width:240px;
+    padding:17px 24px;
+    color:white;
+    background:linear-gradient(135deg,#7152df,#9271ee);
+    border:none;
+    box-shadow:0 14px 30px rgba(105,76,211,.25);
+    font-size:13px;
 }
 
-.level-two {
-    background: #edf9f5;
-    border-color: #d5eee4;
-    color: #247b61;
+.root-node small{
+    color:rgba(255,255,255,.72);
 }
 
-/* =========================
-   INSIGHT BAR
-========================= */
-
-.insights {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 10px;
-    padding: 14px 20px;
-    border-top: 1px solid #efedf4;
+.level-one{
+    background:#f0edff;
+    border-color:#ddd5ff;
+    color:#6248c8;
 }
 
-.insight {
-    padding: 11px;
-    border-radius: 11px;
-    background: #f9f8fc;
-    border: 1px solid #efedf4;
+.level-two{
+    background:#edf9f5;
+    border-color:#d5eee4;
+    color:#247b61;
 }
 
-.insight span {
-    display: block;
-    font-size: 8px;
-    color: #a09bab;
-    font-weight: 700;
-    margin-bottom: 4px;
+.level-three{
+    background:#fff7e8;
+    border-color:#f3dfb7;
+    color:#9a6b18;
 }
 
-.insight strong {
-    font-size: 12px;
+/* INSIGHTS */
+
+.insights{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    padding:14px 20px;
+    border-top:1px solid #efedf4;
 }
 
-/* =========================
-   TOOLBAR
-========================= */
-
-.toolbar {
-    padding: 13px 20px;
-    border-top: 1px solid #efedf4;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.insight{
+    padding:11px;
+    border-radius:11px;
+    background:#f9f8fc;
+    border:1px solid #efedf4;
 }
 
-.toolbar-text {
-    color: #9894a4;
-    font-size: 9px;
+.insight span{
+    display:block;
+    font-size:8px;
+    color:#a09bab;
+    font-weight:700;
+    margin-bottom:4px;
 }
 
-.tool-buttons {
-    display: flex;
-    gap: 7px;
+.insight strong{
+    font-size:12px;
 }
 
-.tool-btn {
-    width: 33px;
-    height: 31px;
-    border: none;
-    border-radius: 9px;
-    background: #f1eff6;
-    color: #5f5a6d;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 800;
-    transition: .2s;
+/* TOOLBAR */
+
+.toolbar{
+    padding:13px 20px;
+    border-top:1px solid #efedf4;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-.tool-btn:hover {
-    background: #e8e4f1;
+.toolbar-text{
+    color:#9894a4;
+    font-size:9px;
 }
 
-/* =========================
-   LOADING
-========================= */
-
-.loading {
-    position: absolute;
-    inset: 0;
-    background: rgba(251,251,253,.94);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 20;
+.tool-buttons{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
 }
 
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #e8e4f5;
-    border-top-color: var(--purple);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 14px;
+.tool-btn{
+    min-width:33px;
+    height:31px;
+    border:none;
+    border-radius:9px;
+    background:#f1eff6;
+    color:#5f5a6d;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+    transition:.2s;
+    padding:0 9px;
 }
 
-.loading strong {
-    font-size: 12px;
+.tool-btn:hover{
+    background:#e8e4f1;
 }
 
-.loading p {
-    margin-top: 5px;
-    font-size: 9px;
-    color: var(--muted);
+.tool-btn.green{
+    background:var(--green-light);
+    color:var(--green);
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
+/* LOADING */
+
+.loading{
+    position:absolute;
+    inset:0;
+    background:rgba(251,251,253,.94);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    z-index:20;
+}
+
+.spinner{
+    width:40px;
+    height:40px;
+    border:4px solid #e8e4f5;
+    border-top-color:var(--purple);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-bottom:14px;
+}
+
+.loading strong{
+    font-size:12px;
+}
+
+.loading p{
+    margin-top:5px;
+    font-size:9px;
+    color:var(--muted);
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+/* EMPTY */
+
+.empty-state{
+    position:absolute;
+    top:210px;
+    left:50%;
+    transform:translateX(-50%);
+    text-align:center;
+    width:300px;
+    color:#aaa6b6;
+}
+
+.empty-icon{
+    width:68px;
+    height:68px;
+    background:#f0eef6;
+    border-radius:21px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    margin:0 auto 15px;
+}
+
+.empty-state h3{
+    font-size:14px;
+    margin-bottom:7px;
+    color:#716d7e;
+}
+
+.empty-state p{
+    font-size:10px;
+    line-height:1.5;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(30,25,55,.42);
+    backdrop-filter:blur(7px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    width:min(600px,100%);
+    max-height:80vh;
+    overflow:auto;
+    background:white;
+    border-radius:22px;
+    box-shadow:0 25px 70px rgba(25,20,55,.2);
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 22px;
+    border-bottom:1px solid var(--border);
+}
+
+.modal-head h2{
+    font-size:15px;
+}
+
+.close-btn{
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:9px;
+    background:#f1eff6;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.modal-body{
+    padding:22px;
+}
+
+.modal-topic{
+    display:inline-block;
+    background:var(--purple-light);
+    color:var(--purple-dark);
+    padding:7px 11px;
+    border-radius:20px;
+    font-size:9px;
+    font-weight:800;
+    margin-bottom:15px;
+}
+
+.explanation{
+    font-size:12px;
+    line-height:1.8;
+    color:#575266;
+    white-space:pre-wrap;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:20px;
+}
+
+.modal-actions button{
+    flex:1;
+    padding:11px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:10px;
+    font-weight:700;
+}
+
+.primary-modal-btn{
+    background:var(--purple);
+    color:white;
+}
+
+.secondary-modal-btn{
+    background:#f1eff6;
+    color:#5f5a6d;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#25233a;
+    color:white;
+    padding:12px 16px;
+    border-radius:12px;
+    font-size:10px;
+    box-shadow:0 12px 30px rgba(0,0,0,.15);
+    transform:translateY(20px);
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:200;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:205px;
+    }
+
+    .main{
+        margin-left:205px;
+        width:calc(100% - 205px);
+    }
+
+    .workspace{
+        grid-template-columns:1fr;
+    }
+
+    .input-panel{
+        width:100%;
     }
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+@media(max-width:700px){
 
-@media(max-width:1050px) {
-
-    .sidebar {
-        width: 205px;
+    .sidebar{
+        display:none;
     }
 
-    .main {
-        margin-left: 205px;
-        width: calc(100% - 205px);
+    .main{
+        margin-left:0;
+        width:100%;
     }
 
-    .workspace {
-        grid-template-columns: 1fr;
+    .content{
+        padding:18px;
     }
 
-    .input-panel {
-        width: 100%;
-    }
-}
-
-@media(max-width:700px) {
-
-    .sidebar {
-        display: none;
+    .topbar{
+        padding:0 18px;
     }
 
-    .main {
-        margin-left: 0;
-        width: 100%;
+    .hero{
+        padding:28px;
     }
 
-    .content {
-        padding: 18px;
+    .workspace{
+        grid-template-columns:1fr;
     }
 
-    .topbar {
-        padding: 0 18px;
+    .insights{
+        grid-template-columns:1fr 1fr;
     }
 
-    .hero {
-        padding: 28px;
+    .toolbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
     }
 
-    .insights {
-        grid-template-columns: 1fr;
+    .map-head{
+        padding:15px;
+    }
+
+    .options{
+        grid-template-columns:1fr;
     }
 }
-
 </style>
 </head>
 
@@ -810,27 +1008,16 @@ textarea:focus {
 
 <div class="app">
 
-<!-- ================= SIDEBAR ================= -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
     <div class="logo">
-
-        <div class="logo-icon">
-            ✦
-        </div>
-
-        <h2>
-            AI <span>StudyLab</span>
-        </h2>
-
+        <div class="logo-icon">✦</div>
+        <h2>AI <span>StudyLab</span></h2>
     </div>
 
-
-    <div class="menu-title">
-        STUDY TOOLS
-    </div>
-
+    <div class="menu-title">STUDY TOOLS</div>
 
     <nav class="nav">
 
@@ -871,18 +1058,13 @@ textarea:focus {
 
     </nav>
 
-
     <div class="sidebar-footer">
 
         <div class="ai-mini-card">
 
-            <div class="mini-icon">
-                ✨
-            </div>
+            <div class="mini-icon">✨</div>
 
-            <strong>
-                AI Learning Assistant
-            </strong>
+            <strong>AI Learning Assistant</strong>
 
             <p>
                 Turn complex study material
@@ -895,13 +1077,9 @@ textarea:focus {
 
 </aside>
 
-
-<!-- ================= MAIN ================= -->
+<!-- MAIN -->
 
 <main class="main">
-
-
-<!-- TOPBAR -->
 
 <header class="topbar">
 
@@ -913,18 +1091,14 @@ textarea:focus {
 
         <div class="ai-status">
             <span class="status-dot"></span>
-            AI Studio Ready
+            Gemini AI Connected
         </div>
 
     </div>
 
 </header>
 
-
-<!-- CONTENT -->
-
 <section class="content">
-
 
 <!-- HERO -->
 
@@ -933,28 +1107,24 @@ textarea:focus {
     <div class="hero-content">
 
         <div class="hero-badge">
-            🧠 AI MIND MAP GENERATOR
+            🧠 REAL GEMINI AI MIND MAP
         </div>
 
-        <h1>
-            Visualize Your Knowledge
-        </h1>
+        <h1>Visualize Your Knowledge</h1>
 
         <p>
             Transform your syllabus, chapters and study material
-            into beautiful hierarchical mind maps that make
-            complex subjects easier to understand and revise.
+            into an intelligent hierarchical mind map using Gemini AI.
+            Click any topic to get an AI explanation.
         </p>
 
     </div>
 
 </div>
 
-
 <!-- WORKSPACE -->
 
 <div class="workspace">
-
 
 <!-- INPUT -->
 
@@ -965,43 +1135,27 @@ textarea:focus {
         <div class="panel-head-row">
 
             <div>
-
-                <h2>
-                    Create Mind Map
-                </h2>
-
-                <p>
-                    Add your syllabus or study content.
-                </p>
-
+                <h2>Create Mind Map</h2>
+                <p>Add your syllabus or study content.</p>
             </div>
 
-            <div class="icon-box">
-                🧠
-            </div>
+            <div class="icon-box">🧠</div>
 
         </div>
 
     </div>
 
-
     <div class="form">
 
         <div class="label-row">
 
-            <label>
-                SYLLABUS / TOPIC
-            </label>
+            <label>SYLLABUS / TOPIC</label>
 
-            <span
-                class="char-count"
-                id="charCount"
-            >
+            <span class="char-count" id="charCount">
                 0 characters
             </span>
 
         </div>
-
 
         <textarea
             id="syllabus"
@@ -1022,6 +1176,27 @@ Needham-Schroeder
 PKI"
         ></textarea>
 
+        <div class="options">
+
+            <div class="option">
+                <label>MAP DETAIL</label>
+                <select id="detailLevel">
+                    <option value="compact">Compact</option>
+                    <option value="balanced" selected>Balanced</option>
+                    <option value="detailed">Detailed</option>
+                </select>
+            </div>
+
+            <div class="option">
+                <label>FOCUS</label>
+                <select id="focusType">
+                    <option value="exam">Exam Revision</option>
+                    <option value="concept">Concept Learning</option>
+                    <option value="complete">Complete Overview</option>
+                </select>
+            </div>
+
+        </div>
 
         <div class="example">
 
@@ -1030,21 +1205,20 @@ PKI"
             </div>
 
             <p>
-                Enter your syllabus or chapter names.
-                AI will organize them into a visual
-                topic hierarchy.
+                Enter a topic, question, chapter or syllabus.
+                Gemini organizes it into branches and subtopics
+                and creates a visual learning map.
             </p>
 
         </div>
 
-
         <button
             class="generate-btn"
+            id="generateBtn"
             onclick="generateMindMap()"
         >
             ✨ Generate AI Mind Map
         </button>
-
 
         <div class="action-row">
 
@@ -1068,11 +1242,9 @@ PKI"
 
 </div>
 
-
 <!-- MAP -->
 
 <div class="card map-panel">
-
 
     <div class="map-head">
 
@@ -1083,19 +1255,11 @@ PKI"
             </div>
 
             <div>
-
-                <h2>
-                    Knowledge Map
-                </h2>
-
-                <p>
-                    Explore your topics visually
-                </p>
-
+                <h2>Knowledge Map</h2>
+                <p>Explore your topics visually</p>
             </div>
 
         </div>
-
 
         <div
             class="topic-badge"
@@ -1106,65 +1270,39 @@ PKI"
 
     </div>
 
-
     <div
         class="map-wrapper"
         id="mapWrapper"
     >
 
         <div
-            class="map-canvas"
-            id="mapCanvas"
+            class="map-viewport"
+            id="mapViewport"
         >
 
             <div
-                style="
-                position:absolute;
-                top:210px;
-                left:50%;
-                transform:translateX(-50%);
-                text-align:center;
-                width:300px;
-                color:#aaa6b6;
-                "
+                class="map-canvas"
+                id="mapCanvas"
             >
 
-                <div
-                    style="
-                    width:68px;
-                    height:68px;
-                    background:#f0eef6;
-                    border-radius:21px;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    font-size:30px;
-                    margin:0 auto 15px;
-                    "
-                >
-                    🧠
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🧠
+                    </div>
+
+                    <h3>Your knowledge map starts here</h3>
+
+                    <p>
+                        Enter your syllabus and generate
+                        your visual learning map.
+                    </p>
+
                 </div>
-
-                <h3 style="
-                    font-size:14px;
-                    margin-bottom:7px;
-                    color:#716d7e;
-                ">
-                    Your knowledge map starts here
-                </h3>
-
-                <p style="
-                    font-size:10px;
-                    line-height:1.5;
-                ">
-                    Enter your syllabus and generate
-                    your visual learning map.
-                </p>
 
             </div>
 
         </div>
-
 
         <div
             class="loading"
@@ -1173,70 +1311,48 @@ PKI"
 
             <div class="spinner"></div>
 
-            <strong>
-                Creating your knowledge map
-            </strong>
+            <strong>Creating your knowledge map</strong>
 
-            <p>
-                Organizing topics and relationships...
+            <p id="loadingText">
+                Gemini is organizing topics and relationships...
             </p>
 
         </div>
 
     </div>
 
-
     <!-- INSIGHTS -->
 
     <div class="insights">
 
         <div class="insight">
-
-            <span>
-                MAIN TOPIC
-            </span>
-
-            <strong id="mainTopic">
-                —
-            </strong>
-
+            <span>MAIN TOPIC</span>
+            <strong id="mainTopic">—</strong>
         </div>
 
-
         <div class="insight">
-
-            <span>
-                MAIN BRANCHES
-            </span>
-
-            <strong id="branchCount">
-                0
-            </strong>
-
+            <span>MAIN BRANCHES</span>
+            <strong id="branchCount">0</strong>
         </div>
 
+        <div class="insight">
+            <span>SUBTOPICS</span>
+            <strong id="subtopicCount">0</strong>
+        </div>
 
         <div class="insight">
-
-            <span>
-                SUBTOPICS
-            </span>
-
-            <strong id="subtopicCount">
-                0
-            </strong>
-
+            <span>ZOOM</span>
+            <strong id="zoomValue">100%</strong>
         </div>
 
     </div>
-
 
     <!-- TOOLBAR -->
 
     <div class="toolbar">
 
         <div class="toolbar-text">
-            Use + / − to zoom the knowledge map
+            Drag to pan • Mouse wheel to zoom • Click a node for AI explanation
         </div>
 
         <div class="tool-buttons">
@@ -1259,10 +1375,42 @@ PKI"
 
             <button
                 class="tool-btn"
-                onclick="resetZoom()"
-                title="Reset"
+                onclick="resetView()"
+                title="Reset view"
             >
                 ⟳
+            </button>
+
+            <button
+                class="tool-btn"
+                onclick="fitMap()"
+                title="Fit map"
+            >
+                ⛶
+            </button>
+
+            <button
+                class="tool-btn green"
+                onclick="copyMap()"
+                title="Copy JSON"
+            >
+                Copy
+            </button>
+
+            <button
+                class="tool-btn green"
+                onclick="downloadJSON()"
+                title="Download JSON"
+            >
+                JSON
+            </button>
+
+            <button
+                class="tool-btn green"
+                onclick="downloadMarkdown()"
+                title="Download Markdown"
+            >
+                MD
             </button>
 
         </div>
@@ -1279,17 +1427,109 @@ PKI"
 
 </div>
 
+<!-- EXPLANATION MODAL -->
+
+<div
+    class="modal"
+    id="explanationModal"
+>
+
+    <div class="modal-card">
+
+        <div class="modal-head">
+
+            <h2>✨ AI Topic Explanation</h2>
+
+            <button
+                class="close-btn"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div
+                class="modal-topic"
+                id="modalTopic"
+            >
+                Topic
+            </div>
+
+            <div
+                class="explanation"
+                id="explanationText"
+            >
+                Loading explanation...
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    class="primary-modal-btn"
+                    onclick="copyExplanation()"
+                >
+                    Copy Explanation
+                </button>
+
+                <button
+                    class="secondary-modal-btn"
+                    onclick="closeModal()"
+                >
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div
+    class="toast"
+    id="toast"
+>
+    Done
+</div>
 
 <script>
 
+/* =========================================
+   CONFIGURATION
+========================================= */
+
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
+
+
+/* =========================================
+   STATE
+========================================= */
+
+let mindMapData = null;
+
 let scale = 1;
 
+let panX = 0;
+let panY = 0;
 
-/* =========================
+let isDragging = false;
+
+let dragStartX = 0;
+let dragStartY = 0;
+
+let selectedTopic = "";
+
+
+/* =========================================
    CHARACTER COUNT
-========================= */
+========================================= */
 
-function updateCount() {
+function updateCount(){
 
     const text =
         document.getElementById("syllabus").value;
@@ -1297,15 +1537,14 @@ function updateCount() {
     document.getElementById("charCount")
         .textContent =
         `${text.length} characters`;
-
 }
 
 
-/* =========================
+/* =========================================
    SAMPLE
-========================= */
+========================================= */
 
-function loadSample() {
+function loadSample(){
 
     const textarea =
         document.getElementById("syllabus");
@@ -1313,10 +1552,15 @@ function loadSample() {
     textarea.value = `
 Information Security
 
+Security Principles
+Confidentiality
+Integrity
+Availability
+
 Cryptography
-Digital Signatures
 DES
 RSA
+Digital Signatures
 PGP
 
 Key Management
@@ -1332,18 +1576,21 @@ Social Engineering
 
     updateCount();
 
+    showToast("Sample syllabus loaded");
 }
 
 
-/* =========================
+/* =========================================
    CLEAR
-========================= */
+========================================= */
 
-function clearMap() {
+function clearMap(){
 
     document.getElementById("syllabus").value = "";
 
     updateCount();
+
+    mindMapData = null;
 
     document.getElementById("topicBadge")
         .textContent = "0 Topics";
@@ -1357,49 +1604,16 @@ function clearMap() {
     document.getElementById("subtopicCount")
         .textContent = "0";
 
-
     document.getElementById("mapCanvas").innerHTML = `
+        <div class="empty-state">
 
-        <div
-            style="
-            position:absolute;
-            top:210px;
-            left:50%;
-            transform:translateX(-50%);
-            text-align:center;
-            width:300px;
-            color:#aaa6b6;
-            "
-        >
-
-            <div
-                style="
-                width:68px;
-                height:68px;
-                background:#f0eef6;
-                border-radius:21px;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-size:30px;
-                margin:0 auto 15px;
-                "
-            >
+            <div class="empty-icon">
                 🧠
             </div>
 
-            <h3 style="
-                font-size:14px;
-                margin-bottom:7px;
-                color:#716d7e;
-            ">
-                Your knowledge map starts here
-            </h3>
+            <h3>Your knowledge map starts here</h3>
 
-            <p style="
-                font-size:10px;
-                line-height:1.5;
-            ">
+            <p>
                 Enter your syllabus and generate
                 your visual learning map.
             </p>
@@ -1407,286 +1621,1365 @@ function clearMap() {
         </div>
     `;
 
+    resetView();
+
+    showToast("Mind map cleared");
 }
 
 
-/* =========================
+/* =========================================
    GENERATE
-========================= */
+========================================= */
 
-function generateMindMap() {
+async function generateMindMap(){
 
     const text =
         document.getElementById("syllabus")
-        .value
-        .trim();
+            .value
+            .trim();
 
-    if (!text) {
+    if(!text){
 
-        alert("Please enter your syllabus or topic.");
+        showToast("Please enter a topic or syllabus.");
 
         return;
-
     }
 
+    if(text.length < 5){
+
+        showToast("Please enter a little more content.");
+
+        return;
+    }
+
+    const detail =
+        document.getElementById("detailLevel").value;
+
+    const focus =
+        document.getElementById("focusType").value;
 
     const prompt = `
-Create a hierarchical mind map from:
+You are an expert educational mind-map generator.
+
+Create a hierarchical mind map from the following study material:
 
 ${text}
 
-Organize the content as:
+Requirements:
 
-Main Topic
-→ Main Branches
-→ Subtopics
+1. Identify one clear main topic.
+2. Create logical main branches.
+3. Create useful subtopics under each branch.
+4. Do not invent unrelated subjects.
+5. Keep the hierarchy educational and easy to revise.
+6. Focus on ${focus}.
+7. Detail level: ${detail}.
+8. Use short node titles.
+9. Add a one-sentence explanation for every node.
+10. Return ONLY valid JSON.
+11. Do not use markdown code fences.
+12. Do not add any text before or after the JSON.
 
-Return structured JSON.
+Use exactly this structure:
+
+{
+  "title": "Main Topic",
+  "description": "Short description",
+  "children": [
+    {
+      "title": "Main Branch",
+      "description": "Short explanation",
+      "children": [
+        {
+          "title": "Subtopic",
+          "description": "Short explanation",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
+
+Maximum:
+- 7 main branches
+- 6 children per branch
+- 3 hierarchy levels
 `;
 
-    console.log("AI Prompt:", prompt);
+    setLoading(true);
 
+    try{
 
-    document.getElementById("loading")
-        .style.display = "flex";
+        const response =
+            await fetch(GEMINI_API_URL, {
 
+                method:"POST",
 
-    setTimeout(() => {
+                headers:{
+                    "Content-Type":"application/json"
+                },
 
-        createDemoMap();
+                body:JSON.stringify({
+                    prompt:prompt
+                })
 
-        document.getElementById("loading")
-            .style.display = "none";
+            });
 
-    }, 1300);
+        const data =
+            await response.json();
 
+        if(!response.ok){
+
+            let message =
+                data.error ||
+                "Gemini request failed.";
+
+            if(response.status === 429){
+
+                message =
+                    "Gemini quota is currently exhausted. Please wait for the quota to reset.";
+            }
+
+            if(response.status === 503){
+
+                message =
+                    "Gemini is temporarily busy. Please try again shortly.";
+            }
+
+            throw new Error(message);
+        }
+
+        if(!data.success || !data.text){
+
+            throw new Error(
+                "Gemini returned an empty response."
+            );
+        }
+
+        const parsed =
+            parseGeminiJSON(data.text);
+
+        validateMindMap(parsed);
+
+        mindMapData = parsed;
+
+        renderMindMap(parsed);
+
+        showToast("AI mind map generated successfully");
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Unable to generate mind map."
+        );
+
+    }finally{
+
+        setLoading(false);
+    }
 }
 
 
-/* =========================
-   CREATE MAP
-========================= */
+/* =========================================
+   PARSE GEMINI JSON
+========================================= */
 
-function createDemoMap() {
+function parseGeminiJSON(text){
+
+    let cleaned =
+        text
+            .replace(/```json/gi,"")
+            .replace(/```/g,"")
+            .trim();
+
+    try{
+
+        return JSON.parse(cleaned);
+
+    }catch(error){
+
+        const start =
+            cleaned.indexOf("{");
+
+        const end =
+            cleaned.lastIndexOf("}");
+
+        if(start !== -1 && end !== -1){
+
+            const possibleJSON =
+                cleaned.substring(
+                    start,
+                    end + 1
+                );
+
+            return JSON.parse(possibleJSON);
+        }
+
+        throw new Error(
+            "Gemini returned invalid mind-map JSON."
+        );
+    }
+}
+
+
+/* =========================================
+   VALIDATE
+========================================= */
+
+function validateMindMap(data){
+
+    if(!data || typeof data !== "object"){
+
+        throw new Error(
+            "Invalid mind-map response."
+        );
+    }
+
+    if(!data.title){
+
+        throw new Error(
+            "Mind map has no main topic."
+        );
+    }
+
+    if(!Array.isArray(data.children)){
+
+        data.children = [];
+    }
+
+    normalizeNode(data);
+}
+
+
+function normalizeNode(node){
+
+    if(!node.title){
+
+        node.title = "Untitled Topic";
+    }
+
+    if(!node.description){
+
+        node.description =
+            "No explanation was provided.";
+    }
+
+    if(!Array.isArray(node.children)){
+
+        node.children = [];
+    }
+
+    node.children.forEach(child => {
+
+        normalizeNode(child);
+
+    });
+}
+
+
+/* =========================================
+   RENDER MIND MAP
+========================================= */
+
+function renderMindMap(data){
 
     const canvas =
         document.getElementById("mapCanvas");
 
+    canvas.innerHTML = "";
 
-    canvas.innerHTML = `
+    const nodes = [];
 
-        <svg
-            class="map-lines"
-            viewBox="0 0 1000 560"
-        >
+    const levels = [];
 
-            <path d="M500 105 C500 145 170 145 170 210"/>
-            <path d="M500 105 C500 150 500 165 500 210"/>
-            <path d="M500 105 C500 145 830 145 830 210"/>
-
-            <path d="M170 260 C170 300 85 310 85 365"/>
-            <path d="M170 260 C170 310 255 310 255 365"/>
-
-            <path d="M500 260 C500 300 415 310 415 365"/>
-            <path d="M500 260 C500 310 585 310 585 365"/>
-
-            <path d="M830 260 C830 300 745 310 745 365"/>
-            <path d="M830 260 C830 310 915 310 915 365"/>
-
-        </svg>
-
-
-        <!-- ROOT -->
-
-        <div
-            class="node root-node"
-            onclick="showTopic('Information Security')"
-        >
-            🛡️ Information Security
-            <small style="color:rgba(255,255,255,.7)">
-                Main Subject
-            </small>
-        </div>
-
-
-        <!-- LEVEL 1 -->
-
-        <div
-            class="node level-one"
-            style="left:105px;top:205px;"
-            onclick="showTopic('Cryptography')"
-        >
-            🔐 Cryptography
-            <small>Security Methods</small>
-        </div>
-
-
-        <div
-            class="node level-one"
-            style="left:435px;top:205px;"
-            onclick="showTopic('Algorithms')"
-        >
-            ⚙️ Algorithms
-            <small>Core Techniques</small>
-        </div>
-
-
-        <div
-            class="node level-one"
-            style="left:765px;top:205px;"
-            onclick="showTopic('Key Management')"
-        >
-            🔑 Key Management
-            <small>Key Exchange</small>
-        </div>
-
-
-        <!-- LEVEL 2 -->
-
-        <div
-            class="node level-two"
-            style="left:25px;top:360px;"
-            onclick="showTopic('Digital Signatures')"
-        >
-            Digital Signatures
-        </div>
-
-
-        <div
-            class="node level-two"
-            style="left:195px;top:360px;"
-            onclick="showTopic('PGP')"
-        >
-            PGP
-        </div>
-
-
-        <div
-            class="node level-two"
-            style="left:350px;top:360px;"
-            onclick="showTopic('DES')"
-        >
-            DES
-        </div>
-
-
-        <div
-            class="node level-two"
-            style="left:530px;top:360px;"
-            onclick="showTopic('RSA')"
-        >
-            RSA
-        </div>
-
-
-        <div
-            class="node level-two"
-            style="left:675px;top:360px;"
-            onclick="showTopic('Diffie-Hellman')"
-        >
-            Diffie-Hellman
-        </div>
-
-
-        <div
-            class="node level-two"
-            style="left:850px;top:360px;"
-            onclick="showTopic('PKI')"
-        >
-            PKI
-        </div>
-
-    `;
-
-
-    document.getElementById("topicBadge")
-        .textContent = "10 Topics";
-
-
-    document.getElementById("mainTopic")
-        .textContent = "Information Security";
-
-
-    document.getElementById("branchCount")
-        .textContent = "3";
-
-
-    document.getElementById("subtopicCount")
-        .textContent = "6";
-
-
-    resetZoom();
-
-}
-
-
-/* =========================
-   TOPIC CLICK
-========================= */
-
-function showTopic(topic) {
-
-    alert(
-        "📚 " + topic +
-        "\n\nAI explanation for this topic can be connected here."
+    collectNodes(
+        data,
+        null,
+        0,
+        nodes,
+        levels
     );
 
+    const canvasWidth =
+        Math.max(
+            1200,
+            (levels.length > 0
+                ? Math.max(...levels.map(x => x.length))
+                : 1) * 190
+        );
+
+    const canvasHeight =
+        Math.max(
+            650,
+            (levels.length + 1) * 150
+        );
+
+    canvas.style.width =
+        `${canvasWidth}px`;
+
+    canvas.style.height =
+        `${canvasHeight}px`;
+
+    const svg =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg"
+        );
+
+    svg.classList.add("map-lines");
+
+    svg.setAttribute(
+        "width",
+        canvasWidth
+    );
+
+    svg.setAttribute(
+        "height",
+        canvasHeight
+    );
+
+    canvas.appendChild(svg);
+
+    const positions =
+        calculatePositions(
+            data,
+            canvasWidth,
+            canvasHeight
+        );
+
+    drawConnections(
+        data,
+        positions,
+        svg
+    );
+
+    nodes.forEach(item => {
+
+        const node =
+            document.createElement("div");
+
+        node.className =
+            "node " +
+            getNodeClass(item.level);
+
+        const position =
+            positions.get(item.path);
+
+        node.style.left =
+            `${position.x}px`;
+
+        node.style.top =
+            `${position.y}px`;
+
+        node.innerHTML = `
+            ${escapeHTML(item.title)}
+            <small>
+                ${escapeHTML(
+                    item.description
+                )}
+            </small>
+        `;
+
+        node.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                showTopic(
+                    item.title,
+                    item.description
+                );
+
+            }
+        );
+
+        canvas.appendChild(node);
+
+    });
+
+    const stats =
+        getStats(data);
+
+    document.getElementById("topicBadge")
+        .textContent =
+        `${stats.total} Topics`;
+
+    document.getElementById("mainTopic")
+        .textContent =
+        data.title;
+
+    document.getElementById("branchCount")
+        .textContent =
+        data.children.length;
+
+    document.getElementById("subtopicCount")
+        .textContent =
+        stats.subtopics;
+
+    resetView();
+
+    setTimeout(
+        fitMap,
+        100
+    );
 }
 
 
-/* =========================
+/* =========================================
+   COLLECT NODES
+========================================= */
+
+function collectNodes(
+    node,
+    parent,
+    level,
+    result,
+    levels,
+    path = "0"
+){
+
+    if(!levels[level]){
+
+        levels[level] = [];
+    }
+
+    const item = {
+
+        title:node.title,
+
+        description:
+            node.description,
+
+        level:level,
+
+        path:path,
+
+        parent:parent
+
+    };
+
+    levels[level].push(item);
+
+    result.push(item);
+
+    node.children.forEach(
+        (child,index) => {
+
+            collectNodes(
+                child,
+                item,
+                level + 1,
+                result,
+                levels,
+                `${path}-${index}`
+            );
+
+        }
+    );
+}
+
+
+/* =========================================
+   POSITION NODES
+========================================= */
+
+function calculatePositions(
+    data,
+    width,
+    height
+){
+
+    const positions =
+        new Map();
+
+    const levels = [];
+
+    collectPaths(
+        data,
+        0,
+        "0",
+        levels
+    );
+
+    levels.forEach(
+        (items,level) => {
+
+            const spacing =
+                width /
+                (items.length + 1);
+
+            items.forEach(
+                (item,index) => {
+
+                    let y;
+
+                    if(level === 0){
+
+                        y = 35;
+
+                    }else if(level === 1){
+
+                        y = 210;
+
+                    }else{
+
+                        y = 390 +
+                            (level - 2) * 150;
+                    }
+
+                    positions.set(
+                        item.path,
+                        {
+                            x:
+                                spacing *
+                                (index + 1) -
+                                80,
+
+                            y:y
+                        }
+                    );
+
+                }
+            );
+
+        }
+    );
+
+    return positions;
+}
+
+
+/* =========================================
+   COLLECT PATHS
+========================================= */
+
+function collectPaths(
+    node,
+    level,
+    path,
+    levels
+){
+
+    if(!levels[level]){
+
+        levels[level] = [];
+    }
+
+    levels[level].push({
+        node:node,
+        path:path
+    });
+
+    node.children.forEach(
+        (child,index) => {
+
+            collectPaths(
+                child,
+                level + 1,
+                `${path}-${index}`,
+                levels
+            );
+
+        }
+    );
+}
+
+
+/* =========================================
+   DRAW CONNECTIONS
+========================================= */
+
+function drawConnections(
+    node,
+    positions,
+    svg,
+    path = "0"
+){
+
+    node.children.forEach(
+        (child,index) => {
+
+            const childPath =
+                `${path}-${index}`;
+
+            const parentPosition =
+                positions.get(path);
+
+            const childPosition =
+                positions.get(childPath);
+
+            if(
+                parentPosition &&
+                childPosition
+            ){
+
+                const x1 =
+                    parentPosition.x + 80;
+
+                const y1 =
+                    parentPosition.y + 55;
+
+                const x2 =
+                    childPosition.x + 80;
+
+                const y2 =
+                    childPosition.y;
+
+                const midY =
+                    (y1 + y2) / 2;
+
+                const pathElement =
+                    document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "path"
+                    );
+
+                pathElement.setAttribute(
+                    "d",
+                    `
+                    M ${x1} ${y1}
+                    C ${x1} ${midY},
+                      ${x2} ${midY},
+                      ${x2} ${y2}
+                    `
+                );
+
+                svg.appendChild(
+                    pathElement
+                );
+            }
+
+            drawConnections(
+                child,
+                positions,
+                svg,
+                childPath
+            );
+
+        }
+    );
+}
+
+
+/* =========================================
+   NODE CLASS
+========================================= */
+
+function getNodeClass(level){
+
+    if(level === 0){
+
+        return "root-node";
+    }
+
+    if(level === 1){
+
+        return "level-one";
+    }
+
+    if(level === 2){
+
+        return "level-two";
+    }
+
+    return "level-three";
+}
+
+
+/* =========================================
+   STATISTICS
+========================================= */
+
+function getStats(data){
+
+    let total = 0;
+
+    let subtopics = 0;
+
+    function walk(node,level){
+
+        total++;
+
+        if(level >= 2){
+
+            subtopics++;
+        }
+
+        node.children.forEach(
+            child => walk(
+                child,
+                level + 1
+            )
+        );
+    }
+
+    walk(data,0);
+
+    return {
+        total:total,
+        subtopics:subtopics
+    };
+}
+
+
+/* =========================================
+   TOPIC EXPLANATION
+========================================= */
+
+async function showTopic(
+    topic,
+    existingDescription
+){
+
+    selectedTopic = topic;
+
+    document.getElementById("modalTopic")
+        .textContent = topic;
+
+    document.getElementById("explanationText")
+        .textContent =
+        "✨ Gemini is preparing an explanation...";
+
+    document.getElementById("explanationModal")
+        .classList.add("show");
+
+    const syllabus =
+        document.getElementById("syllabus")
+            .value
+            .trim();
+
+    const prompt = `
+You are an expert college tutor.
+
+Explain the following study topic:
+
+Topic:
+${topic}
+
+Context:
+${syllabus}
+
+Give a clear student-friendly explanation.
+
+Include:
+1. Definition
+2. Key points
+3. Simple example
+4. Exam tip
+
+Keep the answer concise and useful.
+Use plain text with simple headings.
+`;
+
+    try{
+
+        const response =
+            await fetch(
+                GEMINI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        prompt:prompt
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error ||
+                "Unable to get AI explanation."
+            );
+        }
+
+        document.getElementById(
+            "explanationText"
+        ).textContent =
+            data.text ||
+            existingDescription ||
+            "No explanation available.";
+
+    }catch(error){
+
+        document.getElementById(
+            "explanationText"
+        ).textContent =
+            existingDescription ||
+            error.message ||
+            "Unable to load explanation.";
+    }
+}
+
+
+function closeModal(){
+
+    document.getElementById(
+        "explanationModal"
+    ).classList.remove("show");
+}
+
+
+/* =========================================
+   COPY EXPLANATION
+========================================= */
+
+async function copyExplanation(){
+
+    const text =
+        document.getElementById(
+            "explanationText"
+        ).textContent;
+
+    try{
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+        showToast(
+            "Explanation copied"
+        );
+
+    }catch{
+
+        showToast(
+            "Copy failed"
+        );
+    }
+}
+
+
+/* =========================================
    ZOOM
-========================= */
+========================================= */
 
-function zoomIn() {
+function zoomIn(){
 
-    if (scale < 1.5) {
+    scale =
+        Math.min(
+            1.8,
+            scale + .1
+        );
 
-        scale += .1;
-
-        applyZoom();
-
-    }
-
+    applyView();
 }
 
 
-function zoomOut() {
+function zoomOut(){
 
-    if (scale > .6) {
+    scale =
+        Math.max(
+            .4,
+            scale - .1
+        );
 
-        scale -= .1;
-
-        applyZoom();
-
-    }
-
+    applyView();
 }
 
 
-function resetZoom() {
+function resetView(){
 
     scale = 1;
 
-    applyZoom();
+    panX = 0;
+    panY = 0;
 
+    applyView();
 }
 
 
-function applyZoom() {
+function applyView(){
 
-    document.getElementById("mapCanvas")
-        .style.transform =
-        `scale(${scale})`;
+    const viewport =
+        document.getElementById(
+            "mapViewport"
+        );
 
+    viewport.style.transform =
+        `translate(calc(-50% + ${panX}px), ${panY}px) scale(${scale})`;
+
+    document.getElementById(
+        "zoomValue"
+    ).textContent =
+        `${Math.round(scale * 100)}%`;
 }
 
 
-/* =========================
-   INITIAL COUNT
-========================= */
+/* =========================================
+   FIT MAP
+========================================= */
+
+function fitMap(){
+
+    const wrapper =
+        document.getElementById(
+            "mapWrapper"
+        );
+
+    const viewport =
+        document.getElementById(
+            "mapViewport"
+        );
+
+    const canvas =
+        document.getElementById(
+            "mapCanvas"
+        );
+
+    if(!canvas){
+
+        return;
+    }
+
+    const width =
+        canvas.offsetWidth || 1200;
+
+    const height =
+        canvas.offsetHeight || 650;
+
+    const availableWidth =
+        wrapper.clientWidth - 50;
+
+    const availableHeight =
+        wrapper.clientHeight - 50;
+
+    let newScale =
+        Math.min(
+            availableWidth / width,
+            availableHeight / height
+        );
+
+    newScale =
+        Math.max(
+            .4,
+            Math.min(
+                1,
+                newScale
+            )
+        );
+
+    scale = newScale;
+
+    panX = 0;
+
+    panY = 10;
+
+    viewport.style.left = "50%";
+
+    applyView();
+}
+
+
+/* =========================================
+   MOUSE WHEEL ZOOM
+========================================= */
+
+document.getElementById(
+    "mapWrapper"
+).addEventListener(
+    "wheel",
+    function(event){
+
+        event.preventDefault();
+
+        if(event.deltaY < 0){
+
+            zoomIn();
+
+        }else{
+
+            zoomOut();
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =========================================
+   DRAG / PAN
+========================================= */
+
+const mapWrapper =
+    document.getElementById(
+        "mapWrapper"
+    );
+
+mapWrapper.addEventListener(
+    "mousedown",
+    event => {
+
+        if(
+            event.target.closest(".node")
+        ){
+
+            return;
+        }
+
+        isDragging = true;
+
+        mapWrapper.classList.add(
+            "dragging"
+        );
+
+        dragStartX =
+            event.clientX - panX;
+
+        dragStartY =
+            event.clientY - panY;
+    }
+);
+
+window.addEventListener(
+    "mousemove",
+    event => {
+
+        if(!isDragging){
+
+            return;
+        }
+
+        panX =
+            event.clientX -
+            dragStartX;
+
+        panY =
+            event.clientY -
+            dragStartY;
+
+        applyView();
+    }
+);
+
+window.addEventListener(
+    "mouseup",
+    () => {
+
+        isDragging = false;
+
+        mapWrapper.classList.remove(
+            "dragging"
+        );
+    }
+);
+
+
+/* =========================================
+   COPY MAP JSON
+========================================= */
+
+async function copyMap(){
+
+    if(!mindMapData){
+
+        showToast(
+            "Generate a mind map first."
+        );
+
+        return;
+    }
+
+    try{
+
+        await navigator.clipboard.writeText(
+            JSON.stringify(
+                mindMapData,
+                null,
+                2
+            )
+        );
+
+        showToast(
+            "Mind map JSON copied"
+        );
+
+    }catch{
+
+        showToast(
+            "Copy failed"
+        );
+    }
+}
+
+
+/* =========================================
+   DOWNLOAD JSON
+========================================= */
+
+function downloadJSON(){
+
+    if(!mindMapData){
+
+        showToast(
+            "Generate a mind map first."
+        );
+
+        return;
+    }
+
+    const content =
+        JSON.stringify(
+            mindMapData,
+            null,
+            2
+        );
+
+    downloadFile(
+        content,
+        "ai-mind-map.json",
+        "application/json"
+    );
+}
+
+
+/* =========================================
+   DOWNLOAD MARKDOWN
+========================================= */
+
+function downloadMarkdown(){
+
+    if(!mindMapData){
+
+        showToast(
+            "Generate a mind map first."
+        );
+
+        return;
+    }
+
+    let markdown =
+        `# ${mindMapData.title}\n\n`;
+
+    if(mindMapData.description){
+
+        markdown +=
+            `${mindMapData.description}\n\n`;
+    }
+
+    function walk(node,level){
+
+        if(level > 0){
+
+            markdown +=
+                `${"#".repeat(
+                    Math.min(
+                        level + 1,
+                        6
+                    )
+                )} ${node.title}\n\n`;
+
+            if(node.description){
+
+                markdown +=
+                    `${node.description}\n\n`;
+            }
+        }
+
+        node.children.forEach(
+            child =>
+                walk(
+                    child,
+                    level + 1
+                )
+        );
+    }
+
+    walk(
+        mindMapData,
+        0
+    );
+
+    downloadFile(
+        markdown,
+        "ai-mind-map.md",
+        "text/markdown"
+    );
+}
+
+
+/* =========================================
+   DOWNLOAD HELPER
+========================================= */
+
+function downloadFile(
+    content,
+    filename,
+    type
+){
+
+    const blob =
+        new Blob(
+            [content],
+            {type:type}
+        );
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download = filename;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+    showToast(
+        `${filename} downloaded`
+    );
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+function setLoading(show){
+
+    document.getElementById(
+        "loading"
+    ).style.display =
+        show ? "flex" : "none";
+
+    document.getElementById(
+        "generateBtn"
+    ).disabled = show;
+
+    if(show){
+
+        document.getElementById(
+            "loadingText"
+        ).textContent =
+            "Gemini is organizing topics and relationships...";
+    }
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        toastTimer
+    );
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            3000
+        );
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================
+   MODAL CLICK OUTSIDE
+========================================= */
+
+document.getElementById(
+    "explanationModal"
+).addEventListener(
+    "click",
+    event => {
+
+        if(
+            event.target.id ===
+            "explanationModal"
+        ){
+
+            closeModal();
+        }
+
+    }
+);
+
+
+/* =========================================
+   ESCAPE KEY
+========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeModal();
+        }
+
+    }
+);
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
 
 updateCount();
+
+resetView();
 
 </script>
 

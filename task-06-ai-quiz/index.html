@@ -710,11 +710,23 @@ button{
         0 8px 20px
         rgba(105,76,215,.2);
 
+    transition:.2s;
+
 }
 
 .generate-btn:hover{
 
     transform:translateY(-1px);
+
+}
+
+.generate-btn:disabled{
+
+    opacity:.65;
+
+    cursor:not-allowed;
+
+    transform:none;
 
 }
 
@@ -979,15 +991,23 @@ button{
 
     transition:.2s;
 
+    color:var(--text);
+
 }
 
-.option:hover{
+.option:hover:not(:disabled){
 
     border-color:#a797eb;
 
     background:#fbfaff;
 
     transform:translateY(-1px);
+
+}
+
+.option:disabled{
+
+    cursor:default;
 
 }
 
@@ -1129,6 +1149,12 @@ button{
     font-size:10px;
 
     font-weight:800;
+
+}
+
+.next-btn:hover:not(:disabled){
+
+    background:var(--purple-dark);
 
 }
 
@@ -1304,6 +1330,12 @@ button{
 
 }
 
+.restart-btn:hover{
+
+    background:var(--purple-dark);
+
+}
+
 
 /* ================= LOADING ================= */
 
@@ -1351,6 +1383,8 @@ button{
     box-shadow:
         0 20px 60px
         rgba(30,25,55,.15);
+
+    max-width:330px;
 
 }
 
@@ -1432,6 +1466,8 @@ button{
     transition:.3s;
 
     z-index:110;
+
+    max-width:360px;
 
 }
 
@@ -1557,6 +1593,28 @@ button{
     .options{
 
         grid-template-columns:1fr;
+
+    }
+
+    .quiz-card{
+
+        padding:18px;
+
+    }
+
+    .question-box h3{
+
+        font-size:16px;
+
+    }
+
+    .toast{
+
+        left:15px;
+        right:15px;
+        bottom:15px;
+
+        max-width:none;
 
     }
 
@@ -1918,6 +1976,7 @@ button{
 
     <button
         class="generate-btn"
+        id="generateBtn"
         onclick="generateQuiz()"
     >
         ✨ Generate AI Quiz
@@ -1929,6 +1988,7 @@ button{
 
         <button
             class="small-btn"
+            type="button"
             onclick="loadSample()"
         >
             Load Sample
@@ -1937,6 +1997,7 @@ button{
 
         <button
             class="small-btn"
+            type="button"
             onclick="clearQuiz()"
         >
             Clear
@@ -2130,6 +2191,7 @@ button{
 
         <button
             class="restart-btn"
+            type="button"
             onclick="restartQuiz()"
         >
             ↻ Restart Quiz
@@ -2170,7 +2232,7 @@ button{
         </strong>
 
 
-        <p>
+        <p id="loadingText">
             Creating questions and answers
         </p>
 
@@ -2191,9 +2253,16 @@ button{
 
 <script>
 
+/* ==================================================
+   GEMINI BACKEND
+================================================== */
+
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
+
 
 /* ==================================================
-   QUIZ DATA
+   QUIZ STATE
 ================================================== */
 
 let quizData = [];
@@ -2204,12 +2273,23 @@ let score = 0;
 
 let answered = false;
 
+let toastTimer = null;
+
+let generating = false;
+
 
 /* ==================================================
-   GENERATE QUIZ
+   GENERATE REAL GEMINI QUIZ
 ================================================== */
 
-function generateQuiz(){
+async function generateQuiz(){
+
+    if(generating){
+
+        return;
+
+    }
+
 
     const topic =
         document
@@ -2238,31 +2318,53 @@ function generateQuiz(){
             "Please enter a topic or study material."
         );
 
+        document
+            .getElementById("topic")
+            .focus();
+
+        return;
+
+    }
+
+
+    if(topic.length < 10){
+
+        showToast(
+            "Please enter a little more study material."
+        );
+
         return;
 
     }
 
 
     const prompt = `
+You are an expert educational quiz generator.
 
-Create an interactive multiple-choice quiz.
+Create a multiple-choice quiz from the following study material.
 
-Topic:
+STUDY MATERIAL:
 ${topic}
 
-Requirements:
+REQUIREMENTS:
 
-- Generate ${count} questions.
+- Generate exactly ${count} questions.
 - Difficulty: ${difficulty}.
 - Each question must have exactly 4 options.
-- Only one option should be correct.
-- Include a short explanation.
-- Questions should test understanding.
-- Avoid duplicate questions.
-- Keep language clear and student-friendly.
-- Return structured JSON.
+- Only ONE option can be correct.
+- Questions must be based only on the supplied study material.
+- Test understanding, not only memorization.
+- Avoid duplicate or nearly duplicate questions.
+- Use clear student-friendly language.
+- Do not invent unrelated facts.
+- Include a short explanation for every answer.
+- The "answer" value must be the zero-based index of the correct option.
+- Return ONLY valid JSON.
+- Do not return Markdown.
+- Do not return code fences.
+- Do not add any text before or after the JSON.
 
-Required format:
+EXACT JSON FORMAT:
 
 [
   {
@@ -2274,471 +2376,457 @@ Required format:
       "Option D"
     ],
     "answer": 0,
-    "explanation": "Short explanation"
+    "explanation": "Short explanation of the correct answer."
   }
 ]
-
 `;
 
 
-    console.log(
-        "AI Quiz Prompt:",
-        prompt
-    );
-
+    generating = true;
 
     showLoading(true);
 
 
-    setTimeout(
-        function(){
+    const generateButton =
+        document.getElementById(
+            "generateBtn"
+        );
 
-            quizData =
-                createDemoQuiz(
-                    topic,
-                    count
+
+    generateButton.disabled = true;
+
+    generateButton.textContent =
+        "⏳ Generating Quiz...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                GEMINI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        prompt:prompt
+                    })
+                }
+            );
+
+
+        let data;
+
+
+        try{
+
+            data =
+                await response.json();
+
+        }
+        catch(error){
+
+            throw new Error(
+                "Invalid response received from the Gemini backend."
+            );
+
+        }
+
+
+        if(!response.ok){
+
+            if(response.status === 429){
+
+                throw new Error(
+                    "Gemini quota or rate limit reached. Please wait and try again later."
                 );
 
-
-            currentQuestion = 0;
-
-            score = 0;
-
-            answered = false;
+            }
 
 
-            showLoading(false);
+            if(response.status === 503){
 
-            startQuiz();
+                throw new Error(
+                    "Gemini service is temporarily unavailable. Please try again."
+                );
 
-        },
-        1100
-    );
+            }
+
+
+            throw new Error(
+                data.error ||
+                `Gemini request failed (${response.status}).`
+            );
+
+        }
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.error ||
+                "Gemini could not generate the quiz."
+            );
+
+        }
+
+
+        const rawText =
+            data.text || "";
+
+
+        if(!rawText.trim()){
+
+            throw new Error(
+                "Gemini returned an empty response."
+            );
+
+        }
+
+
+        quizData =
+            parseQuizJSON(rawText);
+
+
+        validateQuiz(
+            quizData,
+            count
+        );
+
+
+        currentQuestion = 0;
+
+        score = 0;
+
+        answered = false;
+
+
+        startQuiz();
+
+
+        showToast(
+            `AI quiz generated with ${quizData.length} questions.`
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Quiz Generation Error:",
+            error
+        );
+
+
+        let message =
+            error.message ||
+            "Unable to generate quiz.";
+
+
+        if(
+            error.name === "TypeError" &&
+            message.includes("fetch")
+        ){
+
+            message =
+                "Gemini backend is not reachable. Please make sure node server.js is running on port 10000.";
+
+        }
+
+
+        showToast(message);
+
+
+    }
+    finally{
+
+        generating = false;
+
+        showLoading(false);
+
+        generateButton.disabled = false;
+
+        generateButton.textContent =
+            "✨ Generate AI Quiz";
+
+    }
 
 }
 
 
 /* ==================================================
-   DEMO QUIZ
+   PARSE GEMINI JSON
 ================================================== */
 
-function createDemoQuiz(
-    topic,
-    count
-){
+function parseQuizJSON(text){
 
-    const informationSecurityQuiz = [
-
-        {
-            question:
-                "Which three principles form the CIA Triad?",
-
-            options:[
-                "Confidentiality, Integrity and Availability",
-                "Control, Inspection and Authentication",
-                "Confidentiality, Inspection and Authorization",
-                "Control, Integrity and Authentication"
-            ],
-
-            answer:0,
-
-            explanation:
-                "The CIA Triad represents Confidentiality, Integrity and Availability."
-        },
+    let cleaned =
+        String(text || "")
+            .trim();
 
 
-        {
-            question:
-                "What is the main purpose of encryption?",
+    /*
+       Remove code fences.
+    */
 
-            options:[
-                "To increase file size",
-                "To protect information from unauthorized access",
-                "To remove duplicate data",
-                "To improve internet speed"
-            ],
-
-            answer:1,
-
-            explanation:
-                "Encryption transforms readable information into protected ciphertext."
-        },
+    cleaned =
+        cleaned.replace(
+            /^```json\s*/i,
+            ""
+        );
 
 
-        {
-            question:
-                "Which algorithm is a symmetric-key algorithm?",
-
-            options:[
-                "RSA",
-                "Diffie-Hellman",
-                "DES",
-                "DSA"
-            ],
-
-            answer:2,
-
-            explanation:
-                "DES is a symmetric-key block cipher."
-        },
+    cleaned =
+        cleaned.replace(
+            /^```\s*/i,
+            ""
+        );
 
 
-        {
-            question:
-                "RSA is primarily based on which mathematical problem?",
-
-            options:[
-                "Integer factorization",
-                "Sorting",
-                "Matrix multiplication",
-                "Linear regression"
-            ],
-
-            answer:0,
-
-            explanation:
-                "RSA security is based on the difficulty of factoring large composite integers."
-        },
+    cleaned =
+        cleaned.replace(
+            /\s*```$/i,
+            ""
+        );
 
 
-        {
-            question:
-                "What does a digital signature primarily provide?",
-
-            options:[
-                "More storage",
-                "Authentication and integrity",
-                "Faster downloads",
-                "Data compression"
-            ],
-
-            answer:1,
-
-            explanation:
-                "Digital signatures help verify the sender and detect modification of signed data."
-        },
+    cleaned =
+        cleaned.trim();
 
 
-        {
-            question:
-                "Which protocol is used for secure key exchange?",
+    /*
+       Find the first JSON array.
+    */
 
-            options:[
-                "Diffie-Hellman",
-                "HTML",
-                "FTP",
-                "CSS"
-            ],
-
-            answer:0,
-
-            explanation:
-                "Diffie-Hellman allows parties to establish a shared secret over an insecure channel."
-        },
+    const firstBracket =
+        cleaned.indexOf("[");
 
 
-        {
-            question:
-                "What is PGP commonly used for?",
-
-            options:[
-                "Image editing",
-                "Email and file encryption",
-                "Database indexing",
-                "Web page styling"
-            ],
-
-            answer:1,
-
-            explanation:
-                "PGP is commonly used to protect email communication and files."
-        },
-
-
-        {
-            question:
-                "What does PKI stand for?",
-
-            options:[
-                "Private Key Integration",
-                "Public Key Infrastructure",
-                "Protected Knowledge Interface",
-                "Public Knowledge Internet"
-            ],
-
-            answer:1,
-
-            explanation:
-                "PKI stands for Public Key Infrastructure."
-        },
-
-
-        {
-            question:
-                "Which security property ensures data is not changed without authorization?",
-
-            options:[
-                "Availability",
-                "Confidentiality",
-                "Integrity",
-                "Scalability"
-            ],
-
-            answer:2,
-
-            explanation:
-                "Integrity ensures that information remains accurate and unaltered."
-        },
-
-
-        {
-            question:
-                "Which security property ensures authorized users can access systems when needed?",
-
-            options:[
-                "Availability",
-                "Integrity",
-                "Confidentiality",
-                "Encryption"
-            ],
-
-            answer:0,
-
-            explanation:
-                "Availability means systems and information are accessible when required."
-        }
-
-    ];
+    const lastBracket =
+        cleaned.lastIndexOf("]");
 
 
     if(
-        topic
-            .toLowerCase()
-            .includes("security")
-        ||
-        topic
-            .toLowerCase()
-            .includes("crypt")
-        ||
-        topic
-            .toLowerCase()
-            .includes("rsa")
-        ||
-        topic
-            .toLowerCase()
-            .includes("cia")
+        firstBracket !== -1 &&
+        lastBracket !== -1 &&
+        lastBracket > firstBracket
     ){
 
-        return informationSecurityQuiz
-            .slice(0,count);
+        cleaned =
+            cleaned.substring(
+                firstBracket,
+                lastBracket + 1
+            );
 
     }
 
 
-    return createGenericQuiz(
-        topic,
-        count
-    );
+    try{
+
+        const parsed =
+            JSON.parse(cleaned);
+
+
+        if(!Array.isArray(parsed)){
+
+            throw new Error(
+                "Quiz response is not an array."
+            );
+
+        }
+
+
+        return parsed;
+
+    }
+    catch(error){
+
+        console.error(
+            "Invalid Gemini JSON:",
+            cleaned
+        );
+
+
+        throw new Error(
+            "Gemini returned an invalid quiz format. Please regenerate the quiz."
+        );
+
+    }
 
 }
 
 
 /* ==================================================
-   GENERIC DEMO QUIZ
+   VALIDATE QUIZ
 ================================================== */
 
-function createGenericQuiz(
-    topic,
-    count
+function validateQuiz(
+    quiz,
+    expectedCount
 ){
 
-    const questions = [
+    if(!Array.isArray(quiz)){
 
-        {
-            question:
-                `Which statement best describes ${topic}?`,
+        throw new Error(
+            "Quiz data is not an array."
+        );
 
-            options:[
-                `${topic} is a concept used to understand and solve problems.`,
-                `${topic} is only used for entertainment.`,
-                `${topic} cannot be applied in real situations.`,
-                `${topic} is unrelated to learning.`
-            ],
-
-            answer:0,
-
-            explanation:
-                `${topic} can be studied as a concept and applied to relevant problems.`
-        },
+    }
 
 
-        {
-            question:
-                `What is an important goal when studying ${topic}?`,
+    if(quiz.length === 0){
 
-            options:[
-                "Memorizing without understanding",
-                "Understanding important concepts and applications",
-                "Ignoring examples",
-                "Avoiding practice"
-            ],
+        throw new Error(
+            "Gemini returned no questions."
+        );
 
-            answer:1,
-
-            explanation:
-                "Understanding concepts and applications makes learning more useful."
-        },
+    }
 
 
-        {
-            question:
-                `Which approach is useful for learning ${topic}?`,
+    /*
+       IMPORTANT:
+       Require exactly the requested
+       number of questions.
+    */
 
-            options:[
-                "Practice and revision",
-                "Never reviewing",
-                "Ignoring difficult concepts",
-                "Only reading the title"
-            ],
+    if(
+        quiz.length !== expectedCount
+    ){
 
-            answer:0,
+        throw new Error(
+            `Gemini returned ${quiz.length} questions instead of ${expectedCount}. Please regenerate the quiz.`
+        );
 
-            explanation:
-                "Practice and revision help reinforce learning."
-        },
-
-
-        {
-            question:
-                `Why are examples useful when learning ${topic}?`,
-
-            options:[
-                "They make concepts easier to understand",
-                "They remove the need to study",
-                "They make all answers identical",
-                "They prevent practice"
-            ],
-
-            answer:0,
-
-            explanation:
-                "Examples connect theoretical ideas with practical understanding."
-        },
+    }
 
 
-        {
-            question:
-                `What should a student do when a concept in ${topic} is unclear?`,
+    quiz.forEach(
+        function(question,index){
 
-            options:[
-                "Skip the entire subject",
-                "Review the concept and ask questions",
-                "Stop practicing",
-                "Ignore the problem"
-            ],
+            if(
+                !question ||
+                typeof question.question !== "string" ||
+                !question.question.trim()
+            ){
 
-            answer:1,
+                throw new Error(
+                    `Question ${index + 1} is invalid.`
+                );
 
-            explanation:
-                "Reviewing the concept and asking questions helps resolve doubts."
-        },
+            }
 
 
-        {
-            question:
-                `Which method can help remember important ideas from ${topic}?`,
+            if(
+                !Array.isArray(question.options) ||
+                question.options.length !== 4
+            ){
 
-            options:[
-                "Revision",
-                "Ignoring notes",
-                "Avoiding questions",
-                "Never practicing"
-            ],
+                throw new Error(
+                    `Question ${index + 1} must have exactly 4 options.`
+                );
 
-            answer:0,
-
-            explanation:
-                "Regular revision helps strengthen memory."
-        },
+            }
 
 
-        {
-            question:
-                `What is the benefit of testing yourself on ${topic}?`,
+            question.options =
+                question.options.map(
+                    function(option){
 
-            options:[
-                "It identifies areas that need more practice",
-                "It removes the need for learning",
-                "It guarantees every answer is correct",
-                "It prevents revision"
-            ],
+                        return String(
+                            option ?? ""
+                        ).trim();
 
-            answer:0,
-
-            explanation:
-                "Self-testing helps identify strengths and areas that need improvement."
-        },
+                    }
+                );
 
 
-        {
-            question:
-                `Which activity can improve understanding of ${topic}?`,
+            /*
+               Make sure every option
+               contains actual text.
+            */
 
-            options:[
-                "Applying concepts to examples",
-                "Avoiding examples",
-                "Skipping difficult topics",
-                "Only reading once"
-            ],
+            if(
+                question.options.some(
+                    function(option){
 
-            answer:0,
+                        return !option;
 
-            explanation:
-                "Applying concepts to examples improves practical understanding."
-        },
+                    }
+                )
+            ){
 
+                throw new Error(
+                    `Question ${index + 1} contains an empty option.`
+                );
 
-        {
-            question:
-                `What is a useful study habit for ${topic}?`,
-
-            options:[
-                "Consistent practice",
-                "Last-minute learning only",
-                "Never revising",
-                "Avoiding questions"
-            ],
-
-            answer:0,
-
-            explanation:
-                "Consistent practice is useful for building understanding."
-        },
+            }
 
 
-        {
-            question:
-                `What is the purpose of a quiz about ${topic}?`,
+            /*
+               Prevent duplicate options.
+            */
 
-            options:[
-                "To test understanding",
-                "To replace all studying",
-                "To avoid learning",
-                "To make every answer random"
-            ],
+            const uniqueOptions =
+                new Set(
+                    question.options.map(
+                        function(option){
 
-            answer:0,
+                            return option
+                                .toLowerCase();
 
-            explanation:
-                "A quiz provides a way to test understanding and identify gaps."
+                        }
+                    )
+                );
+
+
+            if(
+                uniqueOptions.size !== 4
+            ){
+
+                throw new Error(
+                    `Question ${index + 1} contains duplicate options.`
+                );
+
+            }
+
+
+            question.answer =
+                Number(
+                    question.answer
+                );
+
+
+            if(
+                !Number.isInteger(
+                    question.answer
+                ) ||
+                question.answer < 0 ||
+                question.answer > 3
+            ){
+
+                throw new Error(
+                    `Question ${index + 1} has an invalid answer.`
+                );
+
+            }
+
+
+            if(
+                typeof question.explanation !==
+                "string" ||
+                !question.explanation.trim()
+            ){
+
+                question.explanation =
+                    "The selected answer is correct according to the study material.";
+
+            }
+
         }
-
-    ];
-
-
-    return questions.slice(
-        0,
-        count
     );
 
 }
@@ -2752,17 +2840,21 @@ function startQuiz(){
 
     document
         .getElementById("emptyState")
-        .style.display = "none";
+        .style.display =
+            "none";
 
 
     document
         .getElementById("result")
-        .classList.remove("show");
+        .classList.remove(
+            "show"
+        );
 
 
     document
         .getElementById("quizArea")
-        .style.display = "block";
+        .style.display =
+            "block";
 
 
     showQuestion();
@@ -2776,24 +2868,41 @@ function startQuiz(){
 
 function showQuestion(){
 
+    if(!quizData.length){
+
+        return;
+
+    }
+
+
     const question =
-        quizData[currentQuestion];
+        quizData[
+            currentQuestion
+        ];
 
 
     answered = false;
 
 
     document
-        .getElementById("questionCounter")
+        .getElementById(
+            "questionCounter"
+        )
         .textContent =
             `Question ${currentQuestion + 1} of ${quizData.length}`;
 
 
     document
-        .getElementById("questionText")
+        .getElementById(
+            "questionText"
+        )
         .textContent =
             question.question;
 
+
+    /*
+       Progress shows completed questions.
+    */
 
     const progress =
         Math.round(
@@ -2805,27 +2914,37 @@ function showQuestion(){
 
 
     document
-        .getElementById("progressBar")
+        .getElementById(
+            "progressBar"
+        )
         .style.width =
             progress + "%";
 
 
     document
-        .getElementById("progressText")
+        .getElementById(
+            "progressText"
+        )
         .textContent =
             progress + "%";
 
 
     const options =
-        document
-            .getElementById("options");
+        document.getElementById(
+            "options"
+        );
 
 
     options.innerHTML = "";
 
 
     const letters =
-        ["A","B","C","D"];
+        [
+            "A",
+            "B",
+            "C",
+            "D"
+        ];
 
 
     question.options.forEach(
@@ -2839,6 +2958,10 @@ function showQuestion(){
 
             button.className =
                 "option";
+
+
+            button.type =
+                "button";
 
 
             button.innerHTML = `
@@ -2883,21 +3006,25 @@ function showQuestion(){
         "feedback";
 
 
-    feedback.textContent = "";
+    feedback.innerHTML =
+        "";
 
 
-    document
-        .getElementById("nextBtn")
-        .disabled = true;
+    const nextButton =
+        document.getElementById(
+            "nextBtn"
+        );
 
 
-    document
-        .getElementById("nextBtn")
-        .textContent =
-            currentQuestion ===
-            quizData.length - 1
-                ? "Finish Quiz →"
-                : "Next Question →";
+    nextButton.disabled =
+        true;
+
+
+    nextButton.textContent =
+        currentQuestion ===
+        quizData.length - 1
+            ? "Finish Quiz →"
+            : "Next Question →";
 
 }
 
@@ -2912,7 +3039,9 @@ function selectAnswer(
 ){
 
     if(answered){
+
         return;
+
     }
 
 
@@ -2920,7 +3049,9 @@ function selectAnswer(
 
 
     const question =
-        quizData[currentQuestion];
+        quizData[
+            currentQuestion
+        ];
 
 
     const optionButtons =
@@ -2935,8 +3066,14 @@ function selectAnswer(
             button.disabled = true;
 
 
+            /*
+               Always highlight the
+               correct answer.
+            */
+
             if(
-                index === question.answer
+                index ===
+                question.answer
             ){
 
                 button.classList.add(
@@ -2963,6 +3100,10 @@ function selectAnswer(
         score++;
 
 
+        /*
+           Correct selected answer.
+        */
+
         selectedButton.classList.add(
             "correct"
         );
@@ -2973,14 +3114,32 @@ function selectAnswer(
 
 
         feedback.innerHTML =
-            `<strong>✓ Correct!</strong><br>${escapeHTML(question.explanation)}`;
+            `
+            <strong>✓ Correct!</strong><br>
+            ${escapeHTML(
+                question.explanation
+            )}
+            `;
 
     }
     else{
 
+        /*
+           Wrong selected answer.
+        */
+
         selectedButton.classList.add(
             "wrong"
         );
+
+
+        const correctLetter =
+            [
+                "A",
+                "B",
+                "C",
+                "D"
+            ][question.answer];
 
 
         feedback.className =
@@ -2988,13 +3147,21 @@ function selectAnswer(
 
 
         feedback.innerHTML =
-            `<strong>✕ Incorrect.</strong><br>${escapeHTML(question.explanation)}`;
+            `
+            <strong>✕ Incorrect.</strong><br>
+            Correct answer: <strong>${correctLetter}</strong><br>
+            ${escapeHTML(
+                question.explanation
+            )}
+            `;
 
     }
 
 
     document
-        .getElementById("nextBtn")
+        .getElementById(
+            "nextBtn"
+        )
         .disabled = false;
 
 }
@@ -3007,7 +3174,9 @@ function selectAnswer(
 function nextQuestion(){
 
     if(!answered){
+
         return;
+
     }
 
 
@@ -3018,7 +3187,9 @@ function nextQuestion(){
 
         currentQuestion++;
 
+
         showQuestion();
+
 
         return;
 
@@ -3037,8 +3208,11 @@ function nextQuestion(){
 function finishQuiz(){
 
     document
-        .getElementById("quizArea")
-        .style.display = "none";
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+            "none";
 
 
     const result =
@@ -3053,7 +3227,9 @@ function finishQuiz(){
 
 
     document
-        .getElementById("score")
+        .getElementById(
+            "score"
+        )
         .textContent =
             `${score}/${quizData.length}`;
 
@@ -3065,6 +3241,26 @@ function finishQuiz(){
                 quizData.length
             ) * 100
         );
+
+
+    /*
+       Complete progress bar.
+    */
+
+    document
+        .getElementById(
+            "progressBar"
+        )
+        .style.width =
+            "100%";
+
+
+    document
+        .getElementById(
+            "progressText"
+        )
+        .textContent =
+            "100%";
 
 
     let message;
@@ -3091,7 +3287,9 @@ function finishQuiz(){
 
 
     document
-        .getElementById("resultMessage")
+        .getElementById(
+            "resultMessage"
+        )
         .textContent =
             message;
 
@@ -3099,7 +3297,7 @@ function finishQuiz(){
 
 
 /* ==================================================
-   RESTART
+   RESTART QUIZ
 ================================================== */
 
 function restartQuiz(){
@@ -3110,7 +3308,30 @@ function restartQuiz(){
 
     answered = false;
 
-    startQuiz();
+
+    document
+        .getElementById(
+            "result"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    document
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+            "block";
+
+
+    showQuestion();
+
+
+    showToast(
+        "Quiz restarted."
+    );
 
 }
 
@@ -3122,19 +3343,27 @@ function restartQuiz(){
 function loadSample(){
 
     document
-        .getElementById("topic")
+        .getElementById(
+            "topic"
+        )
         .value =
         `Information Security: CIA Triad, cryptography, DES, RSA, digital signatures, Diffie-Hellman, PGP and PKI.`;
 
 
     document
-        .getElementById("questionCount")
-        .value = "5";
+        .getElementById(
+            "questionCount"
+        )
+        .value =
+            "5";
 
 
     document
-        .getElementById("difficulty")
-        .value = "Medium";
+        .getElementById(
+            "difficulty"
+        )
+        .value =
+            "Medium";
 
 
     showToast(
@@ -3145,38 +3374,94 @@ function loadSample(){
 
 
 /* ==================================================
-   CLEAR
+   CLEAR QUIZ
 ================================================== */
 
 function clearQuiz(){
 
     document
-        .getElementById("topic")
-        .value = "";
+        .getElementById(
+            "topic"
+        )
+        .value =
+            "";
 
 
     quizData = [];
 
+
     currentQuestion = 0;
 
+
     score = 0;
+
 
     answered = false;
 
 
     document
-        .getElementById("quizArea")
-        .style.display = "none";
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+            "none";
 
 
     document
-        .getElementById("result")
-        .classList.remove("show");
+        .getElementById(
+            "result"
+        )
+        .classList.remove(
+            "show"
+        );
 
 
     document
-        .getElementById("emptyState")
-        .style.display = "flex";
+        .getElementById(
+            "emptyState"
+        )
+        .style.display =
+            "flex";
+
+
+    document
+        .getElementById(
+            "progressBar"
+        )
+        .style.width =
+            "0%";
+
+
+    document
+        .getElementById(
+            "progressText"
+        )
+        .textContent =
+            "0%";
+
+
+    document
+        .getElementById(
+            "questionText"
+        )
+        .textContent =
+            "Question will appear here";
+
+
+    document
+        .getElementById(
+            "options"
+        )
+        .innerHTML =
+            "";
+
+
+    document
+        .getElementById(
+            "feedback"
+        )
+        .className =
+            "feedback";
 
 
     showToast(
@@ -3237,16 +3522,22 @@ function showToast(message){
     );
 
 
-    setTimeout(
-        function(){
-
-            toast.classList.remove(
-                "show"
-            );
-
-        },
-        3000
+    clearTimeout(
+        toastTimer
     );
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4000
+        );
 
 }
 

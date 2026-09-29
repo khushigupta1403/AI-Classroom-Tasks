@@ -3,1886 +3,3253 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Presentation Generator | AI StudyLab</title>
+
+<title>AI PPT Generator | AI StudyLab</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-:root {
-    --purple: #7657e8;
-    --purple-dark: #6045cc;
-    --purple-light: #f1edff;
-    --green: #27b47e;
-    --green-light: #eafaf4;
-    --text: #202033;
-    --muted: #74748a;
-    --border: #e7e5ef;
-    --bg: #f7f7fb;
-    --white: #ffffff;
+body{
+    font-family:Inter,sans-serif;
+    background:#f6f7fb;
+    color:#242430;
 }
 
-body {
-    font-family: "Inter", sans-serif;
-    background: var(--bg);
-    color: var(--text);
+button,input,textarea,select{
+    font-family:inherit;
 }
 
-button,
-textarea,
-input,
-select {
-    font-family: inherit;
+button{
+    cursor:pointer;
 }
 
-button {
-    cursor: pointer;
+.app{
+    min-height:100vh;
+    display:flex;
 }
 
 /* SIDEBAR */
 
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 250px;
-    height: 100vh;
-    background: #fff;
-    border-right: 1px solid var(--border);
-    padding: 25px 16px;
-    z-index: 10;
+.sidebar{
+    width:250px;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    background:#fff;
+    border-right:1px solid #e8e8ef;
+    padding:24px 16px;
+    z-index:30;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 0 10px 28px;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:4px 10px 27px;
 }
 
-.logo-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 20px;
-    background: linear-gradient(135deg, #8669f3, #6245d1);
-    box-shadow: 0 8px 20px rgba(118, 87, 232, .25);
+.brand-icon{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#7657e8,#9b7cf6);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    box-shadow:0 8px 20px rgba(118,87,232,.22);
 }
 
-.logo strong {
-    font-size: 18px;
+.brand-text h2{
+    font-size:16px;
+    font-weight:800;
 }
 
-.logo span {
-    color: var(--purple);
+.brand-text span{
+    display:block;
+    color:#92929f;
+    font-size:10px;
+    margin-top:2px;
 }
 
-.menu-title {
-    padding: 0 12px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #aaa9b8;
-    margin-bottom: 9px;
+.nav-title{
+    color:#aaaab6;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:0 12px;
+    margin:10px 0;
 }
 
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 13px;
-    border-radius: 12px;
-    color: #656579;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    transition: .2s;
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:#666675;
+    padding:11px 12px;
+    margin:4px 0;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
 }
 
-.nav-item:hover {
-    background: #f6f3ff;
-    color: var(--purple);
+.nav-item:hover,
+.nav-item.active{
+    color:#7657e8;
+    background:#f1eeff;
 }
 
-.nav-item.active {
-    background: var(--purple-light);
-    color: var(--purple);
-}
-
-.nav-icon {
-    width: 28px;
-    text-align: center;
-    font-size: 17px;
-}
-
-.assistant-card {
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 22px;
-    background: linear-gradient(135deg, #f2eeff, #ecfaf5);
-    border: 1px solid #e4defd;
-    border-radius: 18px;
-    padding: 17px;
-}
-
-.assistant-top {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    margin-bottom: 9px;
-}
-
-.assistant-avatar {
-    width: 33px;
-    height: 33px;
-    border-radius: 10px;
-    background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.assistant-card strong {
-    font-size: 12px;
-}
-
-.assistant-card p {
-    color: #76758a;
-    font-size: 11px;
-    line-height: 1.6;
+.nav-icon{
+    width:22px;
+    text-align:center;
 }
 
 /* MAIN */
 
-.main {
-    margin-left: 250px;
-    min-height: 100vh;
+.main{
+    width:calc(100% - 250px);
+    margin-left:250px;
 }
 
-.topbar {
-    height: 70px;
-    background: rgba(255,255,255,.9);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 34px;
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    backdrop-filter: blur(10px);
+.topbar{
+    height:70px;
+    background:rgba(255,255,255,.93);
+    border-bottom:1px solid #e8e8ef;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 32px;
+    position:sticky;
+    top:0;
+    z-index:20;
+    backdrop-filter:blur(12px);
 }
 
-.breadcrumb {
-    font-size: 13px;
-    color: var(--muted);
+.breadcrumb{
+    color:#858593;
+    font-size:12px;
 }
 
-.breadcrumb strong {
-    color: var(--text);
+.breadcrumb strong{
+    color:#252531;
 }
 
-.status {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--green-light);
-    color: #1a9365;
-    padding: 8px 13px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
+.status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 13px;
+    border:1px solid #d6f1e2;
+    background:#eefbf4;
+    color:#258354;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:700;
 }
 
-.status-dot {
-    width: 7px;
-    height: 7px;
-    background: var(--green);
-    border-radius: 50%;
+.status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#35bd76;
 }
 
-/* CONTENT */
-
-.content {
-    padding: 30px 34px 45px;
-    max-width: 1500px;
-    margin: auto;
+.content{
+    max-width:1350px;
+    margin:auto;
+    padding:30px;
 }
 
-.hero {
-    background:
-        radial-gradient(circle at 85% 20%, rgba(255,255,255,.18), transparent 25%),
-        linear-gradient(135deg, #7657e8, #684bd4 55%, #5f46c7);
-    color: white;
-    border-radius: 26px;
-    padding: 38px 42px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 25px;
+/* HERO */
+
+.hero{
+    padding:32px;
+    border-radius:25px;
+    color:white;
+    background:linear-gradient(135deg,#7657e8,#9276ed 55%,#6fbd9b 140%);
+    box-shadow:0 18px 40px rgba(118,87,232,.17);
+    margin-bottom:22px;
+    position:relative;
+    overflow:hidden;
 }
 
-.hero::after {
-    content: "";
-    position: absolute;
-    width: 220px;
-    height: 220px;
-    border: 35px solid rgba(255,255,255,.08);
-    border-radius: 50%;
-    right: -65px;
-    top: -90px;
+.hero:after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    right:-90px;
+    top:-100px;
+    background:rgba(255,255,255,.09);
 }
 
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(255,255,255,.14);
-    border: 1px solid rgba(255,255,255,.18);
-    padding: 7px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    margin-bottom: 15px;
+.hero-badge{
+    display:inline-block;
+    padding:7px 11px;
+    border-radius:999px;
+    background:rgba(255,255,255,.15);
+    font-size:10px;
+    font-weight:700;
+    margin-bottom:14px;
 }
 
-.hero h1 {
-    font-size: 31px;
-    line-height: 1.2;
-    margin-bottom: 10px;
-    max-width: 700px;
+.hero h1{
+    font-size:29px;
+    margin-bottom:9px;
+    position:relative;
+    z-index:1;
 }
 
-.hero p {
-    font-size: 14px;
-    line-height: 1.7;
-    color: rgba(255,255,255,.82);
-    max-width: 720px;
+.hero p{
+    max-width:750px;
+    color:rgba(255,255,255,.86);
+    font-size:13px;
+    line-height:1.7;
+    position:relative;
+    z-index:1;
 }
 
 /* WORKSPACE */
 
-.workspace {
-    display: grid;
-    grid-template-columns: 370px minmax(0, 1fr);
-    gap: 22px;
+.workspace{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:20px;
 }
 
-.card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 21px;
-    box-shadow: 0 8px 30px rgba(39, 35, 65, .04);
+.card{
+    background:#fff;
+    border:1px solid #e8e8ef;
+    border-radius:21px;
+    padding:21px;
+    box-shadow:0 8px 25px rgba(35,35,55,.04);
 }
 
-/* INPUT */
-
-.input-card {
-    padding: 24px;
+.card-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:17px;
 }
 
-.card-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 21px;
+.card-title h2{
+    font-size:16px;
 }
 
-.card-heading h2 {
-    font-size: 17px;
+.card-title span{
+    font-size:10px;
+    color:#92929e;
 }
 
-.card-heading p {
-    color: var(--muted);
-    font-size: 11px;
-    margin-top: 5px;
+/* FORM */
+
+.form-group{
+    margin-bottom:15px;
 }
 
-.ai-label {
-    background: var(--purple-light);
-    color: var(--purple);
-    padding: 7px 9px;
-    border-radius: 9px;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.field {
-    margin-bottom: 17px;
-}
-
-.field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 8px;
+label{
+    display:block;
+    font-size:11px;
+    font-weight:700;
+    color:#4e4e5b;
+    margin-bottom:7px;
 }
 
 textarea,
 select,
-input {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: #fbfbfd;
-    padding: 12px 13px;
-    outline: none;
-    font-size: 12px;
-    color: var(--text);
-    transition: .2s;
+input{
+    width:100%;
+    border:1px solid #dddde6;
+    border-radius:12px;
+    outline:none;
+    background:#fcfcfe;
+    color:#292936;
+    font-size:12px;
 }
 
-textarea {
-    min-height: 145px;
-    resize: vertical;
-    line-height: 1.6;
+textarea{
+    min-height:130px;
+    resize:vertical;
+    padding:13px;
+    line-height:1.55;
+}
+
+select,
+input{
+    padding:11px 12px;
 }
 
 textarea:focus,
 select:focus,
-input:focus {
-    border-color: #9d89ef;
-    box-shadow: 0 0 0 3px rgba(118,87,232,.08);
-    background: white;
+input:focus{
+    border-color:#8d72e8;
+    box-shadow:0 0 0 4px rgba(118,87,232,.07);
 }
 
-.counter {
-    text-align: right;
-    color: #aaa8b7;
-    font-size: 10px;
-    margin-top: 5px;
+.two-cols{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+.sample{
+    font-size:10px;
+    color:#777785;
+    cursor:pointer;
+    margin-top:7px;
 }
 
-.example {
-    background: #f8f7fc;
-    border: 1px dashed #dcd8e9;
-    border-radius: 13px;
-    padding: 13px;
-    margin: 17px 0;
+.sample:hover{
+    color:#7657e8;
 }
 
-.example-title {
-    font-size: 10px;
-    color: var(--purple);
-    font-weight: 800;
-    margin-bottom: 5px;
+.check-row{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    margin:9px 0;
 }
 
-.example p {
-    font-size: 11px;
-    color: #77768a;
-    line-height: 1.55;
+.check-row input{
+    width:15px;
+    height:15px;
 }
 
-.primary-btn {
-    width: 100%;
-    border: 0;
-    border-radius: 13px;
-    padding: 13px;
-    background: linear-gradient(135deg, #7c5bea, #6548d2);
-    color: white;
-    font-size: 12px;
-    font-weight: 800;
-    box-shadow: 0 9px 20px rgba(105, 76, 215, .22);
-    transition: .2s;
+.check-row label{
+    margin:0;
+    font-size:10px;
+    font-weight:600;
+    cursor:pointer;
 }
 
-.primary-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(105, 76, 215, .28);
+.actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:17px;
 }
 
-.secondary-actions {
-    display: flex;
-    gap: 9px;
-    margin-top: 10px;
+.btn{
+    border:0;
+    border-radius:11px;
+    padding:10px 14px;
+    font-size:11px;
+    font-weight:700;
 }
 
-.secondary-btn {
-    flex: 1;
-    border: 1px solid var(--border);
-    background: white;
-    color: #646377;
-    border-radius: 11px;
-    padding: 10px;
-    font-size: 11px;
-    font-weight: 700;
+.primary{
+    background:#7657e8;
+    color:white;
+    box-shadow:0 7px 16px rgba(118,87,232,.18);
 }
 
-.secondary-btn:hover {
-    background: #f8f6ff;
-    border-color: #d8d0f7;
-    color: var(--purple);
+.primary:hover{
+    background:#6849db;
+    transform:translateY(-1px);
 }
 
-/* PRESENTATION */
-
-.presentation-card {
-    padding: 24px;
-    min-width: 0;
+.secondary{
+    background:#f3f2f8;
+    color:#555565;
 }
 
-.presentation-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 17px;
+.secondary:hover{
+    background:#eae8f2;
 }
 
-.presentation-header h2 {
-    font-size: 17px;
+.green{
+    background:#eaf8f1;
+    color:#27845a;
 }
 
-.slide-number {
-    font-size: 11px;
-    color: var(--muted);
-    font-weight: 600;
+.danger{
+    background:#fff0f0;
+    color:#c65757;
 }
 
-.slide-stage {
-    background: #f2f1f7;
-    border-radius: 18px;
-    padding: 25px;
-    min-height: 465px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.full{
+    width:100%;
 }
 
-.slide {
-    width: 100%;
-    max-width: 760px;
-    aspect-ratio: 16 / 9;
-    background: white;
-    border-radius: 9px;
-    padding: 38px 45px;
-    box-shadow: 0 18px 40px rgba(35,32,54,.13);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+.tip{
+    margin-top:17px;
+    padding:12px;
+    border-radius:12px;
+    background:#f8f8fc;
+    border:1px solid #ededf3;
+    color:#777785;
+    font-size:10px;
+    line-height:1.55;
 }
 
-.slide::before {
-    content: "";
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: #eeeaff;
-    right: -65px;
-    top: -65px;
+/* PREVIEW */
+
+.preview-card{
+    min-width:0;
 }
 
-.slide::after {
-    content: "";
-    position: absolute;
-    width: 100px;
-    height: 7px;
-    background: linear-gradient(90deg, #7657e8, #31b984);
-    left: 45px;
-    bottom: 28px;
-    border-radius: 10px;
+.preview-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:15px;
 }
 
-.slide-label {
-    color: var(--purple);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: .13em;
-    font-weight: 800;
-    margin-bottom: 15px;
-    position: relative;
-    z-index: 1;
+.preview-tools{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
 }
 
-.slide h3 {
-    font-size: clamp(22px, 3vw, 32px);
-    line-height: 1.18;
-    margin-bottom: 20px;
-    max-width: 85%;
-    position: relative;
-    z-index: 1;
+.slide-count{
+    padding:7px 10px;
+    border-radius:9px;
+    background:#f1eeff;
+    color:#7657e8;
+    font-size:10px;
+    font-weight:700;
 }
 
-.slide ul {
-    padding-left: 19px;
-    max-width: 88%;
-    position: relative;
-    z-index: 1;
+.slide{
+    min-height:470px;
+    border:1px solid #e8e8ef;
+    border-radius:18px;
+    background:linear-gradient(145deg,#fff,#faf9ff);
+    padding:42px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
 }
 
-.slide li {
-    font-size: clamp(11px, 1.25vw, 15px);
-    line-height: 1.7;
-    margin-bottom: 7px;
-    color: #555467;
+.slide:before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:7px;
+    background:linear-gradient(90deg,#7657e8,#8f75ee,#6fbd9b);
 }
 
-.slide-footer {
-    margin-top: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    position: relative;
-    z-index: 1;
+.slide-number{
+    color:#7657e8;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-weight:800;
+    margin-bottom:13px;
 }
 
-.slide-footer small {
-    color: #a09eae;
-    font-size: 9px;
+.slide h3{
+    font-size:30px;
+    line-height:1.2;
+    margin-bottom:22px;
+    color:#292936;
 }
 
-/* CONTROLS */
-
-.controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 17px;
+.slide ul{
+    padding-left:22px;
 }
 
-.control-group {
-    display: flex;
-    gap: 8px;
+.slide li{
+    margin:11px 0;
+    color:#5f5f6d;
+    font-size:14px;
+    line-height:1.5;
 }
 
-.control-btn {
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 10px;
-    padding: 9px 13px;
-    font-size: 11px;
-    font-weight: 700;
-    color: #646377;
+.slide-empty{
+    text-align:center;
+    color:#9999a6;
 }
 
-.control-btn:hover {
-    color: var(--purple);
-    border-color: #d3caf6;
-    background: #faf9ff;
+.slide-empty-icon{
+    font-size:45px;
+    margin-bottom:12px;
 }
 
-.control-btn.primary-small {
-    color: white;
-    background: var(--purple);
-    border-color: var(--purple);
+.slide-controls{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin-top:13px;
 }
 
-.dots {
-    display: flex;
-    gap: 5px;
-    align-items: center;
+.slide-controls .btn{
+    min-width:90px;
 }
 
-.dot {
-    width: 7px;
-    height: 7px;
-    background: #d8d5e1;
-    border-radius: 50%;
-    transition: .2s;
+.slide-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:14px;
+    gap:10px;
 }
 
-.dot.active {
-    width: 20px;
-    border-radius: 10px;
-    background: var(--purple);
+.note-box{
+    margin-top:14px;
+    background:#f8f8fc;
+    border:1px solid #ededf3;
+    border-radius:13px;
+    padding:13px;
 }
 
-/* INFORMATION */
-
-.info-section {
-    margin-top: 22px;
+.note-box strong{
+    display:block;
+    font-size:10px;
+    margin-bottom:6px;
+    color:#555565;
 }
 
-.info-card {
-    padding: 22px 25px;
+.note-box p{
+    font-size:10px;
+    color:#777785;
+    line-height:1.5;
 }
 
-.info-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 17px;
+/* HISTORY */
+
+.history{
+    margin-top:20px;
 }
 
-.info-header h2 {
-    font-size: 16px;
+.history-list{
+    display:flex;
+    gap:9px;
+    overflow:auto;
 }
 
-.info-header span {
-    font-size: 10px;
-    color: var(--purple);
-    background: var(--purple-light);
-    padding: 6px 9px;
-    border-radius: 8px;
-    font-weight: 700;
+.history-item{
+    min-width:180px;
+    padding:12px;
+    background:#fafaff;
+    border:1px solid #ededf4;
+    border-radius:12px;
 }
 
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 13px;
+.history-item strong{
+    display:block;
+    font-size:11px;
+    margin-bottom:4px;
 }
 
-.info-box {
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 15px;
-    background: #fcfcfe;
+.history-item span{
+    font-size:9px;
+    color:#888895;
 }
 
-.info-box-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
-    background: var(--purple-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
+.history-item button{
+    margin-top:8px;
 }
 
-.info-box h4 {
-    font-size: 12px;
-    margin-bottom: 6px;
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(20,20,30,.62);
+    backdrop-filter:blur(6px);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
 }
 
-.info-box p {
-    font-size: 10.5px;
-    color: var(--muted);
-    line-height: 1.6;
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:min(850px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:#fff;
+    border-radius:22px;
+    padding:24px;
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.modal-head h2{
+    font-size:17px;
+}
+
+.close{
+    width:32px;
+    height:32px;
+    border:0;
+    border-radius:9px;
+    background:#f2f1f7;
+}
+
+.edit-label{
+    margin-top:13px;
+}
+
+.edit-bullet{
+    display:flex;
+    gap:7px;
+    margin-bottom:8px;
+}
+
+.edit-bullet input{
+    flex:1;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:16px;
 }
 
 /* LOADING */
 
-.loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(30,27,48,.4);
-    backdrop-filter: blur(5px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
+.loading{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.72);
+    backdrop-filter:blur(5px);
+    z-index:200;
+    align-items:center;
+    justify-content:center;
 }
 
-.loading-box {
-    background: white;
-    width: 290px;
-    border-radius: 20px;
-    padding: 27px;
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,.18);
+.loading.show{
+    display:flex;
 }
 
-.spinner {
-    width: 38px;
-    height: 38px;
-    border: 4px solid #e8e4fa;
-    border-top-color: var(--purple);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-    margin: 0 auto 14px;
+.loading-box{
+    width:300px;
+    padding:27px;
+    background:white;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.12);
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.spinner{
+    width:35px;
+    height:35px;
+    border:3px solid #e7e2fb;
+    border-top-color:#7657e8;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 15px;
 }
 
-.loading-box h3 {
-    font-size: 14px;
-    margin-bottom: 5px;
+@keyframes spin{
+    to{transform:rotate(360deg)}
 }
 
-.loading-box p {
-    font-size: 11px;
-    color: var(--muted);
+.loading-box h3{
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+.loading-box p{
+    font-size:10px;
+    color:#888895;
 }
 
 /* TOAST */
 
-.toast {
-    position: fixed;
-    right: 25px;
-    bottom: 25px;
-    background: #222132;
-    color: white;
-    padding: 12px 17px;
-    border-radius: 11px;
-    font-size: 11px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.2);
-    transform: translateY(80px);
-    opacity: 0;
-    transition: .3s;
-    z-index: 200;
+.toast{
+    position:fixed;
+    right:24px;
+    bottom:24px;
+    background:#252531;
+    color:white;
+    padding:12px 16px;
+    border-radius:11px;
+    font-size:11px;
+    display:none;
+    z-index:300;
 }
 
-.toast.show {
-    transform: translateY(0);
-    opacity: 1;
+.toast.show{
+    display:block;
 }
 
-/* MOBILE */
+/* FULLSCREEN */
 
-@media(max-width: 1100px) {
-    .workspace {
-        grid-template-columns: 320px minmax(0, 1fr);
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr 1fr;
-    }
+.fullscreen-preview{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#11111a;
+    z-index:500;
+    padding:30px;
 }
 
-@media(max-width: 850px) {
-    .sidebar {
-        width: 72px;
-        padding: 20px 9px;
-    }
-
-    .logo {
-        justify-content: center;
-        padding: 0 0 25px;
-    }
-
-    .logo strong,
-    .menu-title,
-    .nav-item span,
-    .assistant-card {
-        display: none;
-    }
-
-    .nav-item {
-        justify-content: center;
-        padding: 12px 5px;
-    }
-
-    .main {
-        margin-left: 72px;
-    }
-
-    .workspace {
-        grid-template-columns: 1fr;
-    }
-
-    .slide-stage {
-        min-height: auto;
-    }
+.fullscreen-preview.show{
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-@media(max-width: 600px) {
-    .topbar {
-        padding: 0 17px;
-    }
-
-    .content {
-        padding: 18px 14px 35px;
-    }
-
-    .hero {
-        padding: 27px 24px;
-        border-radius: 20px;
-    }
-
-    .hero h1 {
-        font-size: 24px;
-    }
-
-    .form-grid,
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .slide-stage {
-        padding: 10px;
-    }
-
-    .slide {
-        padding: 24px;
-    }
-
-    .slide::after {
-        left: 24px;
-        bottom: 17px;
-    }
-
-    .controls {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .dots {
-        order: -1;
-        width: 100%;
-        justify-content: center;
-    }
+.fullscreen-slide{
+    width:min(1100px,95vw);
+    height:min(650px,85vh);
+    background:white;
+    border-radius:18px;
+    padding:70px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
 
-@media print {
-    body * {
-        visibility: hidden;
+.fullscreen-slide h2{
+    font-size:44px;
+    margin-bottom:35px;
+}
+
+.fullscreen-slide ul{
+    padding-left:30px;
+}
+
+.fullscreen-slide li{
+    font-size:23px;
+    margin:17px 0;
+    color:#555565;
+}
+
+.fullscreen-close{
+    position:absolute;
+    right:20px;
+    top:20px;
+    background:#eeeef4;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .workspace{
+        grid-template-columns:1fr;
     }
 
-    .slide,
-    .slide * {
-        visibility: visible;
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:72px;
+        padding:20px 9px;
     }
 
-    .slide {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        box-shadow: none;
+    .brand{
+        justify-content:center;
+        padding-left:0;
+        padding-right:0;
     }
+
+    .brand-text,
+    .nav-title,
+    .nav-item span{
+        display:none;
+    }
+
+    .nav-item{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:72px;
+        width:calc(100% - 72px);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .content{
+        padding:18px;
+    }
+
+    .topbar{
+        padding:0 18px;
+    }
+
+    .status{
+        display:none;
+    }
+
+    .hero{
+        padding:25px;
+    }
+
+    .hero h1{
+        font-size:24px;
+    }
+
+    .two-cols{
+        grid-template-columns:1fr;
+    }
+
+    .slide{
+        min-height:380px;
+        padding:25px;
+    }
+
+    .slide h3{
+        font-size:23px;
+    }
+
+    .slide-footer{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
 }
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+<div class="app">
 
 <aside class="sidebar">
 
-    <div class="logo">
-        <div class="logo-icon">✦</div>
-        <strong>AI <span>StudyLab</span></strong>
+    <div class="brand">
+        <div class="brand-icon">AI</div>
+
+        <div class="brand-text">
+            <h2>AI StudyLab</h2>
+            <span>Classroom Tasks</span>
+        </div>
     </div>
 
-    <div class="menu-title">AI Learning</div>
+    <div class="nav-title">Workspace</div>
 
-    <a class="nav-item" href="../task-01-resume-builder/index.html">
+    <a class="nav-item" href="../index.html">
+        <div class="nav-icon">⌂</div>
+        <span>Dashboard</span>
+    </a>
+
+    <a class="nav-item" href="../task-01-resume-builder/">
         <div class="nav-icon">📄</div>
         <span>Resume Builder</span>
     </a>
 
-    <a class="nav-item" href="../task-02-notes-generator/index.html">
+    <a class="nav-item" href="../task-02-notes-generator/">
         <div class="nav-icon">📝</div>
-        <span>Notes Generator</span>
+        <span>Study Assistant</span>
     </a>
 
     <a class="nav-item active" href="#">
         <div class="nav-icon">📊</div>
-        <span>Presentation</span>
+        <span>PPT Generator</span>
     </a>
 
-    <a class="nav-item" href="../task-04-mind-map/index.html">
+    <a class="nav-item" href="../task-04-mind-map/">
         <div class="nav-icon">🧠</div>
         <span>Mind Map</span>
     </a>
 
-    <a class="nav-item" href="../task-06-ai-quiz/index.html">
+    <a class="nav-item" href="../task-05-google-sheets/">
+        <div class="nav-icon">📋</div>
+        <span>Google Sheets</span>
+    </a>
+
+    <a class="nav-item" href="../task-06-ai-quiz/">
         <div class="nav-icon">❓</div>
         <span>AI Quiz</span>
     </a>
 
-    <a class="nav-item" href="../task-07-ai-chatbot/index.html">
+    <a class="nav-item" href="../task-07-ai-chatbot/">
         <div class="nav-icon">💬</div>
-        <span>Doubt Solver</span>
+        <span>AI Chatbot</span>
     </a>
 
-    <a class="nav-item" href="../task-08-flashcards/index.html">
+    <a class="nav-item" href="../task-08-flashcards/">
         <div class="nav-icon">🎴</div>
         <span>Flashcards</span>
     </a>
 
-    <div class="assistant-card">
-        <div class="assistant-top">
-            <div class="assistant-avatar">🤖</div>
-            <strong>AI Assistant</strong>
-        </div>
-        <p>Create structured presentations from any topic using AI.</p>
-    </div>
+    <a class="nav-item" href="../task-09-study-planner/">
+        <div class="nav-icon">📅</div>
+        <span>Study Planner</span>
+    </a>
+
+    <a class="nav-item" href="../task-10-ocr-summarizer/">
+        <div class="nav-icon">📷</div>
+        <span>OCR Summarizer</span>
+    </a>
 
 </aside>
 
 
-<!-- MAIN -->
-
 <main class="main">
 
-    <header class="topbar">
+<header class="topbar">
 
-        <div class="breadcrumb">
-            AI StudyLab &nbsp;/&nbsp; <strong>Presentation Generator</strong>
+    <div class="breadcrumb">
+        AI StudyLab / <strong>AI PPT Generator</strong>
+    </div>
+
+    <div class="status">
+        <span class="status-dot"></span>
+        Gemini AI Connected
+    </div>
+
+</header>
+
+
+<section class="content">
+
+<div class="hero">
+
+    <div class="hero-badge">
+        ✨ TASK 03 · REAL GEMINI AI
+    </div>
+
+    <h1>AI Presentation Generator</h1>
+
+    <p>
+        Create professional presentations from any topic.
+        Gemini generates structured slides, examples,
+        conclusions and optional speaker notes automatically.
+    </p>
+
+</div>
+
+
+<div class="workspace">
+
+<!-- LEFT SETTINGS -->
+
+<div class="card">
+
+    <div class="card-title">
+        <h2>Presentation Settings</h2>
+        <span>AI Controls</span>
+    </div>
+
+
+    <div class="form-group">
+
+        <label for="topic">
+            Presentation Topic
+        </label>
+
+        <textarea
+            id="topic"
+            placeholder="Example: Artificial Intelligence in Education"
+        ></textarea>
+
+        <div class="sample" onclick="loadSample()">
+            ✨ Try sample: Artificial Intelligence in Education
         </div>
 
-        <div class="status">
-            <div class="status-dot"></div>
-            AI Studio Ready
-        </div>
+    </div>
 
-    </header>
 
+    <div class="two-cols">
 
-    <section class="content">
+        <div class="form-group">
 
-        <!-- HERO -->
+            <label>Number of Slides</label>
 
-        <div class="hero">
+            <select id="slideCountSelect">
 
-            <div class="hero-badge">
-                ✨ AI Presentation Studio
-            </div>
+                <option value="5">5 Slides</option>
+                <option value="6" selected>6 Slides</option>
+                <option value="8">8 Slides</option>
+                <option value="10">10 Slides</option>
 
-            <h1>
-                Turn Any Topic Into a Complete Presentation
-            </h1>
-
-            <p>
-                Enter your topic and let AI organize the important concepts,
-                explanations and key points into a professional,
-                presentation-ready slide deck.
-            </p>
-
-        </div>
-
-
-        <!-- WORKSPACE -->
-
-        <div class="workspace">
-
-            <!-- INPUT PANEL -->
-
-            <div class="card input-card">
-
-                <div class="card-heading">
-
-                    <div>
-                        <h2>Presentation Details</h2>
-                        <p>Tell AI what you want to learn.</p>
-                    </div>
-
-                    <div class="ai-label">AI POWERED</div>
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>Topic / Subject</label>
-
-                    <textarea
-                        id="topic"
-                        maxlength="500"
-                        placeholder="Example: Information Security, Artificial Intelligence, Climate Change..."
-                    ></textarea>
-
-                    <div class="counter">
-                        <span id="charCount">0</span>/500
-                    </div>
-
-                </div>
-
-
-                <div class="form-grid">
-
-                    <div class="field">
-
-                        <label>Number of Slides</label>
-
-                        <select id="slideCount">
-                            <option value="6">6 Slides</option>
-                            <option value="8">8 Slides</option>
-                            <option value="10" selected>10 Slides</option>
-                            <option value="12">12 Slides</option>
-                        </select>
-
-                    </div>
-
-                    <div class="field">
-
-                        <label>Presentation Type</label>
-
-                        <select id="presentationType">
-                            <option value="academic">Academic</option>
-                            <option value="seminar">Seminar</option>
-                            <option value="project">Project</option>
-                            <option value="business">Business</option>
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>Audience</label>
-
-                    <select id="audience">
-
-                        <option>College Students</option>
-                        <option>School Students</option>
-                        <option>Teachers</option>
-                        <option>General Audience</option>
-                        <option>Professional Audience</option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="example">
-
-                    <div class="example-title">
-                        💡 How it works
-                    </div>
-
-                    <p>
-                        Enter a topic such as <b>Information Security</b>.
-                        AI will create an introduction, important concepts,
-                        technical details, examples, applications and a
-                        conclusion automatically.
-                    </p>
-
-                </div>
-
-
-                <button class="primary-btn" onclick="generatePresentation()">
-                    ✨ Generate AI Presentation
-                </button>
-
-
-                <div class="secondary-actions">
-
-                    <button class="secondary-btn" onclick="loadSample()">
-                        Load Sample
-                    </button>
-
-                    <button class="secondary-btn" onclick="clearForm()">
-                        Clear
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- PRESENTATION PANEL -->
-
-            <div class="card presentation-card">
-
-                <div class="presentation-header">
-
-                    <div>
-                        <h2>Slide Preview</h2>
-                    </div>
-
-                    <div class="slide-number" id="slideNumber">
-                        Slide 1 of 10
-                    </div>
-
-                </div>
-
-
-                <div class="slide-stage">
-
-                    <div class="slide" id="slide">
-
-                        <div class="slide-label">
-                            AI GENERATED PRESENTATION
-                        </div>
-
-                        <h3 id="slideTitle">
-                            Information Security
-                        </h3>
-
-                        <ul id="slidePoints">
-
-                            <li>
-                                Protecting information from unauthorized access,
-                                modification and destruction.
-                            </li>
-
-                            <li>
-                                Includes people, processes, technology and
-                                security policies.
-                            </li>
-
-                            <li>
-                                Important for organizations, individuals and
-                                digital systems.
-                            </li>
-
-                        </ul>
-
-                        <div class="slide-footer">
-
-                            <small id="footerTopic">
-                                AI StudyLab
-                            </small>
-
-                            <small id="footerSlide">
-                                01
-                            </small>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="controls">
-
-                    <div class="control-group">
-
-                        <button class="control-btn" onclick="previousSlide()">
-                            ← Previous
-                        </button>
-
-                        <button class="control-btn" onclick="nextSlide()">
-                            Next →
-                        </button>
-
-                    </div>
-
-
-                    <div class="dots" id="dots"></div>
-
-
-                    <div class="control-group">
-
-                        <button class="control-btn" onclick="regenerate()">
-                            ↻ Regenerate
-                        </button>
-
-                        <button
-                            class="control-btn primary-small"
-                            onclick="printPresentation()"
-                        >
-                            ⬇ Export
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
+            </select>
 
         </div>
 
 
-        <!-- TOPIC INFORMATION -->
+        <div class="form-group">
 
-        <div class="info-section">
+            <label>Presentation Type</label>
 
-            <div class="card info-card">
+            <select id="presentationType">
 
-                <div class="info-header">
+                <option>Academic</option>
+                <option>Seminar</option>
+                <option>Project Presentation</option>
+                <option>Business</option>
+                <option>Workshop</option>
 
-                    <h2>📚 Topic Information</h2>
-
-                    <span>AI GENERATED INSIGHTS</span>
-
-                </div>
-
-
-                <div class="info-grid">
-
-                    <div class="info-box">
-
-                        <div class="info-box-icon">🎯</div>
-
-                        <h4>Learning Objective</h4>
-
-                        <p id="objective">
-                            Understand the fundamental concepts,
-                            importance and applications of the selected topic.
-                        </p>
-
-                    </div>
-
-
-                    <div class="info-box">
-
-                        <div class="info-box-icon">🔑</div>
-
-                        <h4>Key Concepts</h4>
-
-                        <p id="keyConcepts">
-                            Core concepts and important terminology will
-                            be identified by AI.
-                        </p>
-
-                    </div>
-
-
-                    <div class="info-box">
-
-                        <div class="info-box-icon">💼</div>
-
-                        <h4>Real-World Applications</h4>
-
-                        <p id="applications">
-                            AI will identify practical applications and
-                            examples related to the topic.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
+            </select>
 
         </div>
 
-    </section>
-
-</main>
+    </div>
 
 
-<!-- LOADING -->
+    <div class="two-cols">
 
-<div class="loading-overlay" id="loading">
+        <div class="form-group">
 
-    <div class="loading-box">
+            <label>Audience</label>
 
-        <div class="spinner"></div>
+            <select id="audience">
 
-        <h3>Creating your presentation...</h3>
+                <option>School Students</option>
+                <option selected>B.Tech / College Students</option>
+                <option>Beginners</option>
+                <option>Professionals</option>
 
-        <p>AI is organizing the topic into meaningful slides.</p>
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Language</label>
+
+            <select id="language">
+
+                <option selected>English</option>
+                <option>Hindi</option>
+                <option>Hinglish</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>AI Options</label>
+
+        <div class="check-row">
+
+            <input
+                type="checkbox"
+                id="includeNotes"
+                checked
+            >
+
+            <label for="includeNotes">
+                Include speaker notes
+            </label>
+
+        </div>
+
+
+        <div class="check-row">
+
+            <input
+                type="checkbox"
+                id="includeExamples"
+                checked
+            >
+
+            <label for="includeExamples">
+                Include examples
+            </label>
+
+        </div>
+
+
+        <div class="check-row">
+
+            <input
+                type="checkbox"
+                id="includeConclusion"
+                checked
+            >
+
+            <label for="includeConclusion">
+                Include conclusion
+            </label>
+
+        </div>
+
+    </div>
+
+
+    <div class="actions">
+
+        <button
+            class="btn primary full"
+            onclick="generatePresentation()"
+        >
+            ✨ Generate Presentation
+        </button>
+
+    </div>
+
+
+    <div class="actions">
+
+        <button
+            class="btn secondary"
+            onclick="clearPresentation()"
+        >
+            Clear
+        </button>
+
+        <button
+            class="btn secondary"
+            onclick="regeneratePresentation()"
+            id="regenerateBtn"
+            disabled
+        >
+            🔄 Regenerate
+        </button>
+
+    </div>
+
+
+    <div class="tip">
+
+        <strong>Tip:</strong>
+        Add your subject and purpose for better results.
+        Example:
+        <em>Cyber Security for B.Tech students</em>.
 
     </div>
 
 </div>
 
 
-<!-- TOAST -->
+<!-- PREVIEW -->
 
-<div class="toast" id="toast"></div>
+<div class="card preview-card">
+
+    <div class="preview-toolbar">
+
+        <div class="card-title" style="margin:0">
+            <h2>Presentation Preview</h2>
+        </div>
+
+        <div class="preview-tools">
+
+            <span
+                class="slide-count"
+                id="slideCounter"
+            >
+                0 / 0
+            </span>
+
+            <button
+                class="btn secondary"
+                onclick="openFullscreen()"
+                id="fullscreenBtn"
+                disabled
+            >
+                ⛶ Present
+            </button>
+
+            <button
+                class="btn secondary"
+                onclick="openEditor()"
+                id="editBtn"
+                disabled
+            >
+                ✏️ Edit
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="slide"
+        id="slidePreview"
+    >
+
+        <div class="slide-empty">
+
+            <div class="slide-empty-icon">
+                📊
+            </div>
+
+            <h3>
+                Presentation Preview
+            </h3>
+
+            <p>
+                Generate your presentation to see the slides here.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="slide-controls">
+
+        <button
+            class="btn secondary"
+            id="prevBtn"
+            onclick="previousSlide()"
+            disabled
+        >
+            ← Previous
+        </button>
+
+        <button
+            class="btn secondary"
+            id="nextBtn"
+            onclick="nextSlide()"
+            disabled
+        >
+            Next →
+        </button>
+
+    </div>
+
+
+    <div
+        class="note-box"
+        id="speakerNotes"
+        style="display:none"
+    >
+
+        <strong>🎤 Speaker Notes</strong>
+
+        <p id="notesText"></p>
+
+    </div>
+
+
+    <div class="slide-footer">
+
+        <div class="actions" style="margin:0">
+
+            <button
+                class="btn green"
+                onclick="downloadPPT()"
+                id="downloadBtn"
+                disabled
+            >
+                📥 Download PPT
+            </button>
+
+            <button
+                class="btn secondary"
+                onclick="downloadTXT()"
+                id="txtBtn"
+                disabled
+            >
+                📄 TXT
+            </button>
+
+            <button
+                class="btn secondary"
+                onclick="copySlides()"
+                id="copyBtn"
+                disabled
+            >
+                📋 Copy
+            </button>
+
+            <button
+                class="btn secondary"
+                onclick="printPresentation()"
+                id="printBtn"
+                disabled
+            >
+                🖨️ Print/PDF
+            </button>
+
+        </div>
+
+        <div class="actions" style="margin:0">
+
+            <button
+                class="btn secondary"
+                onclick="addSlide()"
+                id="addBtn"
+                disabled
+            >
+                ＋ Add Slide
+            </button>
+
+            <button
+                class="btn secondary"
+                onclick="improveCurrentSlide()"
+                id="improveBtn"
+                disabled
+            >
+                ✨ Improve with AI
+            </button>
+
+            <button
+                class="btn danger"
+                onclick="deleteCurrentSlide()"
+                id="deleteBtn"
+                disabled
+            >
+                🗑 Delete
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- HISTORY -->
+
+<div class="card history">
+
+    <div class="card-title">
+
+        <h2>Recent Presentations</h2>
+
+        <button
+            class="btn secondary"
+            onclick="clearHistory()"
+        >
+            Clear History
+        </button>
+
+    </div>
+
+    <div
+        class="history-list"
+        id="historyList"
+    >
+
+        <span style="font-size:11px;color:#9999a6">
+            Your generated presentations will appear here.
+        </span>
+
+    </div>
+
+</div>
+
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- EDIT MODAL -->
+
+<div
+    class="modal"
+    id="editModal"
+>
+
+<div class="modal-box">
+
+    <div class="modal-head">
+
+        <h2>Edit Slide</h2>
+
+        <button
+            class="close"
+            onclick="closeEditor()"
+        >
+            ✕
+        </button>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>Slide Title</label>
+
+        <input
+            id="editTitle"
+            type="text"
+        >
+
+    </div>
+
+
+    <label class="edit-label">
+        Bullet Points
+    </label>
+
+    <div id="editBullets"></div>
+
+
+    <div class="actions">
+
+        <button
+            class="btn secondary"
+            onclick="addBulletField()"
+        >
+            ＋ Add Bullet
+        </button>
+
+    </div>
+
+
+    <div class="form-group edit-label">
+
+        <label>Speaker Notes</label>
+
+        <textarea
+            id="editNotes"
+            style="min-height:100px"
+        ></textarea>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+        <button
+            class="btn primary"
+            onclick="saveSlideEdit()"
+        >
+            Save Changes
+        </button>
+
+        <button
+            class="btn secondary"
+            onclick="closeEditor()"
+        >
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- FULLSCREEN -->
+
+<div
+    class="fullscreen-preview"
+    id="fullscreenPreview"
+>
+
+    <div
+        class="fullscreen-slide"
+        id="fullscreenSlide"
+    ></div>
+
+    <button
+        class="btn fullscreen-close"
+        onclick="closeFullscreen()"
+    >
+        ✕ Close
+    </button>
+
+</div>
+
+
+<!-- LOADING -->
+
+<div
+    class="loading"
+    id="loading"
+>
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <h3 id="loadingTitle">
+            Creating your presentation...
+        </h3>
+
+        <p id="loadingText">
+            Gemini is generating your slides.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div
+    class="toast"
+    id="toast"
+></div>
 
 
 <script>
 
-/* =========================
-   DATA
-========================= */
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
 
 let slides = [];
 let currentSlide = 0;
+let editingSlide = -1;
 
 
-/* =========================
-   CHARACTER COUNTER
-========================= */
+/* SAMPLE */
 
-const topicInput = document.getElementById("topic");
-const charCount = document.getElementById("charCount");
+function loadSample(){
 
-topicInput.addEventListener("input", function() {
-    charCount.textContent = this.value.length;
-});
+    document.getElementById("topic").value =
+        "Artificial Intelligence in Education";
 
-
-/* =========================
-   SAMPLE PRESENTATION
-========================= */
-
-const informationSecuritySlides = [
-
-    {
-        title: "Information Security",
-        points: [
-            "Information security protects information and information systems from unauthorized access, use, disclosure, disruption, modification and destruction.",
-            "It combines technology, policies, procedures and user awareness to protect digital and physical information.",
-            "Security is important because modern organizations depend heavily on digital data and connected systems."
-        ]
-    },
-
-    {
-        title: "What is Information Security?",
-        points: [
-            "Information security is the practice of protecting information throughout its complete lifecycle.",
-            "It covers data stored on computers, transmitted across networks and processed by applications.",
-            "The objective is to maintain confidentiality, integrity, availability and trust in information systems."
-        ]
-    },
-
-    {
-        title: "CIA Triad",
-        points: [
-            "Confidentiality ensures that information is accessible only to authorized users.",
-            "Integrity ensures that information remains accurate, complete and protected from unauthorized modification.",
-            "Availability ensures that authorized users can access information and services when required."
-        ]
-    },
-
-    {
-        title: "Common Security Threats",
-        points: [
-            "Malware includes viruses, worms, ransomware, spyware and other malicious software.",
-            "Phishing attacks attempt to trick users into revealing passwords, financial information or sensitive data.",
-            "Other threats include social engineering, denial-of-service attacks, insider threats and data breaches."
-        ]
-    },
-
-    {
-        title: "Cryptography",
-        points: [
-            "Cryptography protects information by transforming readable data into a protected form.",
-            "Symmetric cryptography uses the same secret key for encryption and decryption.",
-            "Asymmetric cryptography uses a public key and a private key for secure communication and authentication."
-        ]
-    },
-
-    {
-        title: "Digital Signatures",
-        points: [
-            "A digital signature helps verify the authenticity and integrity of a digital message or document.",
-            "It is commonly created using a private key and verified using the corresponding public key.",
-            "Digital signatures are widely used in secure documents, software distribution and electronic transactions."
-        ]
-    },
-
-    {
-        title: "RSA and Public-Key Security",
-        points: [
-            "RSA is a public-key cryptographic algorithm based on mathematical properties of large prime numbers.",
-            "It uses a public key that can be shared and a private key that must remain secret.",
-            "RSA can be used for encryption, key exchange and digital signatures."
-        ]
-    },
-
-    {
-        title: "Key Management",
-        points: [
-            "Key management covers the generation, distribution, storage, rotation and destruction of cryptographic keys.",
-            "Strong keys must be protected because compromise of a secret key can compromise encrypted information.",
-            "Protocols and systems such as PKI help manage trust and public-key relationships."
-        ]
-    },
-
-    {
-        title: "Security Best Practices",
-        points: [
-            "Use strong and unique passwords together with multi-factor authentication.",
-            "Keep operating systems, applications and security tools updated with appropriate security patches.",
-            "Back up important data, limit user permissions and educate users about phishing and social engineering."
-        ]
-    },
-
-    {
-        title: "Conclusion",
-        points: [
-            "Information security is a continuous process rather than a one-time activity.",
-            "Effective security requires a combination of technology, policies, processes and responsible users.",
-            "Understanding threats and applying security principles helps organizations protect valuable information."
-        ]
-    }
-
-];
-
-
-/* =========================
-   GENERIC DEMO GENERATOR
-========================= */
-
-function createGenericSlides(topic, count) {
-
-    const templates = [
-
-        {
-            title: topic,
-            points: [
-                `${topic} is an important area of study with applications across modern technology and society.`,
-                `Understanding the basic principles of ${topic} helps learners build a strong foundation.`,
-                `This presentation explains its concepts, importance, applications and practical relevance.`
-            ]
-        },
-
-        {
-            title: `Introduction to ${topic}`,
-            points: [
-                `${topic} refers to the concepts, methods and practices associated with this subject area.`,
-                `It has become increasingly important because of advances in technology and changing user requirements.`,
-                `A clear understanding of the fundamentals provides the foundation for deeper learning.`
-            ]
-        },
-
-        {
-            title: `Key Concepts of ${topic}`,
-            points: [
-                `The major concepts of ${topic} provide the foundation for understanding how the subject works.`,
-                `Important terminology should be understood before moving to advanced topics.`,
-                `These concepts are connected and together explain the overall structure of the subject.`
-            ]
-        },
-
-        {
-            title: `${topic} — How It Works`,
-            points: [
-                `The working process of ${topic} can be understood by dividing it into smaller logical steps.`,
-                `Each stage performs a specific function and contributes to the final result.`,
-                `Understanding the workflow makes complex ideas easier to learn and explain.`
-            ]
-        },
-
-        {
-            title: `Benefits of ${topic}`,
-            points: [
-                `${topic} can improve efficiency, knowledge, decision-making and problem-solving.`,
-                `It can provide practical value when applied to appropriate real-world situations.`,
-                `The benefits depend on correct implementation and responsible use.`
-            ]
-        },
-
-        {
-            title: `Applications of ${topic}`,
-            points: [
-                `${topic} is used in multiple real-world environments and professional domains.`,
-                `Its applications depend on the requirements, available technology and target users.`,
-                `Practical examples help connect theoretical concepts with real-world problems.`
-            ]
-        },
-
-        {
-            title: `Challenges and Limitations`,
-            points: [
-                `Implementation of ${topic} can involve technical, financial and organizational challenges.`,
-                `Users must consider limitations, security requirements, accuracy and reliability.`,
-                `Careful planning can reduce risks and improve the quality of implementation.`
-            ]
-        },
-
-        {
-            title: `Future of ${topic}`,
-            points: [
-                `${topic} is likely to continue evolving as technology, research and user requirements change.`,
-                `New tools and approaches can create additional opportunities for innovation.`,
-                `Continuous learning is important for understanding future developments.`
-            ]
-        },
-
-        {
-            title: `Important Takeaways`,
-            points: [
-                `Understand the fundamental concepts before studying advanced topics.`,
-                `Connect theoretical knowledge with practical examples and applications.`,
-                `Evaluate both the benefits and limitations when applying ${topic}.`
-            ]
-        },
-
-        {
-            title: `Conclusion`,
-            points: [
-                `${topic} is an important subject with meaningful academic and practical applications.`,
-                `A strong understanding of its concepts helps learners solve related problems effectively.`,
-                `Continuous practice and real-world examples can strengthen understanding.`
-            ]
-        }
-
-    ];
-
-    return templates.slice(0, count);
 }
 
 
-/* =========================
-   GENERATE PRESENTATION
-========================= */
+/* GENERATE */
 
-function generatePresentation() {
+async function generatePresentation(){
 
-    const topic = topicInput.value.trim();
+    const topic =
+        document.getElementById("topic").value.trim();
 
-    if (!topic) {
-        showToast("Please enter a topic first.");
-        topicInput.focus();
+    if(!topic){
+
+        showToast("Please enter a presentation topic.");
+
         return;
     }
 
-    const count = Number(document.getElementById("slideCount").value);
+    const count =
+        Number(
+            document.getElementById("slideCountSelect").value
+        );
 
-    const type = document.getElementById("presentationType").value;
-    const audience = document.getElementById("audience").value;
+    const type =
+        document.getElementById("presentationType").value;
+
+    const audience =
+        document.getElementById("audience").value;
+
+    const language =
+        document.getElementById("language").value;
+
+    const includeNotes =
+        document.getElementById("includeNotes").checked;
+
+    const includeExamples =
+        document.getElementById("includeExamples").checked;
+
+    const includeConclusion =
+        document.getElementById("includeConclusion").checked;
 
 
     const prompt = `
-Create a detailed ${type} presentation for ${audience}.
+You are an expert academic presentation designer.
 
-Topic:
+Create a ${count}-slide presentation.
+
+TOPIC:
 ${topic}
 
-Requirements:
-- Generate ${count} slides.
-- Each slide should have a clear title.
-- Add 3-4 informative bullet points.
-- Cover introduction, important concepts, examples,
-  applications, challenges and conclusion.
-- Use simple and educational language.
-- Avoid unnecessary repetition.
-- Include technically accurate information.
-- Return structured JSON.
+PRESENTATION TYPE:
+${type}
+
+AUDIENCE:
+${audience}
+
+LANGUAGE:
+${language}
+
+Speaker notes:
+${includeNotes ? "YES" : "NO"}
+
+Examples:
+${includeExamples ? "YES" : "NO"}
+
+Conclusion:
+${includeConclusion ? "YES" : "NO"}
+
+Return ONLY valid JSON.
+Do not use markdown.
+Do not use code fences.
+
+Use exactly this structure:
+
+{
+  "slides": [
+    {
+      "title": "Slide title",
+      "bullets": [
+        "Bullet 1",
+        "Bullet 2",
+        "Bullet 3",
+        "Bullet 4"
+      ],
+      "notes": "Speaker notes for this slide"
+    }
+  ]
+}
+
+Rules:
+- Generate exactly ${count} slides.
+- Every slide must contain 3 or 4 concise bullets.
+- Slide 1 should introduce the topic.
+- Organize the topic logically.
+- Use simple language suitable for the selected audience.
+- Keep bullets presentation-ready.
+- Avoid unsupported statistics.
+- Do not invent qualifications, sources, research findings or facts.
+- Use examples only when useful.
+- The final slide should be a conclusion when requested.
+- Speaker notes should be short and useful.
+- Return valid JSON only.
 `;
 
-    console.log("AI Prompt:", prompt);
+
+    setLoading(
+        true,
+        "Creating your presentation...",
+        "Gemini is generating your slides."
+    );
 
 
-    showLoading();
+    try{
+
+        const response =
+            await fetch(
+                GEMINI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        prompt
+                    })
+                }
+            );
 
 
-    setTimeout(() => {
+        const data =
+            await response.json();
 
-        if (
-            topic.toLowerCase().includes("information security") ||
-            topic.toLowerCase().includes("cyber security") ||
-            topic.toLowerCase().includes("cybersecurity")
-        ) {
 
-            slides = informationSecuritySlides.slice(0, count);
+        if(!response.ok || !data.success){
 
-        } else {
-
-            slides = createGenericSlides(topic, count);
+            throw new Error(
+                data.error ||
+                "Gemini request failed."
+            );
 
         }
 
-        currentSlide = 0;
 
-        updatePresentation(topic);
-
-        hideLoading();
-
-        showToast("Presentation generated successfully!");
-
-    }, 1200);
-
-}
+        const parsed =
+            parseJSON(data.text);
 
 
-/* =========================
-   UPDATE PRESENTATION
-========================= */
+        if(
+            !parsed ||
+            !Array.isArray(parsed.slides) ||
+            !parsed.slides.length
+        ){
 
-function updatePresentation(topic) {
-
-    if (!slides.length) return;
-
-    const slide = slides[currentSlide];
-
-    document.getElementById("slideTitle").textContent = slide.title;
-
-    const pointsContainer = document.getElementById("slidePoints");
-
-    pointsContainer.innerHTML = "";
-
-    slide.points.forEach(point => {
-
-        const li = document.createElement("li");
-
-        li.textContent = point;
-
-        pointsContainer.appendChild(li);
-
-    });
-
-
-    document.getElementById("slideNumber").textContent =
-        `Slide ${currentSlide + 1} of ${slides.length}`;
-
-    document.getElementById("footerTopic").textContent =
-        topic || "AI StudyLab";
-
-    document.getElementById("footerSlide").textContent =
-        String(currentSlide + 1).padStart(2, "0");
-
-
-    updateDots();
-
-    updateTopicInformation(topic);
-
-}
-
-
-/* =========================
-   DOTS
-========================= */
-
-function updateDots() {
-
-    const dots = document.getElementById("dots");
-
-    dots.innerHTML = "";
-
-    slides.forEach((_, index) => {
-
-        const dot = document.createElement("div");
-
-        dot.className =
-            index === currentSlide
-                ? "dot active"
-                : "dot";
-
-        dot.onclick = () => {
-
-            currentSlide = index;
-
-            updatePresentation(
-                topicInput.value.trim()
+            throw new Error(
+                "Gemini returned an invalid presentation."
             );
 
-        };
+        }
 
-        dots.appendChild(dot);
+
+        slides =
+            parsed.slides.map(
+                (slide,index)=>({
+
+                    title:
+                        String(
+                            slide.title ||
+                            `Slide ${index+1}`
+                        ),
+
+                    bullets:
+                        Array.isArray(slide.bullets)
+                        ?
+                        slide.bullets
+                            .map(x=>String(x))
+                            .filter(Boolean)
+                        :
+                        [],
+
+                    notes:
+                        String(
+                            slide.notes || ""
+                        )
+
+                })
+            );
+
+
+        currentSlide = 0;
+
+        saveHistory();
+
+        updateButtons();
+
+        renderSlide();
+
+        showToast(
+            `${slides.length} slides generated successfully!`
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showToast(
+            "Gemini error: " +
+            error.message
+        );
+
+    }
+    finally{
+
+        setLoading(false);
+
+    }
+
+}
+
+
+/* PARSE JSON */
+
+function parseJSON(text){
+
+    if(!text){
+        return null;
+    }
+
+    let cleaned =
+        text
+        .trim()
+        .replace(/^```json\s*/i,"")
+        .replace(/^```\s*/i,"")
+        .replace(/\s*```$/i,"")
+        .trim();
+
+
+    try{
+
+        return JSON.parse(cleaned);
+
+    }
+    catch(error){
+
+        const start =
+            cleaned.indexOf("{");
+
+        const end =
+            cleaned.lastIndexOf("}");
+
+
+        if(start !== -1 && end !== -1){
+
+            try{
+
+                return JSON.parse(
+                    cleaned.substring(
+                        start,
+                        end + 1
+                    )
+                );
+
+            }
+            catch(e){
+
+                console.error(e);
+
+            }
+
+        }
+
+    }
+
+    return null;
+
+}
+
+
+/* RENDER */
+
+function renderSlide(){
+
+    const preview =
+        document.getElementById(
+            "slidePreview"
+        );
+
+
+    if(!slides.length){
+
+        renderEmpty();
+
+        return;
+
+    }
+
+
+    const slide =
+        slides[currentSlide];
+
+
+    preview.innerHTML = "";
+
+
+    const number =
+        document.createElement("div");
+
+    number.className =
+        "slide-number";
+
+    number.textContent =
+        `Slide ${currentSlide + 1}`;
+
+    preview.appendChild(number);
+
+
+    const title =
+        document.createElement("h3");
+
+    title.textContent =
+        slide.title;
+
+    preview.appendChild(title);
+
+
+    const list =
+        document.createElement("ul");
+
+
+    slide.bullets.forEach(
+        bullet=>{
+
+            const li =
+                document.createElement("li");
+
+            li.textContent =
+                bullet;
+
+            list.appendChild(li);
+
+        }
+    );
+
+
+    preview.appendChild(list);
+
+
+    document.getElementById(
+        "slideCounter"
+    ).textContent =
+        `${currentSlide + 1} / ${slides.length}`;
+
+
+    document.getElementById(
+        "notesText"
+    ).textContent =
+        slide.notes || "No speaker notes.";
+
+
+    document.getElementById(
+        "speakerNotes"
+    ).style.display =
+        slide.notes ? "block" : "none";
+
+
+    updateButtons();
+
+}
+
+
+/* EMPTY */
+
+function renderEmpty(){
+
+    document.getElementById(
+        "slidePreview"
+    ).innerHTML = `
+
+        <div class="slide-empty">
+
+            <div class="slide-empty-icon">
+                📊
+            </div>
+
+            <h3>
+                Presentation Preview
+            </h3>
+
+            <p>
+                Generate your presentation
+                to see slides here.
+            </p>
+
+        </div>
+
+    `;
+
+    document.getElementById(
+        "slideCounter"
+    ).textContent = "0 / 0";
+
+}
+
+
+/* BUTTON STATES */
+
+function updateButtons(){
+
+    const hasSlides =
+        slides.length > 0;
+
+
+    document.getElementById(
+        "prevBtn"
+    ).disabled =
+        !hasSlides ||
+        currentSlide === 0;
+
+
+    document.getElementById(
+        "nextBtn"
+    ).disabled =
+        !hasSlides ||
+        currentSlide === slides.length - 1;
+
+
+    [
+        "downloadBtn",
+        "txtBtn",
+        "copyBtn",
+        "printBtn",
+        "addBtn",
+        "improveBtn",
+        "deleteBtn",
+        "editBtn",
+        "fullscreenBtn",
+        "regenerateBtn"
+    ].forEach(id=>{
+
+        document.getElementById(id).disabled =
+            !hasSlides;
 
     });
 
 }
 
 
-/* =========================
-   NEXT
-========================= */
+/* NAVIGATION */
 
-function nextSlide() {
+function nextSlide(){
 
-    if (!slides.length) return;
+    if(
+        currentSlide <
+        slides.length - 1
+    ){
 
-    currentSlide++;
+        currentSlide++;
 
-    if (currentSlide >= slides.length) {
-        currentSlide = 0;
+        renderSlide();
+
     }
 
-    updatePresentation(topicInput.value.trim());
-
 }
 
 
-/* =========================
-   PREVIOUS
-========================= */
+function previousSlide(){
 
-function previousSlide() {
+    if(currentSlide > 0){
 
-    if (!slides.length) return;
+        currentSlide--;
 
-    currentSlide--;
+        renderSlide();
 
-    if (currentSlide < 0) {
-        currentSlide = slides.length - 1;
     }
 
-    updatePresentation(topicInput.value.trim());
-
 }
 
 
-/* =========================
-   TOPIC INFORMATION
-========================= */
+/* CLEAR */
 
-function updateTopicInformation(topic) {
+function clearPresentation(){
 
-    if (!topic) return;
-
-    const lower = topic.toLowerCase();
-
-    if (
-        lower.includes("information security") ||
-        lower.includes("cyber security") ||
-        lower.includes("cybersecurity")
-    ) {
-
-        document.getElementById("objective").textContent =
-            "Understand information security principles, threats, cryptography, authentication, key management and practical security measures.";
-
-        document.getElementById("keyConcepts").textContent =
-            "CIA Triad, cryptography, digital signatures, RSA, DES, PGP, authentication, access control, key management and PKI.";
-
-        document.getElementById("applications").textContent =
-            "Secure communication, online banking, digital payments, cloud systems, enterprise networks, e-commerce and protection of personal data.";
-
-        return;
-    }
-
-
-    document.getElementById("objective").textContent =
-        `Understand the fundamental principles, important concepts and practical applications of ${topic}.`;
-
-    document.getElementById("keyConcepts").textContent =
-        `Definitions, core principles, important terminology, working methods and major components related to ${topic}.`;
-
-    document.getElementById("applications").textContent =
-        `${topic} can be connected to practical problems, academic projects and real-world applications depending on the field.`;
-
-}
-
-
-/* =========================
-   LOAD SAMPLE
-========================= */
-
-function loadSample() {
-
-    topicInput.value = "Information Security";
-
-    charCount.textContent = topicInput.value.length;
-
-    document.getElementById("slideCount").value = "10";
-
-    document.getElementById("presentationType").value = "academic";
-
-    document.getElementById("audience").value =
-        "College Students";
-
-    generatePresentation();
-
-}
-
-
-/* =========================
-   CLEAR
-========================= */
-
-function clearForm() {
-
-    topicInput.value = "";
-
-    charCount.textContent = "0";
+    document.getElementById(
+        "topic"
+    ).value = "";
 
     slides = [];
 
     currentSlide = 0;
 
-    document.getElementById("slideTitle").textContent =
-        "Your Presentation Starts Here";
+    renderEmpty();
 
-    document.getElementById("slidePoints").innerHTML = `
-        <li>Enter a topic to generate your presentation.</li>
-        <li>AI will organize the topic into structured slides.</li>
-        <li>Each slide will contain clear and informative points.</li>
-    `;
-
-    document.getElementById("slideNumber").textContent =
-        "Slide 1 of 1";
-
-    document.getElementById("dots").innerHTML =
-        '<div class="dot active"></div>';
-
-    document.getElementById("objective").textContent =
-        "Understand the fundamental concepts, importance and applications of the selected topic.";
-
-    document.getElementById("keyConcepts").textContent =
-        "Core concepts and important terminology will be identified by AI.";
-
-    document.getElementById("applications").textContent =
-        "AI will identify practical applications and examples related to the topic.";
-
-    showToast("Form cleared.");
+    updateButtons();
 
 }
 
 
-/* =========================
-   REGENERATE
-========================= */
+/* REGENERATE */
 
-function regenerate() {
-
-    if (!topicInput.value.trim()) {
-
-        showToast("Enter a topic first.");
-
-        return;
-    }
+function regeneratePresentation(){
 
     generatePresentation();
 
 }
 
 
-/* =========================
-   EXPORT
-========================= */
+/* EDIT */
 
-function printPresentation() {
+function openEditor(){
 
-    if (!slides.length) {
-
-        showToast("Generate a presentation first.");
-
+    if(!slides.length){
         return;
     }
 
-    window.print();
+    editingSlide =
+        currentSlide;
+
+
+    const slide =
+        slides[editingSlide];
+
+
+    document.getElementById(
+        "editTitle"
+    ).value =
+        slide.title;
+
+
+    document.getElementById(
+        "editNotes"
+    ).value =
+        slide.notes || "";
+
+
+    const container =
+        document.getElementById(
+            "editBullets"
+        );
+
+
+    container.innerHTML = "";
+
+
+    slide.bullets.forEach(
+        bullet=>{
+
+            createBulletField(
+                bullet
+            );
+
+        }
+    );
+
+
+    document.getElementById(
+        "editModal"
+    ).classList.add("show");
 
 }
 
 
-/* =========================
-   LOADING
-========================= */
+function createBulletField(value=""){
 
-function showLoading() {
+    const container =
+        document.getElementById(
+            "editBullets"
+        );
 
-    document.getElementById("loading").style.display =
-        "flex";
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "edit-bullet";
+
+
+    row.innerHTML = `
+
+        <input
+            type="text"
+            value="${escapeAttribute(value)}"
+            placeholder="Bullet point"
+        >
+
+        <button
+            class="btn danger"
+            type="button"
+            onclick="this.parentElement.remove()"
+        >
+            ✕
+        </button>
+
+    `;
+
+
+    container.appendChild(row);
 
 }
 
-function hideLoading() {
 
-    document.getElementById("loading").style.display =
-        "none";
+function addBulletField(){
 
-}
-
-
-/* =========================
-   TOAST
-========================= */
-
-function showToast(message) {
-
-    const toast = document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    }, 2500);
+    createBulletField("");
 
 }
 
 
-/* =========================
-   INITIAL PRESENTATION
-========================= */
+function saveSlideEdit(){
 
-slides = informationSecuritySlides;
+    if(editingSlide < 0){
+        return;
+    }
 
-updatePresentation("Information Security");
+
+    const slide =
+        slides[editingSlide];
+
+
+    slide.title =
+        document.getElementById(
+            "editTitle"
+        ).value.trim() ||
+        "Untitled Slide";
+
+
+    slide.notes =
+        document.getElementById(
+            "editNotes"
+        ).value.trim();
+
+
+    const inputs =
+        document.querySelectorAll(
+            "#editBullets input"
+        );
+
+
+    slide.bullets =
+        Array.from(inputs)
+        .map(input=>input.value.trim())
+        .filter(Boolean);
+
+
+    closeEditor();
+
+    renderSlide();
+
+    saveHistory();
+
+    showToast("Slide updated.");
+
+}
+
+
+function closeEditor(){
+
+    document.getElementById(
+        "editModal"
+    ).classList.remove("show");
+
+    editingSlide = -1;
+
+}
+
+
+/* ADD SLIDE */
+
+function addSlide(){
+
+    slides.splice(
+        currentSlide + 1,
+        0,
+        {
+            title:"New Slide",
+            bullets:[
+                "Add your first point",
+                "Add your second point",
+                "Add your third point"
+            ],
+            notes:""
+        }
+    );
+
+
+    currentSlide++;
+
+    renderSlide();
+
+    saveHistory();
+
+    showToast("New slide added.");
+
+}
+
+
+/* DELETE */
+
+function deleteCurrentSlide(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    if(slides.length === 1){
+
+        showToast(
+            "At least one slide is required."
+        );
+
+        return;
+
+    }
+
+
+    slides.splice(
+        currentSlide,
+        1
+    );
+
+
+    if(
+        currentSlide >=
+        slides.length
+    ){
+
+        currentSlide =
+            slides.length - 1;
+
+    }
+
+
+    renderSlide();
+
+    saveHistory();
+
+    showToast("Slide deleted.");
+
+}
+
+
+/* IMPROVE CURRENT SLIDE */
+
+async function improveCurrentSlide(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    const slide =
+        slides[currentSlide];
+
+
+    const prompt = `
+Improve the following presentation slide.
+
+Title:
+${slide.title}
+
+Bullet points:
+${slide.bullets.join("\n")}
+
+Return ONLY valid JSON:
+
+{
+  "title": "Improved title",
+  "bullets": [
+    "Improved bullet 1",
+    "Improved bullet 2",
+    "Improved bullet 3",
+    "Improved bullet 4"
+  ],
+  "notes": "Improved speaker notes"
+}
+
+Rules:
+- Keep the original meaning.
+- Make the language clearer and more professional.
+- Keep exactly 3 or 4 bullets.
+- Do not invent unsupported facts.
+`;
+
+
+    setLoading(
+        true,
+        "Improving slide...",
+        "Gemini is refining the current slide."
+    );
+
+
+    try{
+
+        const response =
+            await fetch(
+                GEMINI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        prompt
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok || !data.success){
+
+            throw new Error(
+                data.error ||
+                "AI request failed."
+            );
+
+        }
+
+
+        const improved =
+            parseJSON(data.text);
+
+
+        if(!improved){
+
+            throw new Error(
+                "Invalid AI response."
+            );
+
+        }
+
+
+        slide.title =
+            String(
+                improved.title ||
+                slide.title
+            );
+
+
+        slide.bullets =
+            Array.isArray(
+                improved.bullets
+            )
+            ?
+            improved.bullets
+                .map(x=>String(x))
+                .filter(Boolean)
+            :
+            slide.bullets;
+
+
+        slide.notes =
+            String(
+                improved.notes ||
+                slide.notes ||
+                ""
+            );
+
+
+        renderSlide();
+
+        saveHistory();
+
+        showToast(
+            "Slide improved with Gemini!"
+        );
+
+    }
+    catch(error){
+
+        showToast(
+            "Gemini error: " +
+            error.message
+        );
+
+    }
+    finally{
+
+        setLoading(false);
+
+    }
+
+}
+
+
+/* COPY */
+
+async function copySlides(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    const text =
+        slides
+        .map(
+            (slide,index)=>
+                `Slide ${index+1}: ${slide.title}\n\n` +
+                slide.bullets
+                .map(
+                    bullet=>`• ${bullet}`
+                )
+                .join("\n") +
+                `\n\nSpeaker Notes:\n${slide.notes || ""}`
+        )
+        .join("\n\n--------------------\n\n");
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+        showToast(
+            "Presentation copied!"
+        );
+
+    }
+    catch(error){
+
+        showToast(
+            "Unable to copy."
+        );
+
+    }
+
+}
+
+
+/* TXT */
+
+function downloadTXT(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    const text =
+        slides
+        .map(
+            (slide,index)=>
+                `SLIDE ${index+1}\n` +
+                `${slide.title}\n\n` +
+                slide.bullets
+                .map(
+                    bullet=>`• ${bullet}`
+                )
+                .join("\n") +
+                `\n\nSpeaker Notes:\n${slide.notes || ""}`
+        )
+        .join(
+            "\n\n============================\n\n"
+        );
+
+
+    const blob =
+        new Blob(
+            [text],
+            {type:"text/plain"}
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+        createFileName() +
+        ".txt";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    showToast("TXT downloaded.");
+
+}
+
+
+/* PPT */
+
+async function downloadPPT(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    try{
+
+        const pptx =
+            new pptxgen();
+
+
+        pptx.layout =
+            "LAYOUT_WIDE";
+
+
+        pptx.author =
+            "AI StudyLab";
+
+
+        pptx.company =
+            "AI StudyLab";
+
+
+        pptx.subject =
+            "AI Generated Presentation";
+
+
+        pptx.title =
+            document.getElementById(
+                "topic"
+            ).value;
+
+
+        slides.forEach(
+            (slideData,index)=>{
+
+                const slide =
+                    pptx.addSlide();
+
+
+                slide.background = {
+                    color:"FAF9FF"
+                };
+
+
+                slide.addShape(
+                    pptx.ShapeType.rect,
+                    {
+                        x:0,
+                        y:0,
+                        w:13.333,
+                        h:.15,
+                        fill:{
+                            color:"7657E8"
+                        },
+                        line:{
+                            color:"7657E8"
+                        }
+                    }
+                );
+
+
+                slide.addText(
+                    `SLIDE ${index+1}`,
+                    {
+                        x:.7,
+                        y:.65,
+                        w:2,
+                        h:.3,
+                        fontSize:11,
+                        bold:true,
+                        color:"7657E8",
+                        margin:0
+                    }
+                );
+
+
+                slide.addText(
+                    slideData.title,
+                    {
+                        x:.7,
+                        y:1.15,
+                        w:11.7,
+                        h:1,
+                        fontSize:28,
+                        bold:true,
+                        color:"292936",
+                        margin:.02
+                    }
+                );
+
+
+                const bullets =
+                    slideData.bullets.map(
+                        bullet=>({
+                            text:bullet,
+                            options:{
+                                bullet:{
+                                    indent:18
+                                },
+                                hanging:4,
+                                breakLine:true
+                            }
+                        })
+                    );
+
+
+                slide.addText(
+                    bullets,
+                    {
+                        x:1,
+                        y:2.45,
+                        w:11,
+                        h:3.5,
+                        fontSize:18,
+                        color:"555565",
+                        breakLine:false,
+                        paraSpaceAfterPt:14,
+                        margin:.03
+                    }
+                );
+
+
+                if(slideData.notes){
+
+                    slide.addNotes(
+                        slideData.notes
+                    );
+
+                }
+
+
+                slide.addText(
+                    "AI StudyLab",
+                    {
+                        x:10.7,
+                        y:7.05,
+                        w:1.8,
+                        h:.25,
+                        fontSize:9,
+                        color:"9999A6",
+                        align:"right",
+                        margin:0
+                    }
+                );
+
+            }
+        );
+
+
+        await pptx.writeFile({
+            fileName:
+                createFileName() +
+                ".pptx"
+        });
+
+
+        showToast(
+            "PPT downloaded successfully!"
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showToast(
+            "PPT error: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* PRINT / PDF */
+
+function printPresentation(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    const win =
+        window.open(
+            "",
+            "_blank"
+        );
+
+
+    let html = `
+        <html>
+        <head>
+        <title>AI Presentation</title>
+
+        <style>
+        body{
+            font-family:Arial,sans-serif;
+            margin:0;
+        }
+
+        .page{
+            width:100%;
+            min-height:90vh;
+            padding:60px;
+            box-sizing:border-box;
+            page-break-after:always;
+        }
+
+        h1{
+            font-size:34px;
+            margin-bottom:30px;
+        }
+
+        li{
+            font-size:18px;
+            margin:14px 0;
+        }
+
+        .notes{
+            margin-top:30px;
+            color:#666;
+            font-size:13px;
+        }
+        </style>
+
+        </head>
+
+        <body>
+    `;
+
+
+    slides.forEach(
+        (slide,index)=>{
+
+            html += `
+
+                <div class="page">
+
+                    <h1>
+                        ${index+1}. ${escapeHTML(
+                            slide.title
+                        )}
+                    </h1>
+
+                    <ul>
+
+                        ${slide.bullets
+                            .map(
+                                bullet=>
+                                    `<li>${escapeHTML(
+                                        bullet
+                                    )}</li>`
+                            )
+                            .join("")
+                        }
+
+                    </ul>
+
+                    <div class="notes">
+
+                        <strong>
+                            Speaker Notes:
+                        </strong>
+
+                        ${escapeHTML(
+                            slide.notes || ""
+                        )}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+        </body>
+        </html>
+    `;
+
+
+    win.document.write(html);
+
+    win.document.close();
+
+    win.focus();
+
+    setTimeout(
+        ()=>win.print(),
+        500
+    );
+
+}
+
+
+/* FULLSCREEN */
+
+function openFullscreen(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    renderFullscreen();
+
+
+    document
+        .getElementById(
+            "fullscreenPreview"
+        )
+        .classList.add("show");
+
+}
+
+
+function renderFullscreen(){
+
+    const slide =
+        slides[currentSlide];
+
+
+    document.getElementById(
+        "fullscreenSlide"
+    ).innerHTML = `
+
+        <div
+            style="
+                color:#7657e8;
+                font-size:12px;
+                font-weight:800;
+                margin-bottom:18px;
+            "
+        >
+            SLIDE ${currentSlide+1}
+        </div>
+
+        <h2>
+            ${escapeHTML(
+                slide.title
+            )}
+        </h2>
+
+        <ul>
+
+            ${slide.bullets
+                .map(
+                    bullet=>
+                        `<li>${escapeHTML(
+                            bullet
+                        )}</li>`
+                )
+                .join("")
+            }
+
+        </ul>
+
+    `;
+
+}
+
+
+function closeFullscreen(){
+
+    document
+        .getElementById(
+            "fullscreenPreview"
+        )
+        .classList.remove("show");
+
+}
+
+
+/* HISTORY */
+
+function saveHistory(){
+
+    if(!slides.length){
+        return;
+    }
+
+
+    const topic =
+        document.getElementById(
+            "topic"
+        ).value.trim();
+
+
+    if(!topic){
+        return;
+    }
+
+
+    let history =
+        JSON.parse(
+            localStorage.getItem(
+                "aiPptHistory"
+            ) || "[]"
+        );
+
+
+    history.unshift({
+
+        topic,
+
+        slides,
+
+        date:
+            new Date().toLocaleString()
+
+    });
+
+
+    history =
+        history.slice(0,5);
+
+
+    localStorage.setItem(
+        "aiPptHistory",
+        JSON.stringify(history)
+    );
+
+
+    renderHistory();
+
+}
+
+
+function renderHistory(){
+
+    const container =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    let history =
+        JSON.parse(
+            localStorage.getItem(
+                "aiPptHistory"
+            ) || "[]"
+        );
+
+
+    if(!history.length){
+
+        container.innerHTML = `
+            <span
+                style="
+                    font-size:11px;
+                    color:#9999a6;
+                "
+            >
+                Your generated presentations
+                will appear here.
+            </span>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        history
+        .map(
+            (item,index)=>`
+
+                <div class="history-item">
+
+                    <strong>
+                        ${escapeHTML(
+                            item.topic
+                        )}
+                    </strong>
+
+                    <span>
+                        ${item.slides.length}
+                        slides ·
+                        ${escapeHTML(
+                            item.date
+                        )}
+                    </span>
+
+                    <br>
+
+                    <button
+                        class="btn secondary"
+                        onclick="loadHistory(${index})"
+                    >
+                        Open
+                    </button>
+
+                </div>
+
+            `
+        )
+        .join("");
+
+}
+
+
+function loadHistory(index){
+
+    const history =
+        JSON.parse(
+            localStorage.getItem(
+                "aiPptHistory"
+            ) || "[]"
+        );
+
+
+    const item =
+        history[index];
+
+
+    if(!item){
+        return;
+    }
+
+
+    document.getElementById(
+        "topic"
+    ).value =
+        item.topic;
+
+
+    slides =
+        item.slides;
+
+
+    currentSlide = 0;
+
+
+    renderSlide();
+
+    updateButtons();
+
+    showToast(
+        "Presentation loaded."
+    );
+
+}
+
+
+function clearHistory(){
+
+    localStorage.removeItem(
+        "aiPptHistory"
+    );
+
+    renderHistory();
+
+    showToast(
+        "History cleared."
+    );
+
+}
+
+
+/* HELPERS */
+
+function createFileName(){
+
+    const topic =
+        document.getElementById(
+            "topic"
+        ).value.trim();
+
+
+    return (
+        topic
+        .replace(
+            /[^a-z0-9]+/gi,
+            "-"
+        )
+        .replace(
+            /^-+|-+$/g,
+            ""
+        )
+        .toLowerCase()
+        ||
+        "ai-presentation"
+    );
+
+}
+
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHTML(value);
+
+}
+
+
+function setLoading(
+    show,
+    title="Creating your presentation...",
+    text="Gemini is generating your slides."
+){
+
+    document.getElementById(
+        "loadingTitle"
+    ).textContent =
+        title;
+
+
+    document.getElementById(
+        "loadingText"
+    ).textContent =
+        text;
+
+
+    document.getElementById(
+        "loading"
+    ).classList.toggle(
+        "show",
+        show
+    );
+
+}
+
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        ()=>{
+            toast.classList.remove(
+                "show"
+            );
+        },
+        3500
+    );
+
+}
+
+
+/* KEYBOARD SHORTCUTS */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(
+            document
+                .getElementById(
+                    "fullscreenPreview"
+                )
+                .classList.contains(
+                    "show"
+                )
+        ){
+
+            if(event.key === "ArrowRight"){
+
+                nextSlide();
+
+                renderFullscreen();
+
+            }
+
+            if(event.key === "ArrowLeft"){
+
+                previousSlide();
+
+                renderFullscreen();
+
+            }
+
+            if(event.key === "Escape"){
+
+                closeFullscreen();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* START */
+
+renderHistory();
+
+updateButtons();
 
 </script>
 

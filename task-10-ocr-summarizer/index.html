@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AI Notes Summarizer | OCR + AI</title>
+<title>AI OCR Notes Summarizer | AI StudyLab</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<!-- Tesseract.js OCR -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
 
 *{
     margin:0;
@@ -22,165 +34,320 @@
 }
 
 :root{
-    --purple:#6d4aff;
-    --purple-dark:#5135d8;
-    --purple-light:#f0edff;
-    --green:#20b486;
-    --green-light:#e9faf4;
-    --text:#1d2433;
-    --muted:#7b8497;
-    --border:#e8eaf0;
-    --bg:#f7f8fc;
+
+    --purple:#7657e8;
+    --purple-dark:#6246d2;
+    --purple-light:#f1edff;
+
+    --green:#28b681;
+    --green-light:#eafaf4;
+
+    --blue:#4d8fe8;
+    --blue-light:#edf5ff;
+
+    --orange:#f29a4a;
+    --orange-light:#fff5e9;
+
+    --red:#e45d6a;
+    --red-light:#fff0f2;
+
+    --text:#202033;
+    --muted:#77768a;
+
+    --border:#e7e5ef;
+
+    --bg:#f7f7fb;
     --white:#ffffff;
-    --danger:#e05252;
-    --shadow:0 12px 35px rgba(37,35,72,.08);
+
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
+
     font-family:"Inter",sans-serif;
+
     background:var(--bg);
+
     color:var(--text);
+
 }
 
-/* SIDEBAR */
+button,
+input,
+select,
+textarea{
+
+    font-family:inherit;
+
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
 
 .sidebar{
+
     position:fixed;
+
     left:0;
     top:0;
+
     width:250px;
     height:100vh;
-    background:#fff;
-    border-right:1px solid var(--border);
-    padding:24px 16px;
-    z-index:20;
+
+    background:white;
+
+    border-right:
+        1px solid var(--border);
+
+    padding:25px 16px;
+
+    z-index:50;
+
 }
 
 .logo{
+
     display:flex;
+
     align-items:center;
+
     gap:11px;
-    padding:4px 10px 28px;
+
+    padding:
+        0 10px 28px;
+
 }
 
 .logo-icon{
-    width:42px;
-    height:42px;
+
+    width:40px;
+    height:40px;
+
     border-radius:13px;
-    background:linear-gradient(135deg,#7c5cff,#9c7cff);
-    color:white;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
+
+    color:white;
+
     font-size:20px;
-    font-weight:800;
-    box-shadow:0 8px 20px rgba(109,74,255,.25);
+
+    background:
+        linear-gradient(
+            135deg,
+            #8669f3,
+            #6245d1
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(118,87,232,.25);
+
 }
 
-.logo-text{
-    font-size:17px;
-    font-weight:800;
+.logo strong{
+    font-size:18px;
 }
 
-.logo-text span{
-    display:block;
+.logo span{
     color:var(--purple);
 }
 
-.nav-title{
-    font-size:11px;
-    font-weight:700;
-    color:#a0a6b5;
+.menu-title{
+
     padding:0 12px;
-    margin-bottom:9px;
+
+    font-size:11px;
+
+    font-weight:700;
+
     text-transform:uppercase;
+
     letter-spacing:.08em;
+
+    color:#aaa9b8;
+
+    margin-bottom:9px;
+
 }
 
-.nav{
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-}
+.nav-item{
 
-.nav a{
-    text-decoration:none;
-    color:#697286;
-    padding:11px 12px;
-    border-radius:12px;
     display:flex;
+
     align-items:center;
-    gap:11px;
+
+    gap:12px;
+
+    padding:12px 13px;
+
+    border-radius:12px;
+
+    color:#656579;
+
+    text-decoration:none;
+
     font-size:13px;
+
     font-weight:600;
+
+    margin-bottom:4px;
+
     transition:.2s;
+
 }
 
-.nav a:hover{
-    background:#f5f3ff;
+.nav-item:hover{
+
+    background:#f6f3ff;
+
     color:var(--purple);
+
 }
 
-.nav a.active{
+.nav-item.active{
+
     background:var(--purple-light);
+
     color:var(--purple);
+
 }
 
 .nav-icon{
-    width:25px;
+
+    width:28px;
+
     text-align:center;
+
     font-size:17px;
+
 }
 
-.ai-card{
+.assistant-card{
+
     position:absolute;
-    bottom:20px;
+
     left:16px;
     right:16px;
-    background:linear-gradient(135deg,#f1edff,#eefbf7);
-    border:1px solid #e5e1ff;
+    bottom:22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f2eeff,
+            #ecfaf5
+        );
+
+    border:
+        1px solid #e4defd;
+
     border-radius:18px;
-    padding:15px;
+
+    padding:17px;
+
 }
 
-.ai-card-title{
+.assistant-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-bottom:9px;
+
+}
+
+.assistant-avatar{
+
+    width:33px;
+    height:33px;
+
+    border-radius:10px;
+
+    background:white;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+}
+
+.assistant-card strong{
     font-size:12px;
-    font-weight:800;
-    margin-bottom:5px;
 }
 
-.ai-card p{
-    color:var(--muted);
+.assistant-card p{
+
+    color:#76758a;
+
     font-size:11px;
-    line-height:1.5;
+
+    line-height:1.6;
+
 }
 
-/* MAIN */
+
+/* =========================================================
+   MAIN
+========================================================= */
 
 .main{
+
     margin-left:250px;
+
     min-height:100vh;
+
 }
 
-/* TOPBAR */
-
 .topbar{
+
     height:70px;
-    background:rgba(255,255,255,.9);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
+
+    background:
+        rgba(255,255,255,.92);
+
+    border-bottom:
+        1px solid var(--border);
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
-    padding:0 32px;
+
+    padding:
+        0 34px;
+
     position:sticky;
+
     top:0;
-    z-index:15;
+
+    z-index:40;
+
+    backdrop-filter:blur(10px);
+
 }
 
 .breadcrumb{
+
     font-size:13px;
+
     color:var(--muted);
+
 }
 
 .breadcrumb strong{
@@ -188,1224 +355,2978 @@ body{
 }
 
 .status{
+
     display:flex;
+
     align-items:center;
-    gap:8px;
+
+    gap:7px;
+
     background:var(--green-light);
-    color:#168b67;
+
+    color:#1a9365;
+
     padding:8px 13px;
-    border-radius:30px;
-    font-size:12px;
+
+    border-radius:20px;
+
+    font-size:11px;
+
     font-weight:700;
+
 }
 
 .status-dot{
+
     width:7px;
     height:7px;
-    border-radius:50%;
+
     background:var(--green);
+
+    border-radius:50%;
+
 }
 
-/* CONTENT */
+
+/* =========================================================
+   CONTENT
+========================================================= */
 
 .content{
-    padding:32px;
+
+    padding:
+        30px 34px 50px;
+
     max-width:1500px;
+
     margin:auto;
+
 }
 
-/* HERO */
+
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero{
-    position:relative;
-    overflow:hidden;
-    background:linear-gradient(135deg,#6845f5,#8465ff 55%,#9a7aff);
-    border-radius:25px;
-    padding:36px 40px;
+
+    background:
+
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(255,255,255,.18),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            135deg,
+            #7657e8,
+            #684bd4 55%,
+            #5f46c7
+        );
+
     color:white;
-    margin-bottom:25px;
-    box-shadow:0 18px 40px rgba(109,74,255,.18);
-}
 
-.hero:before{
-    content:"";
-    position:absolute;
-    width:300px;
-    height:300px;
-    border-radius:50%;
-    border:55px solid rgba(255,255,255,.06);
-    right:-80px;
-    top:-120px;
-}
+    border-radius:26px;
 
-.hero:after{
-    content:"";
-    position:absolute;
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    background:rgba(255,255,255,.06);
-    right:180px;
-    bottom:-100px;
-}
+    padding:
+        38px 42px;
 
-.hero-content{
     position:relative;
-    z-index:2;
-    max-width:720px;
+
+    overflow:hidden;
+
+    margin-bottom:24px;
+
 }
 
-.badge{
+.hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:250px;
+    height:250px;
+
+    border:
+        36px solid
+        rgba(255,255,255,.08);
+
+    border-radius:50%;
+
+    right:-80px;
+    top:-110px;
+
+}
+
+.hero-badge{
+
     display:inline-flex;
+
     align-items:center;
+
     gap:7px;
-    background:rgba(255,255,255,.15);
-    border:1px solid rgba(255,255,255,.2);
-    padding:7px 12px;
-    border-radius:30px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    padding:
+        7px 12px;
+
+    border-radius:20px;
+
     font-size:11px;
+
     font-weight:700;
-    margin-bottom:14px;
+
+    margin-bottom:15px;
+
 }
 
 .hero h1{
+
     font-size:31px;
+
     line-height:1.2;
+
     margin-bottom:10px;
+
+    max-width:800px;
+
 }
 
 .hero p{
+
     font-size:14px;
+
     line-height:1.7;
-    color:rgba(255,255,255,.84);
+
+    color:
+        rgba(255,255,255,.84);
+
+    max-width:820px;
+
 }
 
-/* WORKSPACE */
 
-.workspace{
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.main-grid{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:22px;
+
+    grid-template-columns:
+        430px
+        minmax(0,1fr);
+
+    gap:20px;
+
 }
+
+
+/* =========================================================
+   CARD
+========================================================= */
 
 .card{
-    background:var(--white);
-    border:1px solid var(--border);
-    border-radius:22px;
-    box-shadow:var(--shadow);
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(39,35,65,.035);
+
 }
 
-.card-header{
-    padding:22px 24px 15px;
-    border-bottom:1px solid #f0f1f5;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
 
-.card-title{
-    font-size:15px;
-    font-weight:800;
-}
-
-.card-subtitle{
-    font-size:11px;
-    color:var(--muted);
-    margin-top:4px;
-}
-
-/* UPLOAD */
+/* =========================================================
+   UPLOAD CARD
+========================================================= */
 
 .upload-card{
-    min-height:510px;
+
+    padding:23px;
+
 }
 
-.upload-area{
-    margin:22px 24px;
-    height:255px;
-    border:2px dashed #dcd8fa;
-    background:#faf9ff;
-    border-radius:19px;
+.card-heading{
+
     display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin-bottom:19px;
+
+}
+
+.card-heading h2{
+
+    font-size:16px;
+
+}
+
+.card-heading p{
+
+    color:var(--muted);
+
+    font-size:10px;
+
+    margin-top:5px;
+
+    line-height:1.6;
+
+}
+
+.ai-label{
+
+    background:var(--purple-light);
+
+    color:var(--purple);
+
+    padding:
+        7px 9px;
+
+    border-radius:9px;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    white-space:nowrap;
+
+}
+
+
+/* =========================================================
+   UPLOAD AREA
+========================================================= */
+
+.upload-area{
+
+    border:
+        1.5px dashed #cfc9eb;
+
+    background:#faf9ff;
+
+    border-radius:16px;
+
+    min-height:190px;
+
+    display:flex;
+
     align-items:center;
+
     justify-content:center;
+
     text-align:center;
-    cursor:pointer;
+
+    padding:22px;
+
     transition:.2s;
-    overflow:hidden;
+
     position:relative;
+
 }
 
 .upload-area:hover{
-    border-color:var(--purple);
-    background:#f7f5ff;
+
+    border-color:
+        var(--purple);
+
+    background:#f8f6ff;
+
+}
+
+.upload-area.dragover{
+
+    border-color:
+        var(--purple);
+
+    background:#f1edff;
+
+    transform:scale(1.01);
+
+}
+
+.upload-content{
+
+    width:100%;
+
 }
 
 .upload-icon{
-    width:66px;
-    height:66px;
-    border-radius:20px;
+
+    width:62px;
+    height:62px;
+
+    border-radius:19px;
+
     background:var(--purple-light);
-    color:var(--purple);
+
     display:flex;
+
     align-items:center;
     justify-content:center;
-    margin:0 auto 14px;
-    font-size:29px;
+
+    font-size:28px;
+
+    margin:
+        0 auto 12px;
+
 }
 
-.upload-text h3{
-    font-size:14px;
-    margin-bottom:6px;
+.upload-area h3{
+
+    font-size:13px;
+
+    margin-bottom:5px;
+
 }
 
-.upload-text p{
+.upload-area p{
+
     color:var(--muted);
-    font-size:11px;
+
+    font-size:9px;
+
     line-height:1.6;
+
+    margin-bottom:13px;
+
 }
 
-.upload-text span{
-    color:var(--purple);
-    font-weight:700;
+.upload-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    background:var(--purple);
+
+    color:white;
+
+    border:0;
+
+    border-radius:10px;
+
+    padding:
+        10px 15px;
+
+    font-size:10px;
+
+    font-weight:800;
+
+}
+
+.upload-btn:hover{
+
+    background:var(--purple-dark);
+
 }
 
 #imageInput{
+
     display:none;
+
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
+.preview-section{
+
+    display:none;
+
+    margin-top:15px;
+
+}
+
+.preview-section.show{
+    display:block;
+}
+
+.preview-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:8px;
+
+}
+
+.preview-header strong{
+
+    font-size:10px;
+
+}
+
+.remove-image{
+
+    border:0;
+
+    background:var(--red-light);
+
+    color:var(--red);
+
+    padding:
+        6px 8px;
+
+    border-radius:7px;
+
+    font-size:8px;
+
+    font-weight:800;
+
+}
+
+.preview-image-wrapper{
+
+    background:#f7f7fa;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:12px;
+
+    padding:8px;
+
+    text-align:center;
+
+    max-height:250px;
+
+    overflow:auto;
+
 }
 
 .preview-image{
-    width:100%;
-    height:100%;
+
+    max-width:100%;
+
+    max-height:220px;
+
+    border-radius:8px;
+
     object-fit:contain;
+
+}
+
+
+/* =========================================================
+   OCR PROGRESS
+========================================================= */
+
+.progress-box{
+
     display:none;
-    background:#fff;
-}
 
-.image-info{
-    padding:0 24px 22px;
-    display:none;
-}
+    margin-top:15px;
 
-.file-name{
-    font-size:12px;
-    font-weight:700;
-}
+    background:#faf9fd;
 
-.file-size{
-    font-size:10px;
-    color:var(--muted);
-    margin-top:4px;
-}
+    border:
+        1px solid var(--border);
 
-.controls{
-    display:flex;
-    gap:10px;
-    padding:0 24px 22px;
-}
-
-.btn{
-    border:none;
     border-radius:12px;
-    padding:11px 16px;
-    font-family:inherit;
-    font-size:12px;
-    font-weight:700;
-    cursor:pointer;
-    transition:.2s;
+
+    padding:12px;
+
 }
 
-.btn-primary{
-    background:var(--purple);
-    color:white;
-    box-shadow:0 7px 16px rgba(109,74,255,.2);
-}
-
-.btn-primary:hover{
-    background:var(--purple-dark);
-    transform:translateY(-1px);
-}
-
-.btn-secondary{
-    background:#f5f6fa;
-    color:#5e6678;
-}
-
-.btn-secondary:hover{
-    background:#eceef5;
-}
-
-.btn-green{
-    background:var(--green);
-    color:white;
-}
-
-/* OCR */
-
-.ocr-progress{
-    margin:0 24px 20px;
-    display:none;
+.progress-box.show{
+    display:block;
 }
 
 .progress-top{
+
     display:flex;
+
     justify-content:space-between;
-    margin-bottom:7px;
-    font-size:11px;
-    color:var(--muted);
+
+    align-items:center;
+
+    margin-bottom:8px;
+
+}
+
+.progress-top strong{
+
+    font-size:9px;
+
+}
+
+.progress-top span{
+
+    font-size:9px;
+
+    color:var(--purple);
+
+    font-weight:800;
+
+}
+
+.progress-track{
+
+    height:7px;
+
+    background:#ebe9f2;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
 }
 
 .progress-bar{
-    height:7px;
-    background:#eeeef4;
-    border-radius:10px;
-    overflow:hidden;
-}
 
-.progress-fill{
     width:0%;
+
     height:100%;
-    background:linear-gradient(90deg,var(--purple),#9277ff);
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--purple),
+            #9a84f3
+        );
+
     border-radius:10px;
-    transition:.3s;
+
+    transition:.2s;
+
 }
 
-/* TEXT */
+.progress-message{
 
-.text-card{
-    min-height:510px;
-}
-
-.text-area-wrap{
-    padding:20px 24px;
-}
-
-textarea{
-    width:100%;
-    border:1px solid var(--border);
-    border-radius:15px;
-    resize:vertical;
-    min-height:320px;
-    padding:16px;
-    font-family:inherit;
-    font-size:13px;
-    line-height:1.7;
-    outline:none;
-    color:var(--text);
-    background:#fbfbfd;
-}
-
-textarea:focus{
-    border-color:#b9adff;
-    box-shadow:0 0 0 4px rgba(109,74,255,.06);
-    background:white;
-}
-
-.text-actions{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:10px;
-}
-
-.word-count{
-    font-size:11px;
     color:var(--muted);
+
+    font-size:8px;
+
+    margin-top:7px;
+
 }
 
-/* SUMMARY */
 
-.summary-card{
-    margin-top:22px;
+/* =========================================================
+   AI OPTIONS
+========================================================= */
+
+.options{
+
+    margin-top:16px;
+
 }
 
-.summary-body{
-    padding:22px 24px;
+.options-title{
+
+    font-size:10px;
+
+    font-weight:800;
+
+    margin-bottom:9px;
+
 }
 
-.summary-output{
-    min-height:240px;
-    background:#fbfbfd;
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:20px;
-    font-size:13px;
-    line-height:1.8;
-    color:#454d5e;
-}
+.option-grid{
 
-.summary-output.empty{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    color:#a0a6b5;
-}
-
-.summary-output h3{
-    color:var(--purple);
-    font-size:15px;
-    margin:16px 0 7px;
-}
-
-.summary-output h3:first-child{
-    margin-top:0;
-}
-
-.summary-output ul{
-    padding-left:21px;
-}
-
-.summary-output li{
-    margin-bottom:5px;
-}
-
-.summary-footer{
-    display:flex;
-    justify-content:flex-end;
-    gap:9px;
-    margin-top:15px;
-}
-
-/* INFO CARDS */
-
-.info-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-top:22px;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:8px;
+
 }
 
-.info-card{
+.option{
+
+    border:
+        1px solid var(--border);
+
     background:white;
-    border:1px solid var(--border);
-    border-radius:17px;
-    padding:19px;
+
+    border-radius:10px;
+
+    padding:10px;
+
 }
 
-.info-icon{
-    width:36px;
-    height:36px;
-    border-radius:11px;
-    background:var(--purple-light);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:11px;
-}
+.option label{
 
-.info-card h4{
-    font-size:12px;
+    display:block;
+
+    font-size:8px;
+
+    color:var(--muted);
+
     margin-bottom:5px;
+
+    font-weight:600;
+
 }
 
-.info-card p{
-    color:var(--muted);
+.option select{
+
+    width:100%;
+
+    border:0;
+
+    outline:none;
+
+    background:white;
+
+    font-size:9px;
+
+    font-weight:700;
+
+    color:var(--text);
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.primary-btn{
+
+    width:100%;
+
+    border:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c5bea,
+            #6548d2
+        );
+
+    color:white;
+
+    border-radius:12px;
+
+    padding:13px;
+
     font-size:11px;
-    line-height:1.6;
+
+    font-weight:800;
+
+    margin-top:16px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(105,76,215,.2);
+
+    transition:.2s;
+
 }
 
-/* LOADING */
+.primary-btn:hover{
+    transform:translateY(-1px);
+}
 
-.overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(20,18,40,.48);
-    backdrop-filter:blur(5px);
+.primary-btn:disabled{
+
+    opacity:.55;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+}
+
+.secondary-actions{
+
+    display:flex;
+
+    gap:8px;
+
+    margin-top:9px;
+
+}
+
+.secondary-btn{
+
+    flex:1;
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    color:#646377;
+
+    border-radius:10px;
+
+    padding:9px;
+
+    font-size:9px;
+
+    font-weight:700;
+
+}
+
+.secondary-btn:hover{
+
+    color:var(--purple);
+
+    background:#faf9ff;
+
+}
+
+
+/* =========================================================
+   OUTPUT CARD
+========================================================= */
+
+.output-card{
+
+    padding:23px;
+
+    min-width:0;
+
+}
+
+.output-header{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+    margin-bottom:17px;
+
+}
+
+.output-header h2{
+
+    font-size:16px;
+
+}
+
+.output-header p{
+
+    color:var(--muted);
+
+    font-size:10px;
+
+    margin-top:5px;
+
+}
+
+.output-actions{
+
     display:none;
+
+    gap:7px;
+
+    flex-wrap:wrap;
+
+    justify-content:flex-end;
+
+}
+
+.output-actions.show{
+    display:flex;
+}
+
+.action-btn{
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    color:#646377;
+
+    border-radius:9px;
+
+    padding:
+        8px 10px;
+
+    font-size:8px;
+
+    font-weight:800;
+
+}
+
+.action-btn:hover{
+
+    color:var(--purple);
+
+    background:#faf9ff;
+
+}
+
+.action-btn.primary{
+
+    color:var(--purple);
+
+    background:var(--purple-light);
+
+    border-color:#ddd5fa;
+
+}
+
+
+/* =========================================================
+   EMPTY OUTPUT
+========================================================= */
+
+.empty-output{
+
+    min-height:580px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:30px;
+
+}
+
+.empty-icon{
+
+    width:80px;
+    height:80px;
+
+    border-radius:25px;
+
+    background:var(--purple-light);
+
+    display:flex;
+
     align-items:center;
     justify-content:center;
-    z-index:100;
+
+    font-size:36px;
+
+    margin:
+        0 auto 17px;
+
 }
 
-.loading-box{
-    width:320px;
-    background:white;
-    border-radius:22px;
-    padding:28px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,.18);
+.empty-output h3{
+
+    font-size:18px;
+
+    margin-bottom:7px;
+
 }
 
-.loader{
-    width:46px;
-    height:46px;
-    border:4px solid #eceaff;
-    border-top-color:var(--purple);
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-    margin:0 auto 17px;
-}
+.empty-output p{
 
-.loading-box h3{
-    font-size:15px;
-    margin-bottom:6px;
-}
-
-.loading-box p{
     color:var(--muted);
+
+    font-size:10px;
+
+    line-height:1.7;
+
+    max-width:500px;
+
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.results{
+
+    display:none;
+
+}
+
+.results.show{
+    display:block;
+}
+
+
+/* =========================================================
+   OCR / AI TABS
+========================================================= */
+
+.result-tabs{
+
+    display:flex;
+
+    gap:5px;
+
+    background:#f7f6fa;
+
+    border-radius:11px;
+
+    padding:4px;
+
+    margin-bottom:15px;
+
+}
+
+.tab-btn{
+
+    flex:1;
+
+    border:0;
+
+    background:transparent;
+
+    border-radius:8px;
+
+    padding:9px;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    color:#8b8998;
+
+}
+
+.tab-btn.active{
+
+    background:white;
+
+    color:var(--purple);
+
+    box-shadow:
+        0 2px 7px
+        rgba(40,35,60,.06);
+
+}
+
+
+/* =========================================================
+   OCR TEXT
+========================================================= */
+
+.result-panel{
+    display:none;
+}
+
+.result-panel.active{
+    display:block;
+}
+
+.text-editor{
+
+    width:100%;
+
+    min-height:330px;
+
+    resize:vertical;
+
+    border:
+        1px solid var(--border);
+
+    background:#fcfcfe;
+
+    border-radius:13px;
+
+    padding:15px;
+
+    outline:none;
+
     font-size:11px;
+
+    line-height:1.7;
+
+    color:#333244;
+
+}
+
+.text-editor:focus{
+
+    background:white;
+
+    border-color:#9d89ef;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(118,87,232,.08);
+
+}
+
+.editor-note{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    background:var(--blue-light);
+
+    color:#477dbf;
+
+    border:
+        1px solid #d8e8fa;
+
+    border-radius:10px;
+
+    padding:9px 11px;
+
+    margin-top:9px;
+
+    font-size:8px;
+
+}
+
+
+/* =========================================================
+   SUMMARY CONTENT
+========================================================= */
+
+.summary-content{
+
+    min-height:330px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:13px;
+
+    padding:20px;
+
+    background:white;
+
+    overflow:auto;
+
+}
+
+.summary-content h2{
+
+    font-size:18px;
+
+    margin:
+        0 0 12px;
+
+}
+
+.summary-content h3{
+
+    font-size:13px;
+
+    color:var(--purple);
+
+    margin:
+        19px 0 8px;
+
+}
+
+.summary-content p{
+
+    font-size:10px;
+
+    line-height:1.8;
+
+    color:#4c4a5c;
+
+    margin-bottom:9px;
+
+}
+
+.summary-content ul{
+
+    padding-left:18px;
+
+    margin-bottom:12px;
+
+}
+
+.summary-content li{
+
+    font-size:10px;
+
+    line-height:1.8;
+
+    color:#4c4a5c;
+
+    margin-bottom:3px;
+
+}
+
+.summary-content strong{
+
+    color:#302d42;
+
+}
+
+.summary-content code{
+
+    background:#f1edff;
+
+    color:#634bd2;
+
+    border-radius:4px;
+
+    padding:2px 5px;
+
+    font-size:9px;
+
+}
+
+
+/* =========================================================
+   RESULT STATS
+========================================================= */
+
+.result-stats{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:9px;
+
+    margin-bottom:14px;
+
+}
+
+.result-stat{
+
+    background:#fafafd;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:11px;
+
+    padding:11px;
+
+}
+
+.result-stat span{
+
+    display:block;
+
+    color:var(--muted);
+
+    font-size:8px;
+
+    margin-bottom:3px;
+
+}
+
+.result-stat strong{
+
+    font-size:14px;
+
+}
+
+
+/* =========================================================
+   FEATURES STRIP
+========================================================= */
+
+.features-card{
+
+    margin-top:20px;
+
+    padding:20px;
+
+}
+
+.features-title{
+
+    font-size:13px;
+
+    margin-bottom:13px;
+
+}
+
+.features-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:10px;
+
+}
+
+.feature{
+
+    border:
+        1px solid var(--border);
+
+    background:#fcfcfe;
+
+    border-radius:12px;
+
+    padding:13px;
+
+}
+
+.feature-icon{
+
+    width:31px;
+    height:31px;
+
+    border-radius:9px;
+
+    background:var(--purple-light);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:8px;
+
+}
+
+.feature strong{
+
+    display:block;
+
+    font-size:9px;
+
+    margin-bottom:4px;
+
+}
+
+.feature p{
+
+    color:var(--muted);
+
+    font-size:8px;
+
+    line-height:1.5;
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(255,255,255,.78);
+
+    backdrop-filter:blur(5px);
+
+    z-index:100;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.loading.show{
+    display:flex;
+}
+
+.loading-card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:
+        28px 35px;
+
+    text-align:center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(30,25,55,.15);
+
+    width:min(
+        350px,
+        calc(100vw - 30px)
+    );
+
+}
+
+.spinner{
+
+    width:38px;
+    height:38px;
+
+    border:
+        4px solid #eeeafa;
+
+    border-top-color:
+        var(--purple);
+
+    border-radius:50%;
+
+    animation:
+        spin .8s linear infinite;
+
+    margin:
+        0 auto 13px;
+
+}
+
+.loading-card strong{
+    font-size:13px;
+}
+
+.loading-card p{
+
+    font-size:10px;
+
+    color:var(--muted);
+
+    margin-top:5px;
+
 }
 
 @keyframes spin{
-    to{transform:rotate(360deg);}
+
+    to{
+        transform:rotate(360deg);
+    }
+
 }
 
-/* TOAST */
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 .toast{
+
     position:fixed;
+
     right:25px;
     bottom:25px;
-    background:#202432;
+
+    background:#222132;
+
     color:white;
-    padding:13px 17px;
-    border-radius:12px;
-    font-size:12px;
-    font-weight:600;
+
+    padding:
+        12px 17px;
+
+    border-radius:11px;
+
+    font-size:10px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.2);
+
+    transform:
+        translateY(80px);
+
     opacity:0;
-    transform:translateY(15px);
-    pointer-events:none;
-    transition:.25s;
-    z-index:150;
+
+    transition:.3s;
+
+    z-index:120;
+
+    max-width:430px;
+
 }
 
 .toast.show{
+
+    transform:
+        translateY(0);
+
     opacity:1;
-    transform:translateY(0);
+
 }
 
-/* RESPONSIVE */
 
-@media(max-width:1050px){
+/* =========================================================
+   PRINT
+========================================================= */
 
-    .sidebar{
-        width:72px;
-        padding:20px 10px;
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .sidebar,
+    .topbar,
+    .hero,
+    .upload-card,
+    .features-card,
+    .output-actions,
+    .result-tabs,
+    .editor-note,
+    .loading,
+    .toast{
+
+        display:none !important;
+
     }
 
     .main{
-        margin-left:72px;
-    }
-
-    .logo{
-        justify-content:center;
-        padding:4px 0 28px;
-    }
-
-    .logo-text,
-    .nav-title,
-    .nav a span:not(.nav-icon),
-    .ai-card{
-        display:none;
-    }
-
-    .nav a{
-        justify-content:center;
-        padding:12px;
-    }
-
-    .workspace{
-        grid-template-columns:1fr;
-    }
-}
-
-@media(max-width:700px){
-
-    .topbar{
-        padding:0 17px;
+        margin-left:0;
     }
 
     .content{
-        padding:18px;
+        padding:0;
+        max-width:none;
+    }
+
+    .main-grid{
+        display:block;
+    }
+
+    .output-card{
+
+        border:0;
+
+        box-shadow:none;
+
+        padding:0;
+
+    }
+
+    .empty-output{
+        display:none;
+    }
+
+    .results{
+        display:block !important;
+    }
+
+    .result-panel{
+        display:none !important;
+    }
+
+    #summaryPanel{
+        display:block !important;
+    }
+
+    .summary-content{
+
+        border:0;
+
+        min-height:auto;
+
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .main-grid{
+
+        grid-template-columns:
+            350px
+            minmax(0,1fr);
+
+    }
+
+    .features-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+
+        width:72px;
+
+        padding:
+            20px 9px;
+
+    }
+
+    .logo{
+
+        justify-content:center;
+
+        padding:
+            0 0 25px;
+
+    }
+
+    .logo strong,
+    .menu-title,
+    .nav-item span,
+    .assistant-card{
+
+        display:none;
+
+    }
+
+    .nav-item{
+
+        justify-content:center;
+
+        padding:
+            12px 5px;
+
+    }
+
+    .main{
+
+        margin-left:72px;
+
+    }
+
+    .main-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:650px){
+
+    .topbar{
+
+        padding:
+            0 16px;
+
+    }
+
+    .content{
+
+        padding:
+            18px 14px 35px;
+
     }
 
     .hero{
-        padding:27px 23px;
+
+        padding:
+            27px 24px;
+
+        border-radius:20px;
+
     }
 
     .hero h1{
-        font-size:25px;
+
+        font-size:24px;
+
     }
 
-    .info-grid{
+    .output-header{
+
+        flex-direction:column;
+
+    }
+
+    .output-actions{
+
+        justify-content:flex-start;
+
+    }
+
+    .option-grid{
+
         grid-template-columns:1fr;
+
     }
 
-    .status{
-        font-size:10px;
-        padding:7px 9px;
+    .result-stats{
+
+        grid-template-columns:
+            1fr 1fr 1fr;
+
     }
+
+    .features-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .toast{
+
+        left:15px;
+        right:15px;
+        bottom:15px;
+
+        max-width:none;
+
+    }
+
 }
 
 </style>
+
 </head>
+
 
 <body>
 
-<!-- SIDEBAR -->
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
 
 <aside class="sidebar">
 
+
     <div class="logo">
-        <div class="logo-icon">AI</div>
 
-        <div class="logo-text">
-            AI
-            <span>StudyLab</span>
+        <div class="logo-icon">
+            ✦
         </div>
+
+        <strong>
+            AI <span>StudyLab</span>
+        </strong>
+
     </div>
 
-    <div class="nav-title">Learning Tools</div>
 
-    <nav class="nav">
+    <div class="menu-title">
+        AI Learning
+    </div>
 
-        <a href="../task-01-resume-builder/index.html">
-            <span class="nav-icon">📄</span>
-            <span>Resume Builder</span>
-        </a>
 
-        <a href="../task-02-notes-generator/index.html">
-            <span class="nav-icon">📝</span>
-            <span>Notes Generator</span>
-        </a>
+    <a
+        class="nav-item"
+        href="../task-01-resume-builder/index.html"
+    >
 
-        <a href="../task-03-ppt-generator/index.html">
-            <span class="nav-icon">📊</span>
-            <span>Presentation</span>
-        </a>
+        <div class="nav-icon">
+            📄
+        </div>
 
-        <a href="../task-04-mind-map/index.html">
-            <span class="nav-icon">🧠</span>
-            <span>Mind Map</span>
-        </a>
+        <span>
+            Resume Builder
+        </span>
 
-        <a href="../task-06-ai-quiz/index.html">
-            <span class="nav-icon">❓</span>
-            <span>AI Quiz</span>
-        </a>
+    </a>
 
-        <a href="../task-07-ai-chatbot/index.html">
-            <span class="nav-icon">💬</span>
-            <span>Doubt Solver</span>
-        </a>
 
-        <a href="../task-08-flashcards/index.html">
-            <span class="nav-icon">🎴</span>
-            <span>Flashcards</span>
-        </a>
+    <a
+        class="nav-item"
+        href="../task-02-notes-generator/index.html"
+    >
 
-        <a href="../task-09-study-planner/index.html">
-            <span class="nav-icon">📅</span>
-            <span>Study Planner</span>
-        </a>
+        <div class="nav-icon">
+            📝
+        </div>
 
-        <a class="active" href="#">
-            <span class="nav-icon">📷</span>
-            <span>OCR Summarizer</span>
-        </a>
+        <span>
+            Notes Generator
+        </span>
 
-    </nav>
+    </a>
 
-    <div class="ai-card">
-        <div class="ai-card-title">✨ AI Learning Assistant</div>
+
+    <a
+        class="nav-item"
+        href="../task-03-ppt-generator/index.html"
+    >
+
+        <div class="nav-icon">
+            📊
+        </div>
+
+        <span>
+            Presentation
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-04-mind-map/index.html"
+    >
+
+        <div class="nav-icon">
+            🧠
+        </div>
+
+        <span>
+            Mind Map
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-05-google-sheets/index.html"
+    >
+
+        <div class="nav-icon">
+            📋
+        </div>
+
+        <span>
+            Google Sheets
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-06-ai-quiz/index.html"
+    >
+
+        <div class="nav-icon">
+            ❓
+        </div>
+
+        <span>
+            AI Quiz
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-07-ai-chatbot/index.html"
+    >
+
+        <div class="nav-icon">
+            💬
+        </div>
+
+        <span>
+            Doubt Solver
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-08-flashcards/index.html"
+    >
+
+        <div class="nav-icon">
+            🎴
+        </div>
+
+        <span>
+            Flashcards
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-09-study-planner/index.html"
+    >
+
+        <div class="nav-icon">
+            📅
+        </div>
+
+        <span>
+            Study Planner
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item active"
+        href="#"
+    >
+
+        <div class="nav-icon">
+            📸
+        </div>
+
+        <span>
+            OCR Summarizer
+        </span>
+
+    </a>
+
+
+    <div class="assistant-card">
+
+        <div class="assistant-top">
+
+            <div class="assistant-avatar">
+                🤖
+            </div>
+
+            <strong>
+                AI OCR Assistant
+            </strong>
+
+        </div>
+
         <p>
-            Convert your photographed notes
-            into clean, exam-ready summaries.
+            Turn photos of your notes into
+            editable text and concise
+            AI-powered study summaries.
         </p>
+
     </div>
+
 
 </aside>
 
 
-<!-- MAIN -->
+<!-- =========================================================
+     MAIN
+========================================================= -->
 
 <main class="main">
 
-    <header class="topbar">
 
-        <div class="breadcrumb">
-            AI StudyLab / <strong>OCR + AI Summarizer</strong>
-        </div>
+<header class="topbar">
 
-        <div class="status">
-            <span class="status-dot"></span>
-            AI Studio Ready
-        </div>
 
-    </header>
+    <div class="breadcrumb">
 
+        AI StudyLab
+        &nbsp;/&nbsp;
 
-    <section class="content">
+        <strong>
+            OCR Summarizer
+        </strong>
 
-        <!-- HERO -->
+    </div>
 
-        <div class="hero">
 
-            <div class="hero-content">
+    <div class="status">
 
-                <div class="badge">
-                    📷 OCR + 🤖 AI
-                </div>
+        <div class="status-dot"></div>
 
-                <h1>
-                    Turn Notes Photos Into Smart Summaries
-                </h1>
+        Gemini AI Connected
 
-                <p>
-                    Upload a photo of your handwritten or printed
-                    study notes. AI extracts the text, cleans it,
-                    and transforms it into concise exam-friendly notes.
-                </p>
+    </div>
 
-            </div>
 
-        </div>
+</header>
 
 
-        <!-- WORKSPACE -->
+<section class="content">
 
-        <div class="workspace">
 
-            <!-- IMAGE -->
+<!-- =========================================================
+     HERO
+========================================================= -->
 
-            <div class="card upload-card">
+<div class="hero">
 
-                <div class="card-header">
 
-                    <div>
-                        <div class="card-title">
-                            📷 Upload Notes
-                        </div>
+    <div class="hero-badge">
+        📸 OCR + Gemini AI
+    </div>
 
-                        <div class="card-subtitle">
-                            OCR will extract text from your image
-                        </div>
-                    </div>
 
-                </div>
+    <h1>
+        Turn Photos of Notes Into Smart Study Material
+    </h1>
 
 
-                <div
-                    class="upload-area"
-                    id="uploadArea"
-                    onclick="document.getElementById('imageInput').click()"
-                >
+    <p>
+        Upload a photo of handwritten or printed
+        notes. Tesseract.js extracts the text in
+        your browser, then Gemini transforms it
+        into clear, concise and exam-focused
+        study material.
+    </p>
 
-                    <div class="upload-text" id="uploadContent">
 
-                        <div class="upload-icon">
-                            📸
-                        </div>
+</div>
 
-                        <h3>
-                            Drop your notes image here
-                        </h3>
 
-                        <p>
-                            or <span>browse from your computer</span>
-                        </p>
+<!-- =========================================================
+     MAIN GRID
+========================================================= -->
 
-                        <p style="margin-top:7px;">
-                            JPG, PNG or JPEG
-                        </p>
+<div class="main-grid">
 
-                    </div>
 
-                    <img
-                        id="previewImage"
-                        class="preview-image"
-                        alt="Notes preview"
-                    >
+<!-- =========================================================
+     LEFT — UPLOAD
+========================================================= -->
 
-                </div>
+<div class="card upload-card">
 
 
-                <input
-                    type="file"
-                    id="imageInput"
-                    accept="image/*"
-                >
+    <div class="card-heading">
 
 
-                <div class="image-info" id="imageInfo">
+        <div>
 
-                    <div class="file-name" id="fileName">
-                        —
-                    </div>
+            <h2>
+                Upload Your Notes
+            </h2>
 
-                    <div class="file-size" id="fileSize">
-                        —
-                    </div>
-
-                </div>
-
-
-                <div class="ocr-progress" id="ocrProgress">
-
-                    <div class="progress-top">
-
-                        <span id="ocrStatus">
-                            Preparing OCR...
-                        </span>
-
-                        <span id="ocrPercent">
-                            0%
-                        </span>
-
-                    </div>
-
-                    <div class="progress-bar">
-
-                        <div
-                            class="progress-fill"
-                            id="progressFill"
-                        ></div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="controls">
-
-                    <button
-                        class="btn btn-primary"
-                        onclick="runOCR()"
-                    >
-                        🔍 Extract Text
-                    </button>
-
-                    <button
-                        class="btn btn-secondary"
-                        onclick="loadSample()"
-                    >
-                        ✨ Sample
-                    </button>
-
-                    <button
-                        class="btn btn-secondary"
-                        onclick="clearAll()"
-                    >
-                        Clear
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- EXTRACTED TEXT -->
-
-            <div class="card text-card">
-
-                <div class="card-header">
-
-                    <div>
-                        <div class="card-title">
-                            📄 Extracted Text
-                        </div>
-
-                        <div class="card-subtitle">
-                            Edit the OCR result before sending it to AI
-                        </div>
-                    </div>
-
-                    <div class="badge" style="
-                        margin:0;
-                        background:#f0edff;
-                        color:#6544ee;
-                        border:none;
-                    ">
-                        OCR
-                    </div>
-
-                </div>
-
-
-                <div class="text-area-wrap">
-
-                    <textarea
-                        id="extractedText"
-                        placeholder="Your extracted text will appear here..."
-                    ></textarea>
-
-
-                    <div class="text-actions">
-
-                        <span
-                            class="word-count"
-                            id="wordCount"
-                        >
-                            0 words
-                        </span>
-
-                        <button
-                            class="btn btn-secondary"
-                            onclick="copyExtracted()"
-                        >
-                            📋 Copy
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div style="padding:0 24px 22px;">
-
-                    <button
-                        class="btn btn-primary"
-                        style="width:100%;"
-                        onclick="generateSummary()"
-                    >
-                        ✨ Generate AI Summary
-                    </button>
-
-                </div>
-
-            </div>
+            <p>
+                Use a clear photo for better OCR
+                accuracy.
+            </p>
 
         </div>
 
 
-        <!-- SUMMARY -->
+        <div class="ai-label">
+            OCR + AI
+        </div>
 
-        <div class="card summary-card">
 
-            <div class="card-header">
+    </div>
 
-                <div>
 
-                    <div class="card-title">
-                        🤖 AI Summary
-                    </div>
+    <!-- UPLOAD AREA -->
 
-                    <div class="card-subtitle">
-                        Clean, concise and exam-friendly study notes
-                    </div>
+    <div
+        class="upload-area"
+        id="uploadArea"
+    >
 
-                </div>
 
-                <div class="badge" style="
-                    margin:0;
-                    background:#e9faf4;
-                    color:#168b67;
-                    border:none;
-                ">
-                    AI Generated
-                </div>
+        <div class="upload-content">
 
+            <div class="upload-icon">
+                📷
             </div>
 
 
-            <div class="summary-body">
-
-                <div
-                    class="summary-output empty"
-                    id="summaryOutput"
-                >
-                    <div>
-                        <div style="font-size:30px;margin-bottom:10px;">
-                            ✨
-                        </div>
-
-                        <strong>
-                            Your AI summary will appear here
-                        </strong>
-
-                        <p style="margin-top:5px;">
-                            Upload notes, extract the text,
-                            then generate a summary.
-                        </p>
-                    </div>
-                </div>
+            <h3>
+                Drop your image here
+            </h3>
 
 
-                <div class="summary-footer">
+            <p>
+                JPG, JPEG, PNG or WEBP<br>
+                Clear handwritten or printed notes
+            </p>
 
-                    <button
-                        class="btn btn-secondary"
-                        onclick="copySummary()"
-                    >
-                        📋 Copy Summary
-                    </button>
 
-                    <button
-                        class="btn btn-green"
-                        onclick="downloadSummary()"
-                    >
-                        ⬇ Download
-                    </button>
+            <button
+                class="upload-btn"
+                type="button"
+                onclick="document.getElementById('imageInput').click()"
+            >
+                📁 Choose Image
+            </button>
 
-                </div>
 
-            </div>
+            <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+            >
 
         </div>
 
 
-        <!-- INFO -->
-
-        <div class="info-grid">
-
-            <div class="info-card">
-
-                <div class="info-icon">
-                    📷
-                </div>
-
-                <h4>
-                    1. Upload
-                </h4>
-
-                <p>
-                    Upload a clear image of handwritten
-                    or printed notes.
-                </p>
-
-            </div>
+    </div>
 
 
-            <div class="info-card">
+    <!-- PREVIEW -->
 
-                <div class="info-icon">
-                    🔍
-                </div>
-
-                <h4>
-                    2. OCR
-                </h4>
-
-                <p>
-                    Tesseract.js detects and extracts
-                    readable text from the image.
-                </p>
-
-            </div>
+    <div
+        class="preview-section"
+        id="previewSection"
+    >
 
 
-            <div class="info-card">
+        <div class="preview-header">
 
-                <div class="info-icon">
-                    🤖
-                </div>
+            <strong>
+                Selected Image
+            </strong>
 
-                <h4>
-                    3. AI Summary
-                </h4>
 
-                <p>
-                    AI converts the extracted content
-                    into short revision-friendly notes.
-                </p>
-
-            </div>
+            <button
+                class="remove-image"
+                onclick="removeImage()"
+                type="button"
+            >
+                ✕ Remove
+            </button>
 
         </div>
 
-    </section>
+
+        <div class="preview-image-wrapper">
+
+            <img
+                id="previewImage"
+                class="preview-image"
+                alt="Uploaded notes preview"
+            >
+
+        </div>
+
+
+    </div>
+
+
+    <!-- OCR PROGRESS -->
+
+    <div
+        class="progress-box"
+        id="progressBox"
+    >
+
+
+        <div class="progress-top">
+
+            <strong id="progressTitle">
+                Preparing OCR...
+            </strong>
+
+            <span id="progressPercent">
+                0%
+            </span>
+
+        </div>
+
+
+        <div class="progress-track">
+
+            <div
+                class="progress-bar"
+                id="progressBar"
+            ></div>
+
+        </div>
+
+
+        <div
+            class="progress-message"
+            id="progressMessage"
+        >
+            Starting text recognition...
+        </div>
+
+
+    </div>
+
+
+    <!-- OPTIONS -->
+
+    <div class="options">
+
+
+        <div class="options-title">
+            AI Summary Preferences
+        </div>
+
+
+        <div class="option-grid">
+
+
+            <div class="option">
+
+                <label>
+                    Summary Style
+                </label>
+
+
+                <select id="summaryStyle">
+
+                    <option value="Concise">
+                        Concise
+                    </option>
+
+                    <option value="Detailed">
+                        Detailed
+                    </option>
+
+                    <option value="Exam Focused">
+                        Exam Focused
+                    </option>
+
+                    <option value="Revision">
+                        Quick Revision
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="option">
+
+                <label>
+                    Explanation Level
+                </label>
+
+
+                <select id="explanationLevel">
+
+                    <option value="Simple">
+                        Simple
+                    </option>
+
+                    <option value="College">
+                        B.Tech / College
+                    </option>
+
+                    <option value="Advanced">
+                        Advanced
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ACTION -->
+
+    <button
+        class="primary-btn"
+        id="summarizeBtn"
+        onclick="summarizeNotes()"
+        disabled
+    >
+        ✨ Extract & Summarize Notes
+    </button>
+
+
+    <div class="secondary-actions">
+
+
+        <button
+            class="secondary-btn"
+            onclick="loadSampleText()"
+            type="button"
+        >
+            Load Sample
+        </button>
+
+
+        <button
+            class="secondary-btn"
+            onclick="clearAll()"
+            type="button"
+        >
+            Clear
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     RIGHT — OUTPUT
+========================================================= -->
+
+<div class="card output-card">
+
+
+    <div class="output-header">
+
+
+        <div>
+
+            <h2>
+                Notes Workspace
+            </h2>
+
+            <p>
+                Review OCR text and generate your
+                AI-powered summary.
+            </p>
+
+        </div>
+
+
+        <div
+            class="output-actions"
+            id="outputActions"
+        >
+
+
+            <button
+                class="action-btn"
+                onclick="copyOCR()"
+            >
+                📋 OCR
+            </button>
+
+
+            <button
+                class="action-btn"
+                onclick="copySummary()"
+            >
+                📋 Summary
+            </button>
+
+
+            <button
+                class="action-btn"
+                onclick="downloadSummary()"
+            >
+                ↓ TXT
+            </button>
+
+
+            <button
+                class="action-btn"
+                onclick="printSummary()"
+            >
+                🖨 PDF
+            </button>
+
+
+            <button
+                class="action-btn primary"
+                onclick="summarizeNotes()"
+            >
+                ↻ Summarize Again
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+        class="empty-output"
+        id="emptyOutput"
+    >
+
+        <div>
+
+            <div class="empty-icon">
+                📸
+            </div>
+
+
+            <h3>
+                Your AI Summary Will Appear Here
+            </h3>
+
+
+            <p>
+                Upload a photo of your notes.
+                OCR will extract the text and you
+                can review it before asking Gemini
+                to create a study-friendly summary.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div
+        class="results"
+        id="results"
+    >
+
+
+        <!-- STATS -->
+
+        <div class="result-stats">
+
+
+            <div class="result-stat">
+
+                <span>
+                    OCR Characters
+                </span>
+
+                <strong id="ocrCharacters">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="result-stat">
+
+                <span>
+                    OCR Words
+                </span>
+
+                <strong id="ocrWords">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="result-stat">
+
+                <span>
+                    AI Status
+                </span>
+
+                <strong id="aiStatus">
+                    Ready
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- TABS -->
+
+        <div class="result-tabs">
+
+
+            <button
+                class="tab-btn active"
+                id="ocrTab"
+                onclick="switchTab('ocr')"
+            >
+                🔍 Extracted Text
+            </button>
+
+
+            <button
+                class="tab-btn"
+                id="summaryTab"
+                onclick="switchTab('summary')"
+            >
+                ✨ AI Summary
+            </button>
+
+
+        </div>
+
+
+        <!-- OCR PANEL -->
+
+        <div
+            class="result-panel active"
+            id="ocrPanel"
+        >
+
+
+            <textarea
+                class="text-editor"
+                id="ocrText"
+                placeholder="Extracted text will appear here..."
+            ></textarea>
+
+
+            <div class="editor-note">
+
+                ✏️
+
+                <span>
+                    You can edit or correct the OCR text
+                    before generating the AI summary.
+                </span>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="summarizeEditedText()"
+                type="button"
+            >
+                ✨ Generate Summary From This Text
+            </button>
+
+
+        </div>
+
+
+        <!-- SUMMARY PANEL -->
+
+        <div
+            class="result-panel"
+            id="summaryPanel"
+        >
+
+
+            <div
+                class="summary-content"
+                id="summaryContent"
+            ></div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- =========================================================
+     FEATURES
+========================================================= -->
+
+<div class="card features-card">
+
+
+    <div class="features-title">
+        What This AI Tool Does
+    </div>
+
+
+    <div class="features-grid">
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                📷
+            </div>
+
+            <strong>
+                Image OCR
+            </strong>
+
+            <p>
+                Extract text from uploaded
+                notes directly in the browser.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ✏️
+            </div>
+
+            <strong>
+                Editable Text
+            </strong>
+
+            <p>
+                Review and correct extracted
+                text before sending it to AI.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🤖
+            </div>
+
+            <strong>
+                Gemini Summary
+            </strong>
+
+            <p>
+                Convert raw notes into useful
+                study-friendly material.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🎯
+            </div>
+
+            <strong>
+                Exam Ready
+            </strong>
+
+            <p>
+                Generate important points,
+                concepts and revision material.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</section>
+
 
 </main>
 
 
-<!-- LOADING -->
+<!-- =========================================================
+     LOADING
+========================================================= -->
 
-<div class="overlay" id="loadingOverlay">
+<div
+    class="loading"
+    id="loading"
+>
 
-    <div class="loading-box">
 
-        <div class="loader"></div>
+    <div class="loading-card">
 
-        <h3 id="loadingTitle">
-            Creating AI Summary
-        </h3>
 
-        <p id="loadingText">
-            Please wait...
+        <div class="spinner"></div>
+
+
+        <strong id="loadingTitle">
+            Gemini is summarizing your notes...
+        </strong>
+
+
+        <p id="loadingMessage">
+            Turning extracted text into clear
+            study material.
         </p>
+
 
     </div>
 
+
 </div>
 
 
-<!-- TOAST -->
+<!-- =========================================================
+     TOAST
+========================================================= -->
 
-<div class="toast" id="toast">
-    Done!
-</div>
+<div
+    class="toast"
+    id="toast"
+></div>
 
 
 <script>
 
-/* =========================
-   ELEMENTS
-========================= */
+/* =========================================================
+   CONFIG
+========================================================= */
 
-const imageInput =
-    document.getElementById("imageInput");
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
 
-const uploadArea =
-    document.getElementById("uploadArea");
 
-const uploadContent =
-    document.getElementById("uploadContent");
-
-const previewImage =
-    document.getElementById("previewImage");
-
-const imageInfo =
-    document.getElementById("imageInfo");
-
-const fileName =
-    document.getElementById("fileName");
-
-const fileSize =
-    document.getElementById("fileSize");
-
-const extractedText =
-    document.getElementById("extractedText");
-
-const wordCount =
-    document.getElementById("wordCount");
-
-const summaryOutput =
-    document.getElementById("summaryOutput");
-
-const ocrProgress =
-    document.getElementById("ocrProgress");
-
-const progressFill =
-    document.getElementById("progressFill");
-
-const ocrPercent =
-    document.getElementById("ocrPercent");
-
-const ocrStatus =
-    document.getElementById("ocrStatus");
-
-const loadingOverlay =
-    document.getElementById("loadingOverlay");
-
-const loadingTitle =
-    document.getElementById("loadingTitle");
-
-const loadingText =
-    document.getElementById("loadingText");
+/* =========================================================
+   STATE
+========================================================= */
 
 let selectedFile = null;
 
+let extractedText = "";
 
-/* =========================
-   IMAGE UPLOAD
-========================= */
+let aiSummary = "";
 
-imageInput.addEventListener("change", function(){
+let isOCRRunning = false;
 
-    const file = this.files[0];
+let isGenerating = false;
 
-    if(!file) return;
-
-    selectedFile = file;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e){
-
-        previewImage.src = e.target.result;
-
-        previewImage.style.display = "block";
-
-        uploadContent.style.display = "none";
-
-        imageInfo.style.display = "block";
-
-        fileName.textContent = file.name;
-
-        fileSize.textContent =
-            formatFileSize(file.size);
-
-    };
-
-    reader.readAsDataURL(file);
-
-});
+let toastTimer = null;
 
 
-/* =========================
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const imageInput =
+    document.getElementById(
+        "imageInput"
+    );
+
+const uploadArea =
+    document.getElementById(
+        "uploadArea"
+    );
+
+const previewSection =
+    document.getElementById(
+        "previewSection"
+    );
+
+const previewImage =
+    document.getElementById(
+        "previewImage"
+    );
+
+const summarizeBtn =
+    document.getElementById(
+        "summarizeBtn"
+    );
+
+const progressBox =
+    document.getElementById(
+        "progressBox"
+    );
+
+const progressBar =
+    document.getElementById(
+        "progressBar"
+    );
+
+const progressPercent =
+    document.getElementById(
+        "progressPercent"
+    );
+
+const progressTitle =
+    document.getElementById(
+        "progressTitle"
+    );
+
+const progressMessage =
+    document.getElementById(
+        "progressMessage"
+    );
+
+const ocrText =
+    document.getElementById(
+        "ocrText"
+    );
+
+const results =
+    document.getElementById(
+        "results"
+    );
+
+const emptyOutput =
+    document.getElementById(
+        "emptyOutput"
+    );
+
+const outputActions =
+    document.getElementById(
+        "outputActions"
+    );
+
+const summaryContent =
+    document.getElementById(
+        "summaryContent"
+    );
+
+
+/* =========================================================
+   FILE SELECT
+========================================================= */
+
+imageInput.addEventListener(
+    "change",
+    function(event){
+
+        const file =
+            event.target.files &&
+            event.target.files[0];
+
+
+        if(!file){
+
+            return;
+
+        }
+
+
+        handleFile(
+            file
+        );
+
+    }
+);
+
+
+/* =========================================================
    DRAG & DROP
-========================= */
+========================================================= */
 
-uploadArea.addEventListener("dragover", function(e){
+[
+    "dragenter",
+    "dragover"
+].forEach(
+    function(eventName){
 
-    e.preventDefault();
+        uploadArea.addEventListener(
+            eventName,
+            function(event){
 
-    uploadArea.style.borderColor =
-        "var(--purple)";
+                event.preventDefault();
 
-});
+                event.stopPropagation();
+
+                uploadArea.classList.add(
+                    "dragover"
+                );
+
+            }
+        );
+
+    }
+);
 
 
-uploadArea.addEventListener("dragleave", function(){
+[
+    "dragleave",
+    "drop"
+].forEach(
+    function(eventName){
 
-    uploadArea.style.borderColor =
-        "#dcd8fa";
+        uploadArea.addEventListener(
+            eventName,
+            function(event){
 
-});
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                uploadArea.classList.remove(
+                    "dragover"
+                );
+
+            }
+        );
+
+    }
+);
 
 
-uploadArea.addEventListener("drop", function(e){
+uploadArea.addEventListener(
+    "drop",
+    function(event){
 
-    e.preventDefault();
+        const file =
+            event.dataTransfer.files &&
+            event.dataTransfer.files[0];
 
-    uploadArea.style.borderColor =
-        "#dcd8fa";
 
-    const file =
-        e.dataTransfer.files[0];
+        if(!file){
 
-    if(!file || !file.type.startsWith("image/")){
-        showToast("Please select an image file.");
+            return;
+
+        }
+
+
+        handleFile(
+            file
+        );
+
+    }
+);
+
+
+/* =========================================================
+   HANDLE FILE
+========================================================= */
+
+function handleFile(
+    file
+){
+
+    if(
+        !file.type ||
+        !file.type.startsWith(
+            "image/"
+        )
+    ){
+
+        showToast(
+            "Please upload a valid image file."
+        );
+
         return;
+
     }
 
-    selectedFile = file;
 
-    const reader = new FileReader();
-
-    reader.onload = function(event){
-
-        previewImage.src =
-            event.target.result;
-
-        previewImage.style.display =
-            "block";
-
-        uploadContent.style.display =
-            "none";
-
-        imageInfo.style.display =
-            "block";
-
-        fileName.textContent =
-            file.name;
-
-        fileSize.textContent =
-            formatFileSize(file.size);
-
-    };
-
-    reader.readAsDataURL(file);
-
-});
+    const maxSize =
+        10 * 1024 * 1024;
 
 
-/* =========================
-   OCR
-========================= */
+    if(file.size > maxSize){
 
-async function runOCR(){
+        showToast(
+            "Image is too large. Please use an image below 10 MB."
+        );
+
+        return;
+
+    }
+
+
+    selectedFile =
+        file;
+
+
+    extractedText =
+        "";
+
+    aiSummary =
+        "";
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(event){
+
+            previewImage.src =
+                event.target.result;
+
+            previewSection.classList.add(
+                "show"
+            );
+
+            summarizeBtn.disabled =
+                false;
+
+            resetResults();
+
+            showToast(
+                "Image selected. Click Extract & Summarize Notes."
+            );
+
+        };
+
+
+    reader.onerror =
+        function(){
+
+            showToast(
+                "Could not read the selected image."
+            );
+
+        };
+
+
+    reader.readAsDataURL(
+        file
+    );
+
+}
+
+
+/* =========================================================
+   REMOVE IMAGE
+========================================================= */
+
+function removeImage(){
+
+    selectedFile =
+        null;
+
+    extractedText =
+        "";
+
+    aiSummary =
+        "";
+
+
+    imageInput.value =
+        "";
+
+
+    previewImage.removeAttribute(
+        "src"
+    );
+
+
+    previewSection.classList.remove(
+        "show"
+    );
+
+
+    summarizeBtn.disabled =
+        true;
+
+
+    resetResults();
+
+
+    hideProgress();
+
+
+    showToast(
+        "Image removed."
+    );
+
+}
+
+
+/* =========================================================
+   SUMMARIZE NOTES
+========================================================= */
+
+async function summarizeNotes(){
+
+    if(isOCRRunning || isGenerating){
+
+        return;
+
+    }
+
 
     if(!selectedFile){
 
@@ -1414,83 +3335,645 @@ async function runOCR(){
         );
 
         return;
+
     }
 
-    ocrProgress.style.display =
-        "block";
-
-    progressFill.style.width =
-        "0%";
-
-    ocrPercent.textContent =
-        "0%";
-
-    ocrStatus.textContent =
-        "Starting OCR...";
 
     try{
 
-        const result =
-            await Tesseract.recognize(
-                selectedFile,
-                "eng",
-                {
-                    logger:function(message){
+        isOCRRunning =
+            true;
 
-                        if(
-                            message.status ===
-                            "recognizing text"
-                        ){
 
-                            const percent =
-                                Math.round(
-                                    message.progress * 100
-                                );
+        summarizeBtn.disabled =
+            true;
 
-                            progressFill.style.width =
-                                percent + "%";
 
-                            ocrPercent.textContent =
-                                percent + "%";
+        summarizeBtn.textContent =
+            "🔍 Extracting Text...";
 
-                            ocrStatus.textContent =
-                                "Reading text from image...";
 
-                        }else{
+        await runOCR();
 
-                            ocrStatus.textContent =
-                                message.status || "Processing...";
 
-                        }
+        if(!extractedText.trim()){
+
+            throw new Error(
+                "No readable text was found in the image. Try a clearer photo."
+            );
+
+        }
+
+
+        ocrText.value =
+            extractedText;
+
+
+        updateOCRStats(
+            extractedText
+        );
+
+
+        showResults();
+
+
+        switchTab(
+            "ocr"
+        );
+
+
+        showToast(
+            "OCR completed. Review the extracted text."
+        );
+
+
+        await generateAISummary(
+            extractedText
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "OCR/Summary error:",
+            error
+        );
+
+
+        showToast(
+            error.message ||
+            "Unable to process the image."
+        );
+
+    }
+    finally{
+
+        isOCRRunning =
+            false;
+
+
+        summarizeBtn.disabled =
+            !selectedFile;
+
+
+        summarizeBtn.textContent =
+            "✨ Extract & Summarize Notes";
+
+    }
+
+}
+
+
+/* =========================================================
+   RUN OCR
+========================================================= */
+
+async function runOCR(){
+
+    if(
+        typeof Tesseract ===
+        "undefined"
+    ){
+
+        throw new Error(
+            "Tesseract OCR library could not be loaded. Check your internet connection and refresh the page."
+        );
+
+    }
+
+
+    showProgress(
+        1,
+        "Preparing OCR...",
+        "Loading the OCR engine..."
+    );
+
+
+    const worker =
+        await Tesseract.createWorker(
+            "eng",
+            1,
+            {
+                logger:
+                    function(message){
+
+                        handleOCRProgress(
+                            message
+                        );
 
                     }
+            }
+        );
+
+
+    try{
+
+        showProgress(
+            5,
+            "Reading image...",
+            "Analyzing the uploaded notes image."
+        );
+
+
+        const result =
+            await worker.recognize(
+                selectedFile
+            );
+
+
+        extractedText =
+            String(
+                result &&
+                result.data &&
+                result.data.text
+                ||
+                ""
+            ).trim();
+
+
+        showProgress(
+            100,
+            "OCR complete",
+            "Text extraction finished."
+        );
+
+
+        return extractedText;
+
+    }
+    finally{
+
+        await worker.terminate();
+
+    }
+
+}
+
+
+/* =========================================================
+   OCR PROGRESS
+========================================================= */
+
+function handleOCRProgress(
+    message
+){
+
+    if(!message){
+
+        return;
+
+    }
+
+
+    const progress =
+        Number(
+            message.progress
+        );
+
+
+    let percent =
+        Number.isFinite(
+            progress
+        )
+        ?
+        Math.round(
+            progress * 100
+        )
+        :
+        0;
+
+
+    percent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        );
+
+
+    const status =
+        String(
+            message.status ||
+            ""
+        );
+
+
+    let title =
+        "Extracting text...";
+
+
+    let detail =
+        "OCR is processing your image.";
+
+
+    if(
+        status.includes(
+            "loading"
+        )
+    ){
+
+        title =
+            "Loading OCR engine...";
+
+        detail =
+            "Preparing text recognition.";
+
+    }
+    else if(
+        status.includes(
+            "recognizing"
+        )
+    ){
+
+        title =
+            "Reading your notes...";
+
+        detail =
+            "Recognizing characters from the image.";
+
+    }
+    else if(
+        status.includes(
+            "initializing"
+        )
+    ){
+
+        title =
+            "Initializing OCR...";
+
+        detail =
+            "Getting the recognition engine ready.";
+
+    }
+
+
+    showProgress(
+        percent,
+        title,
+        detail
+    );
+
+}
+
+
+/* =========================================================
+   SHOW PROGRESS
+========================================================= */
+
+function showProgress(
+    percent,
+    title,
+    message
+){
+
+    progressBox.classList.add(
+        "show"
+    );
+
+
+    const safePercent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(percent) || 0
+            )
+        );
+
+
+    progressBar.style.width =
+        `${safePercent}%`;
+
+
+    progressPercent.textContent =
+        `${Math.round(
+            safePercent
+        )}%`;
+
+
+    progressTitle.textContent =
+        title ||
+        "Processing...";
+
+
+    progressMessage.textContent =
+        message ||
+        "";
+
+}
+
+
+/* =========================================================
+   HIDE PROGRESS
+========================================================= */
+
+function hideProgress(){
+
+    progressBox.classList.remove(
+        "show"
+    );
+
+
+    progressBar.style.width =
+        "0%";
+
+
+    progressPercent.textContent =
+        "0%";
+
+}
+
+
+/* =========================================================
+   GENERATE AI SUMMARY
+========================================================= */
+
+async function generateAISummary(
+    text
+){
+
+    const cleanText =
+        String(
+            text ||
+            ""
+        ).trim();
+
+
+    if(!cleanText){
+
+        showToast(
+            "There is no text to summarize."
+        );
+
+        return;
+
+    }
+
+
+    if(isGenerating){
+
+        return;
+
+    }
+
+
+    isGenerating =
+        true;
+
+
+    document.getElementById(
+        "aiStatus"
+    ).textContent =
+        "Working";
+
+
+    showLoading(
+        true,
+        "Gemini is summarizing your notes...",
+        "Turning extracted text into clear study material."
+    );
+
+
+    try{
+
+        const style =
+            document
+                .getElementById(
+                    "summaryStyle"
+                )
+                .value;
+
+
+        const level =
+            document
+                .getElementById(
+                    "explanationLevel"
+                )
+                .value;
+
+
+        const prompt = `
+You are an AI academic notes assistant.
+
+The student uploaded a photo of study notes.
+OCR has extracted the text below.
+
+Your task is to transform ONLY the supplied text into useful study material.
+
+SUMMARY STYLE:
+${style}
+
+EXPLANATION LEVEL:
+${level}
+
+IMPORTANT RULES:
+
+1. Use the supplied notes as the primary source.
+2. Do not invent facts, examples, statistics, references, qualifications or syllabus requirements.
+3. Correct obvious OCR formatting problems when the intended meaning is clear.
+4. Preserve important technical terminology.
+5. Remove unnecessary repetition.
+6. Organize the content with clear headings.
+7. Make the result easy for a college student to revise.
+8. Include important definitions when they are present in the notes.
+9. Include key concepts and important points.
+10. For exam-focused mode, emphasize likely important concepts from the supplied material without claiming that something will definitely appear in an exam.
+11. If the OCR text is incomplete or unclear, mention that briefly rather than inventing missing information.
+12. Use Markdown.
+13. Do not mention these instructions.
+14. Do not mention that you are an AI unless necessary.
+15. Keep the summary reasonably concise while preserving important information.
+
+Use this structure where appropriate:
+
+# Notes Summary
+
+## Overview
+
+## Key Concepts
+
+## Important Points
+
+## Definitions
+
+## Exam / Revision Points
+
+## Quick Revision
+
+Only include sections that are supported by the supplied notes.
+
+STUDENT NOTES:
+----------------
+${cleanText}
+----------------
+`;
+
+
+        const response =
+            await fetch(
+                GEMINI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        prompt:prompt
+                    })
                 }
             );
 
-        extractedText.value =
-            result.data.text.trim();
 
-        updateWordCount();
+        let data;
 
-        progressFill.style.width =
-            "100%";
 
-        ocrPercent.textContent =
-            "100%";
+        try{
 
-        ocrStatus.textContent =
-            "OCR completed successfully";
+            data =
+                await response.json();
 
-        showToast(
-            "Text extracted successfully!"
+        }
+        catch(error){
+
+            throw new Error(
+                "The Gemini backend returned an invalid response."
+            );
+
+        }
+
+
+        if(!response.ok){
+
+            if(response.status === 429){
+
+                throw new Error(
+                    "Gemini quota or rate limit reached. Please wait and try again later."
+                );
+
+            }
+
+
+            if(response.status === 503){
+
+                throw new Error(
+                    "Gemini service is temporarily unavailable. Please try again."
+                );
+
+            }
+
+
+            throw new Error(
+                data.error ||
+                `Gemini request failed (${response.status}).`
+            );
+
+        }
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.error ||
+                "Gemini could not summarize the notes."
+            );
+
+        }
+
+
+        aiSummary =
+            String(
+                data.text ||
+                ""
+            ).trim();
+
+
+        if(!aiSummary){
+
+            throw new Error(
+                "Gemini returned an empty summary."
+            );
+
+        }
+
+
+        summaryContent.innerHTML =
+            markdownToHTML(
+                aiSummary
+            );
+
+
+        document.getElementById(
+            "aiStatus"
+        ).textContent =
+            "Complete";
+
+
+        outputActions.classList.add(
+            "show"
         );
 
-    }catch(error){
 
-        console.error(error);
+        showResults();
+
+
+        switchTab(
+            "summary"
+        );
+
 
         showToast(
-            "OCR failed. Please try a clearer image."
+            "AI summary generated successfully."
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Gemini error:",
+            error
+        );
+
+
+        document.getElementById(
+            "aiStatus"
+        ).textContent =
+            "Error";
+
+
+        let message =
+            error.message ||
+            "Unable to generate AI summary.";
+
+
+        if(
+            error.name ===
+            "TypeError"
+        ){
+
+            message =
+                "Gemini backend is not reachable. Run node server.js in the backend folder.";
+
+        }
+
+
+        showToast(
+            message
+        );
+
+    }
+    finally{
+
+        isGenerating =
+            false;
+
+
+        showLoading(
+            false
         );
 
     }
@@ -1498,530 +3981,942 @@ async function runOCR(){
 }
 
 
-/* =========================
-   WORD COUNT
-========================= */
+/* =========================================================
+   SUMMARIZE EDITED TEXT
+========================================================= */
 
-extractedText.addEventListener(
-    "input",
-    updateWordCount
-);
-
-
-function updateWordCount(){
+async function summarizeEditedText(){
 
     const text =
-        extractedText.value.trim();
+        ocrText.value.trim();
 
-    const words =
-        text
-        ? text.split(/\s+/).length
-        : 0;
-
-    wordCount.textContent =
-        words + (words === 1 ? " word" : " words");
-
-}
-
-
-/* =========================
-   AI SUMMARY
-========================= */
-
-function generateSummary(){
-
-    const text =
-        extractedText.value.trim();
 
     if(!text){
 
         showToast(
-            "Please extract or enter some text first."
+            "Please enter or extract some text first."
         );
 
         return;
+
     }
 
-    const prompt = `
 
-You are an AI study assistant.
+    extractedText =
+        text;
 
-Summarize the following study material into
-short, clear and exam-friendly notes.
 
-Rules:
-- Create a suitable main heading.
-- Use important subheadings.
-- Use concise bullet points.
-- Highlight definitions and important concepts.
-- Remove unnecessary repetition.
-- Preserve important technical information.
-- Use simple student-friendly language.
-- Add an "Exam Points" section.
-- Do not invent information not present in the source.
-
-Study Material:
-
-${text}
-
-Return a structured summary.
-
-`;
-
-    console.log(
-        "AI Notes Summarizer Prompt:",
-        prompt
+    updateOCRStats(
+        text
     );
 
 
-    loadingOverlay.style.display =
+    await generateAISummary(
+        text
+    );
+
+}
+
+
+/* =========================================================
+   MARKDOWN TO HTML
+========================================================= */
+
+function markdownToHTML(
+    markdown
+){
+
+    let text =
+        escapeHTML(
+            markdown
+        );
+
+
+    /*
+       Code blocks
+    */
+
+    text =
+        text.replace(
+            /```([\s\S]*?)```/g,
+            function(match,code){
+
+                return `
+                    <pre style="
+                        background:#f7f5fc;
+                        border:1px solid #e8e4f3;
+                        border-radius:10px;
+                        padding:12px;
+                        overflow:auto;
+                        font-size:9px;
+                        line-height:1.6;
+                        margin:12px 0;
+                    "><code>${code.trim()}</code></pre>
+                `;
+
+            }
+        );
+
+
+    /*
+       Headings
+    */
+
+    text =
+        text.replace(
+            /^### (.*)$/gm,
+            "<h3>$1</h3>"
+        );
+
+
+    text =
+        text.replace(
+            /^## (.*)$/gm,
+            "<h3>$1</h3>"
+        );
+
+
+    text =
+        text.replace(
+            /^# (.*)$/gm,
+            "<h2>$1</h2>"
+        );
+
+
+    /*
+       Bold
+    */
+
+    text =
+        text.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+
+    /*
+       Inline code
+    */
+
+    text =
+        text.replace(
+            /`([^`]+)`/g,
+            "<code>$1</code>"
+        );
+
+
+    /*
+       Unordered list
+    */
+
+    text =
+        text.replace(
+            /(?:^|\n)([-*] .+(?:\n[-*] .+)*)/g,
+            function(match){
+
+                const lines =
+                    match
+                        .trim()
+                        .split("\n");
+
+
+                const items =
+                    lines
+                        .map(
+                            function(line){
+
+                                return `
+                                    <li>
+                                        ${line
+                                            .replace(
+                                                /^[-*]\s+/,
+                                                ""
+                                            )}
+                                    </li>
+                                `;
+
+                            }
+                        )
+                        .join("");
+
+
+                return `
+                    <ul>
+                        ${items}
+                    </ul>
+                `;
+
+            }
+        );
+
+
+    /*
+       Numbered list
+    */
+
+    text =
+        text.replace(
+            /(?:^|\n)((?:\d+\.\s.+\n?)+)/g,
+            function(match){
+
+                const lines =
+                    match
+                        .trim()
+                        .split("\n")
+                        .filter(Boolean);
+
+
+                const items =
+                    lines
+                        .map(
+                            function(line){
+
+                                return `
+                                    <li>
+                                        ${line
+                                            .replace(
+                                                /^\d+\.\s+/,
+                                                ""
+                                            )}
+                                    </li>
+                                `;
+
+                            }
+                        )
+                        .join("");
+
+
+                return `
+                    <ol>
+                        ${items}
+                    </ol>
+                `;
+
+            }
+        );
+
+
+    /*
+       Paragraphs
+    */
+
+    const blocks =
+        text
+            .split(/\n{2,}/)
+            .map(
+                function(block){
+
+                    const trimmed =
+                        block.trim();
+
+
+                    if(!trimmed){
+
+                        return "";
+
+                    }
+
+
+                    if(
+                        trimmed.startsWith(
+                            "<h2"
+                        ) ||
+                        trimmed.startsWith(
+                            "<h3"
+                        ) ||
+                        trimmed.startsWith(
+                            "<ul"
+                        ) ||
+                        trimmed.startsWith(
+                            "<ol"
+                        ) ||
+                        trimmed.startsWith(
+                            "<pre"
+                        )
+                    ){
+
+                        return trimmed;
+
+                    }
+
+
+                    return `
+                        <p>
+                            ${trimmed
+                                .replace(
+                                    /\n/g,
+                                    "<br>"
+                                )}
+                        </p>
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    return blocks;
+
+}
+
+
+/* =========================================================
+   SWITCH TAB
+========================================================= */
+
+function switchTab(
+    tab
+){
+
+    const ocrTab =
+        document.getElementById(
+            "ocrTab"
+        );
+
+    const summaryTab =
+        document.getElementById(
+            "summaryTab"
+        );
+
+    const ocrPanel =
+        document.getElementById(
+            "ocrPanel"
+        );
+
+    const summaryPanel =
+        document.getElementById(
+            "summaryPanel"
+        );
+
+
+    if(tab === "ocr"){
+
+        ocrTab.classList.add(
+            "active"
+        );
+
+        summaryTab.classList.remove(
+            "active"
+        );
+
+        ocrPanel.classList.add(
+            "active"
+        );
+
+        summaryPanel.classList.remove(
+            "active"
+        );
+
+    }
+    else{
+
+        summaryTab.classList.add(
+            "active"
+        );
+
+        ocrTab.classList.remove(
+            "active"
+        );
+
+        summaryPanel.classList.add(
+            "active"
+        );
+
+        ocrPanel.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SHOW RESULTS
+========================================================= */
+
+function showResults(){
+
+    emptyOutput.style.display =
+        "none";
+
+
+    results.classList.add(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   RESET RESULTS
+========================================================= */
+
+function resetResults(){
+
+    emptyOutput.style.display =
         "flex";
 
-    loadingTitle.textContent =
-        "Creating AI Summary";
 
-    loadingText.textContent =
-        "Analyzing your extracted notes...";
+    results.classList.remove(
+        "show"
+    );
 
 
-    setTimeout(function(){
+    outputActions.classList.remove(
+        "show"
+    );
 
-        const summary =
-            createDemoSummary(text);
 
-        summaryOutput.classList.remove("empty");
+    ocrText.value =
+        "";
 
-        summaryOutput.innerHTML =
-            summary;
 
-        loadingOverlay.style.display =
-            "none";
+    summaryContent.innerHTML =
+        "";
 
-        showToast(
-            "AI summary generated!"
-        );
 
-    },1400);
+    document.getElementById(
+        "ocrCharacters"
+    ).textContent =
+        "0";
+
+
+    document.getElementById(
+        "ocrWords"
+    ).textContent =
+        "0";
+
+
+    document.getElementById(
+        "aiStatus"
+    ).textContent =
+        "Ready";
+
+
+    switchTab(
+        "ocr"
+    );
 
 }
 
 
-/* =========================
-   DEMO SUMMARY
-========================= */
+/* =========================================================
+   OCR STATS
+========================================================= */
 
-function createDemoSummary(text){
+function updateOCRStats(
+    text
+){
 
-    const lower =
-        text.toLowerCase();
+    const clean =
+        String(
+            text || ""
+        ).trim();
 
-    if(
-        lower.includes("information security") ||
-        lower.includes("cryptography") ||
-        lower.includes("rsa")
-    ){
 
-        return `
-
-            <h3>Information Security</h3>
-
-            <p>
-                Information security focuses on protecting
-                information and systems from unauthorized
-                access, modification, disclosure and disruption.
-            </p>
-
-            <h3>Key Concepts</h3>
-
-            <ul>
-                <li>
-                    <strong>Confidentiality:</strong>
-                    Information should only be accessible
-                    to authorized users.
-                </li>
-
-                <li>
-                    <strong>Integrity:</strong>
-                    Information should remain accurate
-                    and protected from unauthorized changes.
-                </li>
-
-                <li>
-                    <strong>Availability:</strong>
-                    Authorized users should be able to
-                    access information when required.
-                </li>
-
-                <li>
-                    <strong>Cryptography:</strong>
-                    Uses mathematical techniques to protect
-                    information and secure communication.
-                </li>
-
-                <li>
-                    <strong>RSA:</strong>
-                    A public-key cryptographic algorithm
-                    based on mathematical operations involving
-                    large prime numbers.
-                </li>
-            </ul>
-
-            <h3>Exam Points</h3>
-
-            <ul>
-                <li>Remember the CIA Triad.</li>
-                <li>Understand the purpose of cryptography.</li>
-                <li>Differentiate symmetric and asymmetric encryption.</li>
-                <li>Know the basic concept of RSA.</li>
-            </ul>
-
-        `;
-
-    }
+    const characters =
+        clean.length;
 
 
     const words =
-        text
-        .split(/\s+/)
-        .filter(Boolean);
+        clean
+            ?
+            clean.split(
+                /\s+/
+            ).filter(Boolean).length
+            :
+            0;
 
-    const shortText =
-        words.slice(0,35).join(" ");
+
+    document.getElementById(
+        "ocrCharacters"
+    ).textContent =
+        characters.toLocaleString();
 
 
-    return `
-
-        <h3>Study Material Summary</h3>
-
-        <p>
-            The uploaded study material discusses
-            the following important content:
-        </p>
-
-        <ul>
-            <li>
-                The material contains
-                <strong>${words.length}</strong>
-                extracted words.
-            </li>
-
-            <li>
-                Key information should be reviewed
-                from the extracted text.
-            </li>
-
-            <li>
-                Important definitions and concepts
-                can be revised from the original material.
-            </li>
-        </ul>
-
-        <h3>Quick Revision</h3>
-
-        <p>
-            ${escapeHTML(shortText)}
-            ${words.length > 35 ? "..." : ""}
-        </p>
-
-        <h3>Exam Points</h3>
-
-        <ul>
-            <li>Review important definitions.</li>
-            <li>Remember major concepts and keywords.</li>
-            <li>Practice questions based on the topic.</li>
-        </ul>
-
-    `;
+    document.getElementById(
+        "ocrWords"
+    ).textContent =
+        words.toLocaleString();
 
 }
 
 
-/* =========================
-   SAMPLE
-========================= */
+/* =========================================================
+   COPY OCR
+========================================================= */
 
-function loadSample(){
-
-    extractedText.value = `
-
-Information Security
-
-Information security protects information
-from unauthorized access, use, disclosure,
-modification and destruction.
-
-CIA Triad
-
-Confidentiality ensures that information is
-accessible only to authorized users.
-
-Integrity ensures that information remains
-accurate and is not modified without
-authorization.
-
-Availability ensures that authorized users
-can access information when needed.
-
-Cryptography
-
-Cryptography uses mathematical techniques
-to protect information and secure communication.
-
-RSA
-
-RSA is a public-key cryptographic algorithm.
-It uses a public key and a private key.
-
-Digital signatures can be used to verify
-the authenticity and integrity of information.
-
-`;
-
-    updateWordCount();
-
-    showToast(
-        "Sample notes loaded!"
-    );
-
-}
-
-
-/* =========================
-   COPY EXTRACTED
-========================= */
-
-async function copyExtracted(){
+async function copyOCR(){
 
     const text =
-        extractedText.value.trim();
+        ocrText.value.trim();
+
 
     if(!text){
 
-        showToast("Nothing to copy.");
+        showToast(
+            "There is no OCR text to copy."
+        );
 
         return;
+
     }
 
-    await navigator.clipboard.writeText(text);
 
-    showToast(
-        "Extracted text copied!"
-    );
+    try{
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+
+        showToast(
+            "Extracted text copied."
+        );
+
+    }
+    catch(error){
+
+        showToast(
+            "Could not copy the OCR text."
+        );
+
+    }
 
 }
 
 
-/* =========================
+/* =========================================================
    COPY SUMMARY
-========================= */
+========================================================= */
 
 async function copySummary(){
 
-    const text =
-        summaryOutput.innerText.trim();
-
-    if(
-        !text ||
-        summaryOutput.classList.contains("empty")
-    ){
+    if(!aiSummary){
 
         showToast(
-            "Generate a summary first."
+            "Generate an AI summary first."
         );
 
         return;
+
     }
 
-    await navigator.clipboard.writeText(text);
 
-    showToast(
-        "Summary copied!"
-    );
+    try{
+
+        await navigator.clipboard.writeText(
+            aiSummary
+        );
+
+
+        showToast(
+            "AI summary copied."
+        );
+
+    }
+    catch(error){
+
+        showToast(
+            "Could not copy the summary."
+        );
+
+    }
 
 }
 
 
-/* =========================
-   DOWNLOAD
-========================= */
+/* =========================================================
+   DOWNLOAD SUMMARY
+========================================================= */
 
 function downloadSummary(){
 
-    if(
-        summaryOutput.classList.contains("empty")
-    ){
+    if(!aiSummary){
 
         showToast(
-            "Generate a summary first."
+            "Generate an AI summary first."
         );
 
         return;
+
     }
 
-    const text =
-        summaryOutput.innerText.trim();
 
     const blob =
         new Blob(
-            [text],
-            {type:"text/plain"}
+            [
+                aiSummary
+            ],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
         );
 
+
     const url =
-        URL.createObjectURL(blob);
+        URL.createObjectURL(
+            blob
+        );
+
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
-    link.href = url;
+
+    link.href =
+        url;
+
 
     link.download =
-        "AI-Notes-Summary.txt";
+        "ai-notes-summary.txt";
+
+
+    document.body.appendChild(
+        link
+    );
+
 
     link.click();
 
-    URL.revokeObjectURL(url);
+
+    link.remove();
+
+
+    setTimeout(
+        function(){
+
+            URL.revokeObjectURL(
+                url
+            );
+
+        },
+        1000
+    );
+
 
     showToast(
-        "Summary downloaded!"
+        "AI summary downloaded."
     );
 
 }
 
 
-/* =========================
-   CLEAR
-========================= */
+/* =========================================================
+   PRINT
+========================================================= */
+
+function printSummary(){
+
+    if(!aiSummary){
+
+        showToast(
+            "Generate an AI summary first."
+        );
+
+        return;
+
+    }
+
+
+    switchTab(
+        "summary"
+    );
+
+
+    setTimeout(
+        function(){
+
+            window.print();
+
+        },
+        100
+    );
+
+}
+
+
+/* =========================================================
+   SAMPLE TEXT
+========================================================= */
+
+function loadSampleText(){
+
+    const sample = `
+Information Security
+
+Information security is the practice of protecting information and information systems from unauthorized access, use, disclosure, disruption, modification, or destruction.
+
+The three basic principles of information security are confidentiality, integrity, and availability.
+
+Confidentiality ensures that information is accessible only to authorized users.
+
+Integrity ensures that information remains accurate, complete, and protected from unauthorized modification.
+
+Availability ensures that authorized users can access information and systems when required.
+
+Authentication is the process of verifying the identity of a user or system.
+
+Authorization determines what an authenticated user is allowed to access.
+
+Encryption converts readable plaintext into ciphertext using an encryption algorithm and key.
+
+Symmetric encryption uses the same key for encryption and decryption. Examples include DES and AES.
+
+Asymmetric encryption uses a pair of keys: a public key and a private key. RSA is a common public-key algorithm.
+
+A digital signature can be used to provide authentication, integrity, and non-repudiation.
+
+A firewall is a security mechanism that monitors and controls network traffic according to defined security rules.
+`;
+
+
+    extractedText =
+        sample.trim();
+
+
+    ocrText.value =
+        extractedText;
+
+
+    updateOCRStats(
+        extractedText
+    );
+
+
+    showResults();
+
+
+    switchTab(
+        "ocr"
+    );
+
+
+    outputActions.classList.remove(
+        "show"
+    );
+
+
+    aiSummary =
+        "";
+
+
+    document.getElementById(
+        "aiStatus"
+    ).textContent =
+        "Ready";
+
+
+    showToast(
+        "Sample notes loaded. You can edit them and generate a summary."
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR ALL
+========================================================= */
 
 function clearAll(){
 
-    selectedFile = null;
+    if(
+        isOCRRunning ||
+        isGenerating
+    ){
 
-    imageInput.value = "";
-
-    previewImage.src = "";
-
-    previewImage.style.display =
-        "none";
-
-    uploadContent.style.display =
-        "block";
-
-    imageInfo.style.display =
-        "none";
-
-    extractedText.value =
-        "";
-
-    updateWordCount();
-
-    ocrProgress.style.display =
-        "none";
-
-    progressFill.style.width =
-        "0%";
-
-    summaryOutput.className =
-        "summary-output empty";
-
-    summaryOutput.innerHTML = `
-
-        <div>
-
-            <div style="font-size:30px;margin-bottom:10px;">
-                ✨
-            </div>
-
-            <strong>
-                Your AI summary will appear here
-            </strong>
-
-            <p style="margin-top:5px;">
-                Upload notes, extract the text,
-                then generate a summary.
-            </p>
-
-        </div>
-
-    `;
-
-    showToast(
-        "Workspace cleared."
-    );
-
-}
-
-
-/* =========================
-   FILE SIZE
-========================= */
-
-function formatFileSize(bytes){
-
-    if(bytes === 0)
-        return "0 Bytes";
-
-    const units =
-        ["Bytes","KB","MB","GB"];
-
-    const i =
-        Math.floor(
-            Math.log(bytes) /
-            Math.log(1024)
+        showToast(
+            "Please wait until processing is finished."
         );
 
-    return (
-        parseFloat(
-            (bytes /
-            Math.pow(1024,i))
-            .toFixed(2)
-        )
-        + " "
-        + units[i]
+        return;
+
+    }
+
+
+    selectedFile =
+        null;
+
+    extractedText =
+        "";
+
+    aiSummary =
+        "";
+
+
+    imageInput.value =
+        "";
+
+
+    previewImage.removeAttribute(
+        "src"
+    );
+
+
+    previewSection.classList.remove(
+        "show"
+    );
+
+
+    summarizeBtn.disabled =
+        true;
+
+
+    summarizeBtn.textContent =
+        "✨ Extract & Summarize Notes";
+
+
+    resetResults();
+
+
+    hideProgress();
+
+
+    showToast(
+        "OCR workspace cleared."
     );
 
 }
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+/* =========================================================
+   LOADING
+========================================================= */
 
-function escapeHTML(value){
+function showLoading(
+    show,
+    title,
+    message
+){
 
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+
+    document.getElementById(
+        "loadingTitle"
+    ).textContent =
+        title ||
+        "Processing...";
+
+
+    document.getElementById(
+        "loadingMessage"
+    ).textContent =
+        message ||
+        "Please wait.";
+
+
+    if(show){
+
+        loading.classList.add(
+            "show"
+        );
+
+    }
+    else{
+
+        loading.classList.remove(
+            "show"
+        );
+
+    }
 
 }
 
 
-/* =========================
+/* =========================================================
    TOAST
-========================= */
+========================================================= */
 
-function showToast(message){
+function showToast(
+    message
+){
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
+
 
     toast.textContent =
         message;
 
-    toast.classList.add("show");
 
-    setTimeout(function(){
+    toast.classList.add(
+        "show"
+    );
 
-        toast.classList.remove("show");
 
-    },2500);
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4500
+        );
 
 }
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+
+resetResults();
 
 </script>
 
 </body>
+
 </html>

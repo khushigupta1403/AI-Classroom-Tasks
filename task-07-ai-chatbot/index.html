@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
 <title>AI Doubt Solver | AI StudyLab</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
 <style>
+
+/* ==================================================
+   RESET
+================================================== */
+
 *{
     margin:0;
     padding:0;
@@ -17,1395 +33,2544 @@
 }
 
 :root{
-    --purple:#6d5dfc;
-    --purple-dark:#5545e8;
-    --green:#20c997;
-    --text:#20233a;
-    --muted:#73778c;
-    --bg:#f6f7fb;
+
+    --purple:#7657e8;
+    --purple-dark:#6246d2;
+    --purple-light:#f1edff;
+
+    --green:#28b681;
+    --green-light:#eafaf4;
+
+    --red:#e45d6a;
+    --red-light:#fff0f2;
+
+    --blue:#4e8ee8;
+
+    --text:#202033;
+    --muted:#77768a;
+
+    --border:#e7e5ef;
+
+    --bg:#f7f7fb;
     --white:#ffffff;
-    --border:#e8e9f1;
-    --danger:#ef5b6d;
+
 }
 
 body{
-    font-family:'Inter',sans-serif;
+
+    font-family:"Inter",sans-serif;
+
     background:var(--bg);
+
     color:var(--text);
-    min-height:100vh;
+
 }
 
-/* SIDEBAR */
+button,
+input,
+select,
+textarea{
+
+    font-family:inherit;
+
+}
+
+button{
+
+    cursor:pointer;
+
+}
+
+
+/* ==================================================
+   SIDEBAR
+================================================== */
 
 .sidebar{
+
     position:fixed;
+
     left:0;
     top:0;
+
     width:250px;
     height:100vh;
-    background:#fff;
-    border-right:1px solid var(--border);
-    padding:25px 17px;
+
+    background:white;
+
+    border-right:
+        1px solid var(--border);
+
+    padding:25px 16px;
+
     z-index:20;
+
 }
 
 .logo{
+
     display:flex;
+
     align-items:center;
+
     gap:11px;
-    padding:0 10px 28px;
+
+    padding:
+        0 10px 28px;
+
 }
 
 .logo-icon{
+
     width:40px;
     height:40px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#786cff,#5748e9);
-    color:white;
+
+    border-radius:13px;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
-    font-size:19px;
-    box-shadow:0 8px 18px rgba(109,93,252,.25);
+
+    color:white;
+
+    font-size:20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8669f3,
+            #6245d1
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(118,87,232,.25);
+
 }
 
-.logo-text{
-    font-size:17px;
-    font-weight:800;
+.logo strong{
+
+    font-size:18px;
+
 }
 
-.logo-text span{
+.logo span{
+
     color:var(--purple);
+
 }
 
-.section-label{
-    color:#a2a5b5;
-    font-size:10px;
-    font-weight:800;
-    letter-spacing:1.1px;
-    padding:0 12px;
-    margin-bottom:10px;
+.menu-title{
+
+    padding:
+        0 12px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+    color:#aaa9b8;
+
+    margin-bottom:9px;
+
 }
 
-.nav{
+.nav-item{
+
     display:flex;
-    flex-direction:column;
-    gap:5px;
-}
 
-.nav a{
-    text-decoration:none;
-    color:#6d7082;
-    display:flex;
     align-items:center;
+
     gap:12px;
-    padding:11px 12px;
-    border-radius:11px;
-    font-size:12px;
+
+    padding:12px 13px;
+
+    border-radius:12px;
+
+    color:#656579;
+
+    text-decoration:none;
+
+    font-size:13px;
+
     font-weight:600;
+
+    margin-bottom:4px;
+
     transition:.2s;
+
 }
 
-.nav a:hover{
-    background:#f4f2ff;
+.nav-item:hover{
+
+    background:#f6f3ff;
+
     color:var(--purple);
+
 }
 
-.nav a.active{
-    background:#efedff;
+.nav-item.active{
+
+    background:var(--purple-light);
+
     color:var(--purple);
+
 }
 
 .nav-icon{
-    width:25px;
+
+    width:28px;
+
     text-align:center;
-    font-size:15px;
+
+    font-size:17px;
+
 }
 
 .assistant-card{
+
     position:absolute;
+
+    left:16px;
+    right:16px;
     bottom:22px;
-    left:17px;
-    right:17px;
-    background:linear-gradient(145deg,#f0edff,#effcf7);
-    border:1px solid #e5e1ff;
-    border-radius:17px;
-    padding:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f2eeff,
+            #ecfaf5
+        );
+
+    border:
+        1px solid #e4defd;
+
+    border-radius:18px;
+
+    padding:17px;
+
 }
 
-.assistant-card .small-icon{
+.assistant-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-bottom:9px;
+
+}
+
+.assistant-avatar{
+
     width:33px;
     height:33px;
-    background:#fff;
+
     border-radius:10px;
+
+    background:white;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
-    margin-bottom:10px;
+
 }
 
 .assistant-card strong{
+
     font-size:12px;
-    display:block;
-    margin-bottom:4px;
+
 }
 
 .assistant-card p{
-    font-size:10px;
-    color:#777b90;
-    line-height:1.5;
+
+    color:#76758a;
+
+    font-size:11px;
+
+    line-height:1.6;
+
 }
 
-/* MAIN */
+
+/* ==================================================
+   MAIN
+================================================== */
 
 .main{
+
     margin-left:250px;
+
     min-height:100vh;
+
 }
 
 .topbar{
-    height:72px;
-    background:rgba(255,255,255,.92);
-    border-bottom:1px solid var(--border);
+
+    height:70px;
+
+    background:
+        rgba(255,255,255,.9);
+
+    border-bottom:
+        1px solid var(--border);
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
-    padding:0 34px;
+
+    padding:
+        0 34px;
+
     position:sticky;
+
     top:0;
+
     z-index:10;
-    backdrop-filter:blur(12px);
+
+    backdrop-filter:
+        blur(10px);
+
 }
 
 .breadcrumb{
-    font-size:12px;
-    color:#999caf;
+
+    font-size:13px;
+
+    color:var(--muted);
+
 }
 
 .breadcrumb strong{
+
     color:var(--text);
+
 }
 
-.ready{
+.status{
+
     display:flex;
+
     align-items:center;
-    gap:8px;
-    padding:8px 13px;
-    border:1px solid #d9f4eb;
-    background:#f2fffb;
+
+    gap:7px;
+
+    background:var(--green-light);
+
+    color:#1a9365;
+
+    padding:
+        8px 13px;
+
     border-radius:20px;
+
     font-size:11px;
+
     font-weight:700;
-    color:#159a73;
+
 }
 
-.ready-dot{
+.status-dot{
+
     width:7px;
     height:7px;
+
+    background:var(--green);
+
     border-radius:50%;
-    background:#20c997;
+
 }
 
-/* HERO */
+
+/* ==================================================
+   CONTENT
+================================================== */
+
+.content{
+
+    padding:
+        30px 34px 45px;
+
+    max-width:1450px;
+
+    margin:auto;
+
+}
+
+
+/* ==================================================
+   HERO
+================================================== */
 
 .hero{
-    margin:30px 34px 20px;
-    min-height:190px;
-    border-radius:24px;
-    padding:34px 38px;
-    color:#fff;
+
     background:
-        radial-gradient(circle at 85% 15%,rgba(255,255,255,.18),transparent 28%),
-        linear-gradient(125deg,#6655ef,#7969fa 52%,#5dcbad);
+
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(255,255,255,.18),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            135deg,
+            #7657e8,
+            #684bd4 55%,
+            #5f46c7
+        );
+
+    color:white;
+
+    border-radius:26px;
+
+    padding:
+        38px 42px;
+
     position:relative;
+
     overflow:hidden;
+
+    margin-bottom:24px;
+
 }
 
 .hero::after{
+
     content:"";
+
     position:absolute;
-    width:260px;
-    height:260px;
-    border:1px solid rgba(255,255,255,.13);
+
+    width:230px;
+    height:230px;
+
+    border:
+        35px solid
+        rgba(255,255,255,.08);
+
     border-radius:50%;
-    right:-90px;
-    bottom:-140px;
+
+    right:-70px;
+    top:-90px;
+
 }
 
-.badge{
+.hero-badge{
+
     display:inline-flex;
-    padding:6px 10px;
-    background:rgba(255,255,255,.15);
-    border:1px solid rgba(255,255,255,.2);
+
+    align-items:center;
+
+    gap:7px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    padding:
+        7px 12px;
+
     border-radius:20px;
-    font-size:10px;
+
+    font-size:11px;
+
     font-weight:700;
-    margin-bottom:13px;
+
+    margin-bottom:15px;
+
 }
 
 .hero h1{
-    font-size:27px;
-    letter-spacing:-.7px;
-    margin-bottom:9px;
+
+    font-size:31px;
+
+    line-height:1.2;
+
+    margin-bottom:10px;
+
+    max-width:760px;
+
 }
 
 .hero p{
-    max-width:650px;
-    font-size:12px;
+
+    font-size:14px;
+
     line-height:1.7;
-    opacity:.9;
+
+    color:
+        rgba(255,255,255,.83);
+
+    max-width:760px;
+
 }
 
-/* CHAT AREA */
 
-.chat-layout{
-    margin:0 34px 35px;
+/* ==================================================
+   CHAT WORKSPACE
+================================================== */
+
+.workspace{
+
     display:grid;
-    grid-template-columns:1fr 290px;
+
+    grid-template-columns:
+        280px
+        minmax(0,1fr);
+
     gap:20px;
+
 }
 
-.chat-card,
-.side-card{
-    background:#fff;
-    border:1px solid var(--border);
+
+/* ==================================================
+   CARD
+================================================== */
+
+.card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
     border-radius:20px;
-    box-shadow:0 8px 28px rgba(30,35,70,.04);
+
+    box-shadow:
+        0 8px 30px
+        rgba(39,35,65,.035);
+
 }
 
-/* CHAT */
+
+/* ==================================================
+   SETTINGS PANEL
+================================================== */
+
+.settings-card{
+
+    padding:22px;
+
+}
+
+.card-heading{
+
+    margin-bottom:20px;
+
+}
+
+.card-heading h2{
+
+    font-size:16px;
+
+}
+
+.card-heading p{
+
+    color:var(--muted);
+
+    font-size:10px;
+
+    line-height:1.6;
+
+    margin-top:5px;
+
+}
+
+.field{
+
+    margin-bottom:16px;
+
+}
+
+.field label{
+
+    display:block;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    margin-bottom:7px;
+
+}
+
+.field select{
+
+    width:100%;
+
+    border:
+        1px solid var(--border);
+
+    background:#fbfbfd;
+
+    border-radius:11px;
+
+    padding:11px;
+
+    font-size:10px;
+
+    outline:none;
+
+}
+
+.field select:focus{
+
+    border-color:#9d89ef;
+
+    background:white;
+
+}
+
+.mode-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:8px;
+
+}
+
+.mode-btn{
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    border-radius:10px;
+
+    padding:10px 7px;
+
+    font-size:9px;
+
+    font-weight:700;
+
+    color:#666477;
+
+    transition:.2s;
+
+}
+
+.mode-btn:hover{
+
+    background:#faf9ff;
+
+    color:var(--purple);
+
+}
+
+.mode-btn.active{
+
+    background:var(--purple-light);
+
+    color:var(--purple);
+
+    border-color:#c9bdf5;
+
+}
+
+.clear-chat{
+
+    width:100%;
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    color:#686678;
+
+    border-radius:10px;
+
+    padding:10px;
+
+    font-size:10px;
+
+    font-weight:700;
+
+    margin-top:4px;
+
+}
+
+.clear-chat:hover{
+
+    background:var(--red-light);
+
+    color:var(--red);
+
+    border-color:#f0c0c6;
+
+}
+
+.tips{
+
+    margin-top:20px;
+
+    background:#faf9fd;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:13px;
+
+    padding:13px;
+
+}
+
+.tips-title{
+
+    font-size:10px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+
+}
+
+.tips ul{
+
+    list-style:none;
+
+}
+
+.tips li{
+
+    font-size:9px;
+
+    color:var(--muted);
+
+    line-height:1.6;
+
+    padding:3px 0;
+
+}
+
+
+/* ==================================================
+   CHAT CARD
+================================================== */
 
 .chat-card{
-    height:650px;
+
+    min-height:650px;
+
     display:flex;
+
     flex-direction:column;
+
     overflow:hidden;
+
 }
+
+
+/* ==================================================
+   CHAT HEADER
+================================================== */
 
 .chat-header{
-    padding:17px 20px;
-    border-bottom:1px solid var(--border);
+
     display:flex;
-    justify-content:space-between;
+
     align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        18px 22px;
+
+    border-bottom:
+        1px solid var(--border);
+
 }
 
-.tutor-info{
+.chat-title{
+
     display:flex;
+
     align-items:center;
+
     gap:11px;
+
 }
 
 .bot-avatar{
-    width:40px;
-    height:40px;
-    border-radius:13px;
-    background:linear-gradient(135deg,#7363ff,#20c997);
-    color:#fff;
+
+    width:39px;
+    height:39px;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eee9ff,
+            #e8faf3
+        );
+
     display:flex;
+
     align-items:center;
     justify-content:center;
-    font-size:18px;
+
+    font-size:20px;
+
 }
 
-.tutor-info strong{
-    display:block;
+.chat-title strong{
+
     font-size:13px;
+
 }
 
-.tutor-info span{
-    font-size:10px;
-    color:#20a87e;
-    font-weight:600;
-}
+.chat-title span{
 
-.clear-btn{
-    border:1px solid var(--border);
-    background:#fff;
-    color:#777b8e;
-    padding:8px 12px;
-    border-radius:9px;
-    cursor:pointer;
-    font-size:10px;
-    font-weight:700;
-}
-
-.clear-btn:hover{
-    color:var(--danger);
-    border-color:#ffd4da;
-    background:#fff8f9;
-}
-
-.messages{
-    flex:1;
-    overflow-y:auto;
-    padding:23px;
-    background:#fafbfe;
-}
-
-.message{
-    display:flex;
-    margin-bottom:19px;
-    gap:10px;
-}
-
-.message.user{
-    justify-content:flex-end;
-}
-
-.avatar{
-    width:31px;
-    height:31px;
-    min-width:31px;
-    border-radius:10px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:13px;
-    background:#eeeaff;
-    color:var(--purple);
-}
-
-.message.user .avatar{
-    order:2;
-    background:#dcfaf1;
-    color:#149b73;
-}
-
-.bubble{
-    max-width:75%;
-    padding:12px 14px;
-    border-radius:15px;
-    background:#fff;
-    border:1px solid var(--border);
-    color:#42465c;
-    font-size:12px;
-    line-height:1.65;
-    box-shadow:0 4px 12px rgba(30,35,70,.025);
-}
-
-.message.user .bubble{
-    background:var(--purple);
-    color:#fff;
-    border-color:var(--purple);
-    border-radius:15px 15px 4px 15px;
-}
-
-.message.bot .bubble{
-    border-radius:15px 15px 15px 4px;
-}
-
-.bubble strong{
-    color:inherit;
-}
-
-.bubble ul{
-    margin:7px 0 0 17px;
-}
-
-.bubble li{
-    margin:4px 0;
-}
-
-.message-time{
     display:block;
-    margin-top:7px;
+
+    color:var(--muted);
+
     font-size:9px;
-    opacity:.55;
+
+    margin-top:3px;
+
 }
 
-/* TYPING */
+.online{
 
-.typing{
-    display:none;
-    gap:5px;
+    display:flex;
+
     align-items:center;
+
+    gap:6px;
+
+    color:#1b9567;
+
+    background:var(--green-light);
+
+    padding:
+        7px 10px;
+
+    border-radius:15px;
+
+    font-size:9px;
+
+    font-weight:800;
+
 }
 
-.typing span{
+.online-dot{
+
     width:6px;
     height:6px;
+
+    background:var(--green);
+
     border-radius:50%;
-    background:#999;
-    animation:typing 1s infinite;
+
 }
 
-.typing span:nth-child(2){
-    animation-delay:.15s;
-}
 
-.typing span:nth-child(3){
-    animation-delay:.3s;
-}
+/* ==================================================
+   CHAT BODY
+================================================== */
 
-@keyframes typing{
-    0%,60%,100%{transform:translateY(0);opacity:.4}
-    30%{transform:translateY(-4px);opacity:1}
-}
+.chat-body{
 
-/* INPUT */
-
-.chat-input-area{
-    padding:15px;
-    border-top:1px solid var(--border);
-    background:#fff;
-}
-
-.input-row{
-    display:flex;
-    gap:9px;
-}
-
-.input-row textarea{
     flex:1;
-    min-height:47px;
-    max-height:110px;
-    resize:none;
-    border:1px solid #dedfeb;
-    border-radius:13px;
-    padding:13px;
-    font-family:inherit;
-    font-size:11px;
-    outline:none;
+
+    min-height:480px;
+
+    max-height:560px;
+
+    overflow-y:auto;
+
+    padding:22px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fcfcfe,
+            #fafafd
+        );
+
 }
 
-.input-row textarea:focus{
-    border-color:var(--purple);
-    box-shadow:0 0 0 3px rgba(109,93,252,.08);
+.chat-body::-webkit-scrollbar{
+
+    width:6px;
+
 }
 
-.send-btn{
-    width:48px;
-    border:none;
-    border-radius:13px;
-    background:var(--purple);
-    color:#fff;
-    cursor:pointer;
-    font-size:17px;
-    transition:.2s;
-}
+.chat-body::-webkit-scrollbar-thumb{
 
-.send-btn:hover{
-    background:var(--purple-dark);
-    transform:translateY(-1px);
-}
+    background:#ddd9eb;
 
-.input-hint{
-    margin-top:7px;
-    font-size:9px;
-    color:#a0a3b2;
-}
-
-/* RIGHT PANEL */
-
-.side-card{
-    padding:19px;
-    height:max-content;
-}
-
-.side-card h3{
-    font-size:13px;
-    margin-bottom:5px;
-}
-
-.side-card > p{
-    font-size:10px;
-    color:#9296a8;
-    line-height:1.5;
-    margin-bottom:15px;
-}
-
-.subject-label{
-    font-size:10px;
-    font-weight:700;
-    color:#777b8e;
-    margin-bottom:7px;
-    display:block;
-}
-
-.subject-select{
-    width:100%;
-    padding:10px;
-    border:1px solid var(--border);
     border-radius:10px;
-    background:#fff;
-    font-family:inherit;
-    font-size:11px;
-    outline:none;
+
 }
 
-.suggestions-title{
+
+/* ==================================================
+   WELCOME
+================================================== */
+
+.welcome{
+
+    text-align:center;
+
+    max-width:620px;
+
+    margin:30px auto;
+
+}
+
+.welcome-icon{
+
+    width:66px;
+    height:66px;
+
+    border-radius:20px;
+
+    background:var(--purple-light);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:30px;
+
+    margin:
+        0 auto 15px;
+
+}
+
+.welcome h3{
+
+    font-size:18px;
+
+    margin-bottom:7px;
+
+}
+
+.welcome p{
+
+    color:var(--muted);
+
     font-size:10px;
-    font-weight:800;
-    margin:22px 0 9px;
+
+    line-height:1.7;
+
+    margin-bottom:18px;
+
+}
+
+.suggestions{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:9px;
+
+    text-align:left;
+
 }
 
 .suggestion{
-    width:100%;
-    text-align:left;
-    border:1px solid var(--border);
-    background:#fff;
-    padding:10px 11px;
-    border-radius:10px;
-    margin-bottom:7px;
-    cursor:pointer;
-    color:#606477;
-    font-family:inherit;
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:12px;
+
     font-size:10px;
-    line-height:1.4;
+
+    color:#5f5d70;
+
     transition:.2s;
+
 }
 
 .suggestion:hover{
-    border-color:#d9d3ff;
-    background:#f8f6ff;
+
+    border-color:#b5a7ed;
+
     color:var(--purple);
+
+    background:#fcfbff;
+
 }
 
-.tutor-rules{
-    margin-top:18px;
-    padding:13px;
-    background:#f8f7ff;
-    border-radius:12px;
+
+/* ==================================================
+   MESSAGE
+================================================== */
+
+.message{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:19px;
+
+    max-width:90%;
+
 }
 
-.tutor-rules strong{
-    font-size:10px;
-    display:block;
-    margin-bottom:7px;
+.message.user{
+
+    margin-left:auto;
+
+    flex-direction:row-reverse;
+
 }
 
-.rule{
+.message-avatar{
+
+    width:31px;
+    height:31px;
+
+    flex-shrink:0;
+
+    border-radius:10px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:14px;
+
+}
+
+.message.ai .message-avatar{
+
+    background:var(--purple-light);
+
+}
+
+.message.user .message-avatar{
+
+    background:var(--green-light);
+
+}
+
+.message-content{
+
+    min-width:0;
+
+}
+
+.message-name{
+
     font-size:9px;
-    color:#777b8e;
-    margin:5px 0;
+
+    font-weight:800;
+
+    color:var(--muted);
+
+    margin-bottom:5px;
+
 }
 
-/* TOAST */
+.message.user .message-name{
+
+    text-align:right;
+
+}
+
+.message-bubble{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        4px 15px 15px 15px;
+
+    padding:
+        12px 14px;
+
+    font-size:11px;
+
+    line-height:1.7;
+
+    color:#3f3d50;
+
+    box-shadow:
+        0 3px 12px
+        rgba(30,25,55,.025);
+
+    word-break:break-word;
+
+}
+
+.message.user .message-bubble{
+
+    background:
+        var(--purple);
+
+    color:white;
+
+    border:0;
+
+    border-radius:
+        15px 4px 15px 15px;
+
+}
+
+.message-bubble strong{
+
+    color:var(--purple-dark);
+
+}
+
+.message.user .message-bubble strong{
+
+    color:white;
+
+}
+
+.message-bubble code{
+
+    background:#f2eff9;
+
+    color:#664bcf;
+
+    padding:
+        2px 5px;
+
+    border-radius:5px;
+
+    font-size:10px;
+
+}
+
+.message.user .message-bubble code{
+
+    background:
+        rgba(255,255,255,.16);
+
+    color:white;
+
+}
+
+.message-bubble pre{
+
+    background:#242230;
+
+    color:#eee;
+
+    border-radius:10px;
+
+    padding:12px;
+
+    overflow-x:auto;
+
+    margin:9px 0;
+
+}
+
+.message-bubble pre code{
+
+    background:none;
+
+    color:inherit;
+
+    padding:0;
+
+}
+
+.message-bubble ul,
+.message-bubble ol{
+
+    padding-left:19px;
+
+    margin:6px 0;
+
+}
+
+.message-bubble p{
+
+    margin-bottom:7px;
+
+}
+
+.message-bubble p:last-child{
+
+    margin-bottom:0;
+
+}
+
+
+/* ==================================================
+   COPY BUTTON
+================================================== */
+
+.copy-btn{
+
+    border:0;
+
+    background:transparent;
+
+    color:#9290a0;
+
+    font-size:9px;
+
+    padding:5px 0;
+
+}
+
+.copy-btn:hover{
+
+    color:var(--purple);
+
+}
+
+
+/* ==================================================
+   TYPING
+================================================== */
+
+.typing{
+
+    display:none;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:15px;
+
+}
+
+.typing.show{
+
+    display:flex;
+
+}
+
+.typing-avatar{
+
+    width:31px;
+    height:31px;
+
+    border-radius:10px;
+
+    background:var(--purple-light);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+}
+
+.typing-bubble{
+
+    display:flex;
+
+    gap:4px;
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        4px 15px 15px 15px;
+
+    padding:
+        12px 15px;
+
+}
+
+.typing-bubble span{
+
+    width:6px;
+    height:6px;
+
+    background:#aaa6bb;
+
+    border-radius:50%;
+
+    animation:
+        typing .9s infinite;
+
+}
+
+.typing-bubble span:nth-child(2){
+
+    animation-delay:.15s;
+
+}
+
+.typing-bubble span:nth-child(3){
+
+    animation-delay:.3s;
+
+}
+
+@keyframes typing{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+        opacity:.45;
+
+    }
+
+    50%{
+
+        transform:translateY(-4px);
+
+        opacity:1;
+
+    }
+
+}
+
+
+/* ==================================================
+   CHAT INPUT
+================================================== */
+
+.chat-input-area{
+
+    border-top:
+        1px solid var(--border);
+
+    padding:
+        15px 18px;
+
+    background:white;
+
+}
+
+.input-row{
+
+    display:flex;
+
+    gap:9px;
+
+    align-items:flex-end;
+
+}
+
+.chat-input{
+
+    flex:1;
+
+    resize:none;
+
+    min-height:46px;
+
+    max-height:130px;
+
+    border:
+        1px solid var(--border);
+
+    background:#fafafd;
+
+    border-radius:13px;
+
+    padding:
+        13px 14px;
+
+    font-size:11px;
+
+    line-height:1.5;
+
+    outline:none;
+
+}
+
+.chat-input:focus{
+
+    background:white;
+
+    border-color:#9d89ef;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(118,87,232,.07);
+
+}
+
+.send-btn{
+
+    width:46px;
+    height:46px;
+
+    border:0;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c5bea,
+            #6548d2
+        );
+
+    color:white;
+
+    font-size:17px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+}
+
+.send-btn:hover{
+
+    background:var(--purple-dark);
+
+}
+
+.send-btn:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+
+}
+
+.input-hint{
+
+    font-size:8px;
+
+    color:#aaa8b7;
+
+    margin-top:7px;
+
+}
+
+
+/* ==================================================
+   LOADING
+================================================== */
+
+.loading{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(255,255,255,.78);
+
+    backdrop-filter:
+        blur(5px);
+
+    z-index:100;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.loading.show{
+
+    display:flex;
+
+}
+
+.loading-card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:28px 35px;
+
+    text-align:center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(30,25,55,.15);
+
+    max-width:330px;
+
+}
+
+.spinner{
+
+    width:38px;
+    height:38px;
+
+    border:
+        4px solid #eeeafa;
+
+    border-top-color:
+        var(--purple);
+
+    border-radius:50%;
+
+    animation:
+        spin .8s linear infinite;
+
+    margin:
+        0 auto 13px;
+
+}
+
+.loading-card strong{
+
+    font-size:13px;
+
+}
+
+.loading-card p{
+
+    font-size:10px;
+
+    color:var(--muted);
+
+    margin-top:5px;
+
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* ==================================================
+   TOAST
+================================================== */
 
 .toast{
+
     position:fixed;
+
     right:25px;
     bottom:25px;
-    background:#20233a;
-    color:#fff;
-    padding:11px 15px;
-    border-radius:10px;
-    font-size:10px;
+
+    background:#222132;
+
+    color:white;
+
+    padding:
+        12px 17px;
+
+    border-radius:11px;
+
+    font-size:11px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.2);
+
+    transform:
+        translateY(80px);
+
     opacity:0;
-    transform:translateY(10px);
-    pointer-events:none;
-    transition:.25s;
-    z-index:100;
+
+    transition:.3s;
+
+    z-index:110;
+
+    max-width:380px;
+
 }
 
 .toast.show{
+
+    transform:
+        translateY(0);
+
     opacity:1;
-    transform:translateY(0);
+
 }
 
-/* RESPONSIVE */
 
-@media(max-width:1000px){
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media(max-width:1050px){
+
+    .workspace{
+
+        grid-template-columns:
+            250px
+            minmax(0,1fr);
+
+    }
+
+}
+
+@media(max-width:850px){
+
     .sidebar{
+
         width:72px;
-        padding:20px 9px;
+
+        padding:
+            20px 9px;
+
     }
 
     .logo{
+
         justify-content:center;
-        padding:0 0 25px;
+
+        padding:
+            0 0 25px;
+
     }
 
-    .logo-text,
-    .section-label,
-    .nav a span:not(.nav-icon),
+    .logo strong,
+    .menu-title,
+    .nav-item span,
     .assistant-card{
+
         display:none;
+
     }
 
-    .nav a{
+    .nav-item{
+
         justify-content:center;
-        padding:12px;
+
+        padding:
+            12px 5px;
+
     }
 
     .main{
+
         margin-left:72px;
+
     }
 
-    .chat-layout{
+    .workspace{
+
         grid-template-columns:1fr;
+
     }
 
-    .side-card{
-        order:-1;
-    }
-}
+    .settings-card{
 
-@media(max-width:700px){
-    .main{
-        margin-left:0;
-    }
+        order:2;
 
-    .sidebar{
-        display:none;
-    }
-
-    .topbar{
-        padding:0 17px;
-    }
-
-    .hero{
-        margin:18px 15px;
-        padding:25px;
-    }
-
-    .hero h1{
-        font-size:22px;
-    }
-
-    .chat-layout{
-        margin:0 15px 25px;
     }
 
     .chat-card{
-        height:600px;
+
+        order:1;
+
     }
 
-    .messages{
-        padding:15px;
-    }
-
-    .bubble{
-        max-width:84%;
-    }
 }
+
+@media(max-width:600px){
+
+    .topbar{
+
+        padding:
+            0 16px;
+
+    }
+
+    .content{
+
+        padding:
+            18px 14px 35px;
+
+    }
+
+    .hero{
+
+        padding:
+            27px 24px;
+
+        border-radius:20px;
+
+    }
+
+    .hero h1{
+
+        font-size:24px;
+
+    }
+
+    .chat-body{
+
+        min-height:430px;
+
+        max-height:520px;
+
+        padding:15px;
+
+    }
+
+    .suggestions{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .message{
+
+        max-width:96%;
+
+    }
+
+    .chat-header{
+
+        padding:
+            15px;
+
+    }
+
+    .online{
+
+        display:none;
+
+    }
+
+    .toast{
+
+        left:15px;
+        right:15px;
+        bottom:15px;
+
+        max-width:none;
+
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
-<!-- SIDEBAR -->
+
+<!-- ==================================================
+     SIDEBAR
+================================================== -->
 
 <aside class="sidebar">
 
+
     <div class="logo">
-        <div class="logo-icon">✦</div>
-        <div class="logo-text">AI <span>StudyLab</span></div>
+
+        <div class="logo-icon">
+            ✦
+        </div>
+
+        <strong>
+            AI <span>StudyLab</span>
+        </strong>
+
     </div>
 
-    <div class="section-label">LEARNING TOOLS</div>
 
-    <nav class="nav">
+    <div class="menu-title">
+        AI Learning
+    </div>
 
-        <a href="../task-01-resume-builder/index.html">
-            <span class="nav-icon">📄</span>
-            <span>Resume Builder</span>
-        </a>
 
-        <a href="../task-02-notes-generator/index.html">
-            <span class="nav-icon">📝</span>
-            <span>Notes Generator</span>
-        </a>
+    <a
+        class="nav-item"
+        href="../task-01-resume-builder/index.html"
+    >
 
-        <a href="../task-03-ppt-generator/index.html">
-            <span class="nav-icon">📊</span>
-            <span>Presentation</span>
-        </a>
+        <div class="nav-icon">
+            📄
+        </div>
 
-        <a href="../task-04-mind-map/index.html">
-            <span class="nav-icon">🧠</span>
-            <span>Mind Map</span>
-        </a>
+        <span>
+            Resume Builder
+        </span>
 
-        <a href="../task-06-ai-quiz/index.html">
-            <span class="nav-icon">🎯</span>
-            <span>AI Quiz</span>
-        </a>
+    </a>
 
-        <a class="active" href="#">
-            <span class="nav-icon">🤖</span>
-            <span>Doubt Solver</span>
-        </a>
 
-        <a href="../task-08-flashcards/index.html">
-            <span class="nav-icon">🗂️</span>
-            <span>Flashcards</span>
-        </a>
+    <a
+        class="nav-item"
+        href="../task-02-notes-generator/index.html"
+    >
 
-    </nav>
+        <div class="nav-icon">
+            📝
+        </div>
+
+        <span>
+            Notes Generator
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-03-ppt-generator/index.html"
+    >
+
+        <div class="nav-icon">
+            📊
+        </div>
+
+        <span>
+            Presentation
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-04-mind-map/index.html"
+    >
+
+        <div class="nav-icon">
+            🧠
+        </div>
+
+        <span>
+            Mind Map
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-05-google-sheets/index.html"
+    >
+
+        <div class="nav-icon">
+            📋
+        </div>
+
+        <span>
+            Google Sheets
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-06-ai-quiz/index.html"
+    >
+
+        <div class="nav-icon">
+            ❓
+        </div>
+
+        <span>
+            AI Quiz
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item active"
+        href="#"
+    >
+
+        <div class="nav-icon">
+            💬
+        </div>
+
+        <span>
+            Doubt Solver
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-08-flashcards/index.html"
+    >
+
+        <div class="nav-icon">
+            🎴
+        </div>
+
+        <span>
+            Flashcards
+        </span>
+
+    </a>
+
 
     <div class="assistant-card">
-        <div class="small-icon">✨</div>
-        <strong>AI Learning Assistant</strong>
-        <p>Ask questions, understand concepts and learn at your own pace.</p>
+
+        <div class="assistant-top">
+
+            <div class="assistant-avatar">
+                🤖
+            </div>
+
+            <strong>
+                AI Subject Tutor
+            </strong>
+
+        </div>
+
+        <p>
+            Ask questions about your
+            subjects and get clear,
+            student-friendly explanations.
+        </p>
+
     </div>
+
 
 </aside>
 
 
+<!-- ==================================================
+     MAIN
+================================================== -->
+
 <main class="main">
 
-    <!-- TOPBAR -->
 
-    <header class="topbar">
-
-        <div class="breadcrumb">
-            Learning Tools &nbsp;/&nbsp;
-            <strong>Doubt Solver</strong>
-        </div>
-
-        <div class="ready">
-            <span class="ready-dot"></span>
-            AI Studio Ready
-        </div>
-
-    </header>
+<header class="topbar">
 
 
-    <!-- HERO -->
+    <div class="breadcrumb">
 
-    <section class="hero">
+        AI StudyLab
+        &nbsp;/&nbsp;
 
-        <div class="badge">🤖 AI TUTOR</div>
+        <strong>
+            AI Doubt Solver
+        </strong>
 
-        <h1>Ask Anything. Understand Everything.</h1>
+    </div>
+
+
+    <div class="status">
+
+        <div class="status-dot"></div>
+
+        Gemini AI Connected
+
+    </div>
+
+
+</header>
+
+
+<section class="content">
+
+
+<!-- ==================================================
+     HERO
+================================================== -->
+
+<div class="hero">
+
+
+    <div class="hero-badge">
+        ✨ AI Subject Tutor
+    </div>
+
+
+    <h1>
+        Ask Anything About Your Subject
+    </h1>
+
+
+    <p>
+        Stuck on a concept? Ask your doubt
+        and get a clear explanation from your
+        AI tutor. Continue the conversation
+        with follow-up questions just like a
+        real study session.
+    </p>
+
+
+</div>
+
+
+<!-- ==================================================
+     WORKSPACE
+================================================== -->
+
+<div class="workspace">
+
+
+<!-- ==================================================
+     SETTINGS
+================================================== -->
+
+<div class="card settings-card">
+
+
+    <div class="card-heading">
+
+        <h2>
+            Tutor Settings
+        </h2>
 
         <p>
-            Get clear, student-friendly explanations for difficult concepts.
-            Your AI tutor explains topics step-by-step instead of simply giving
-            you the final answer.
+            Customize how Gemini explains
+            your answer.
         </p>
 
-    </section>
+    </div>
 
 
-    <!-- CHAT -->
+    <div class="field">
 
-    <section class="chat-layout">
+        <label>
+            Subject
+        </label>
 
-        <div class="chat-card">
+        <select id="subject">
 
-            <div class="chat-header">
+            <option>
+                General
+            </option>
 
-                <div class="tutor-info">
+            <option>
+                Java
+            </option>
 
-                    <div class="bot-avatar">🤖</div>
+            <option>
+                Data Structures
+            </option>
 
-                    <div>
-                        <strong>AI Study Tutor</strong>
-                        <span>● Online & ready to help</span>
-                    </div>
+            <option>
+                DBMS
+            </option>
 
-                </div>
+            <option>
+                Computer Networks
+            </option>
 
-                <button class="clear-btn" onclick="clearChat()">
-                    🗑 Clear Chat
+            <option>
+                Operating Systems
+            </option>
+
+            <option>
+                Information Security
+            </option>
+
+            <option>
+                Artificial Intelligence
+            </option>
+
+            <option>
+                Machine Learning
+            </option>
+
+            <option>
+                Web Development
+            </option>
+
+            <option>
+                Other
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="field">
+
+        <label>
+            Student Level
+        </label>
+
+        <select id="level">
+
+            <option>
+                Beginner
+            </option>
+
+            <option selected>
+                B.Tech / College
+            </option>
+
+            <option>
+                Advanced
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="field">
+
+        <label>
+            Explanation Style
+        </label>
+
+
+        <div class="mode-grid">
+
+
+            <button
+                type="button"
+                class="mode-btn active"
+                data-mode="Simple"
+                onclick="selectMode(this)"
+            >
+                🌱 Simple
+            </button>
+
+
+            <button
+                type="button"
+                class="mode-btn"
+                data-mode="Detailed"
+                onclick="selectMode(this)"
+            >
+                📚 Detailed
+            </button>
+
+
+            <button
+                type="button"
+                class="mode-btn"
+                data-mode="Exam"
+                onclick="selectMode(this)"
+            >
+                📝 Exam
+            </button>
+
+
+            <button
+                type="button"
+                class="mode-btn"
+                data-mode="Example"
+                onclick="selectMode(this)"
+            >
+                💡 Example
+            </button>
+
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="clear-chat"
+        type="button"
+        onclick="clearChat()"
+    >
+        🗑️ Clear Conversation
+    </button>
+
+
+    <div class="tips">
+
+
+        <div class="tips-title">
+            💡 Study Tips
+        </div>
+
+
+        <ul>
+
+            <li>
+                • Ask one concept at a time.
+            </li>
+
+            <li>
+                • Ask follow-up questions.
+            </li>
+
+            <li>
+                • Use Exam mode before tests.
+            </li>
+
+            <li>
+                • Ask for examples when stuck.
+            </li>
+
+        </ul>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ==================================================
+     CHAT
+================================================== -->
+
+<div class="card chat-card">
+
+
+    <!-- CHAT HEADER -->
+
+    <div class="chat-header">
+
+
+        <div class="chat-title">
+
+
+            <div class="bot-avatar">
+                🤖
+            </div>
+
+
+            <div>
+
+                <strong>
+                    AI Subject Tutor
+                </strong>
+
+                <span>
+                    Gemini-powered learning assistant
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="online">
+
+            <div class="online-dot"></div>
+
+            ONLINE
+
+        </div>
+
+
+    </div>
+
+
+    <!-- CHAT BODY -->
+
+    <div
+        class="chat-body"
+        id="chatBody"
+    >
+
+
+        <div
+            class="welcome"
+            id="welcome"
+        >
+
+
+            <div class="welcome-icon">
+                🤖
+            </div>
+
+
+            <h3>
+                Hi! I'm your AI Tutor 👋
+            </h3>
+
+
+            <p>
+                Ask me anything about your
+                subject. I'll explain concepts
+                step-by-step and help you
+                understand them.
+            </p>
+
+
+            <div class="suggestions">
+
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('Explain inheritance in Java with a simple example.')"
+                >
+                    💻 Explain Java inheritance
                 </button>
 
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('Explain the difference between primary key and foreign key in DBMS.')"
+                >
+                    🗄️ Primary key vs foreign key
+                </button>
+
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('Explain the OSI model in simple language.')"
+                >
+                    🌐 Explain OSI model
+                </button>
+
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('What is the CIA Triad in Information Security?')"
+                >
+                    🔐 What is CIA Triad?
+                </button>
+
+
             </div>
 
 
-            <div class="messages" id="messages">
+        </div>
 
-                <div class="message bot">
 
-                    <div class="avatar">🤖</div>
+        <!-- TYPING -->
 
-                    <div class="bubble">
+        <div
+            class="typing"
+            id="typing"
+        >
 
-                        <strong>Hello! I'm your AI Study Tutor 👋</strong>
-
-                        <p style="margin-top:7px;">
-                            Ask me any question about your subject.
-                            I'll explain it in simple language with examples
-                            and step-by-step reasoning.
-                        </p>
-
-                        <span class="message-time">
-                            AI Tutor • Just now
-                        </span>
-
-                    </div>
-
-                </div>
-
+            <div class="typing-avatar">
+                🤖
             </div>
 
+            <div class="typing-bubble">
 
-            <div class="chat-input-area">
-
-                <div class="input-row">
-
-                    <textarea
-                        id="questionInput"
-                        placeholder="Type your doubt here... e.g. What is the CIA Triad?"
-                        onkeydown="handleKey(event)"
-                    ></textarea>
-
-                    <button
-                        class="send-btn"
-                        onclick="sendQuestion()"
-                        title="Send"
-                    >
-                        ➤
-                    </button>
-
-                </div>
-
-                <div class="input-hint">
-                    Press Enter to send • Shift + Enter for a new line
-                </div>
+                <span></span>
+                <span></span>
+                <span></span>
 
             </div>
 
         </div>
 
 
-        <!-- RIGHT SIDE -->
-
-        <aside class="side-card">
-
-            <h3>Study Settings</h3>
-
-            <p>
-                Choose a subject and try one of the suggested questions.
-            </p>
-
-            <label class="subject-label">
-                SUBJECT
-            </label>
-
-            <select id="subject" class="subject-select">
-                <option>Information Security</option>
-                <option>Programming</option>
-                <option>Mathematics</option>
-                <option>Computer Networks</option>
-                <option>Database Management</option>
-                <option>General</option>
-            </select>
+    </div>
 
 
-            <div class="suggestions-title">
-                TRY ASKING
-            </div>
+    <!-- INPUT -->
 
-            <button class="suggestion" onclick="useSuggestion('What is the CIA Triad in Information Security?')">
-                🔐 What is the CIA Triad?
-            </button>
+    <div class="chat-input-area">
 
-            <button class="suggestion" onclick="useSuggestion('Explain RSA encryption in simple words.')">
-                🔑 Explain RSA simply.
-            </button>
 
-            <button class="suggestion" onclick="useSuggestion('What is the difference between symmetric and asymmetric cryptography?')">
-                ⚡ Symmetric vs asymmetric cryptography?
-            </button>
+        <div class="input-row">
 
-            <button class="suggestion" onclick="useSuggestion('Explain digital signatures with a real-world example.')">
-                ✍️ What are digital signatures?
+
+            <textarea
+                id="chatInput"
+                class="chat-input"
+                rows="1"
+                placeholder="Ask your doubt here..."
+                onkeydown="handleKeyDown(event)"
+            ></textarea>
+
+
+            <button
+                id="sendBtn"
+                class="send-btn"
+                type="button"
+                onclick="sendMessage()"
+                title="Send"
+            >
+                ➤
             </button>
 
 
-            <div class="tutor-rules">
+        </div>
 
-                <strong>✨ Tutor Style</strong>
 
-                <div class="rule">✓ Simple explanations</div>
-                <div class="rule">✓ Step-by-step reasoning</div>
-                <div class="rule">✓ Real-world examples</div>
-                <div class="rule">✓ Exam-friendly points</div>
-                <div class="rule">✓ Ask follow-up questions</div>
+        <div class="input-hint">
+            Press Enter to send • Shift + Enter for a new line
+        </div>
 
-            </div>
 
-        </aside>
+    </div>
 
-    </section>
+
+</div>
+
+
+</div>
+
+
+</section>
+
 
 </main>
 
 
-<div class="toast" id="toast"></div>
+<!-- ==================================================
+     LOADING
+================================================== -->
+
+<div
+    class="loading"
+    id="loading"
+>
+
+
+    <div class="loading-card">
+
+
+        <div class="spinner"></div>
+
+
+        <strong>
+            AI Tutor is thinking...
+        </strong>
+
+
+        <p>
+            Preparing your explanation
+        </p>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ==================================================
+     TOAST
+================================================== -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
 
 
 <script>
 
-let conversationHistory = [];
+/* ==================================================
+   GEMINI BACKEND
+================================================== */
+
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
 
 
-/* ESCAPE HTML */
+/* ==================================================
+   CHAT STATE
+================================================== */
 
-function escapeHTML(value){
+let conversation = [];
 
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+let selectedMode =
+    "Simple";
+
+let sending =
+    false;
+
+let toastTimer =
+    null;
+
+
+/* ==================================================
+   SELECT EXPLANATION MODE
+================================================== */
+
+function selectMode(button){
+
+    document
+        .querySelectorAll(".mode-btn")
+        .forEach(
+            function(btn){
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    selectedMode =
+        button.dataset.mode;
+
+
+    showToast(
+        `${selectedMode} explanation mode selected.`
+    );
 
 }
 
 
-/* CURRENT TIME */
+/* ==================================================
+   SEND MESSAGE
+================================================== */
 
-function getTime(){
+async function sendMessage(){
 
-    return new Date().toLocaleTimeString([],{
-        hour:"2-digit",
-        minute:"2-digit"
-    });
+    if(sending){
 
-}
-
-
-/* SEND ON ENTER */
-
-function handleKey(event){
-
-    if(event.key === "Enter" && !event.shiftKey){
-
-        event.preventDefault();
-
-        sendQuestion();
+        return;
 
     }
 
-}
-
-
-/* SUGGESTION */
-
-function useSuggestion(question){
-
-    document.getElementById("questionInput").value = question;
-
-    document.getElementById("questionInput").focus();
-
-}
-
-
-/* ADD USER MESSAGE */
-
-function addUserMessage(text){
-
-    const messages =
-        document.getElementById("messages");
-
-    const div =
-        document.createElement("div");
-
-    div.className = "message user";
-
-    div.innerHTML = `
-
-        <div class="avatar">👤</div>
-
-        <div class="bubble">
-
-            ${escapeHTML(text)}
-
-            <span class="message-time">
-                You • ${getTime()}
-            </span>
-
-        </div>
-
-    `;
-
-    messages.appendChild(div);
-
-    messages.scrollTop = messages.scrollHeight;
-
-}
-
-
-/* ADD BOT MESSAGE */
-
-function addBotMessage(html){
-
-    const messages =
-        document.getElementById("messages");
-
-    const div =
-        document.createElement("div");
-
-    div.className = "message bot";
-
-    div.innerHTML = `
-
-        <div class="avatar">🤖</div>
-
-        <div class="bubble">
-
-            ${html}
-
-            <span class="message-time">
-                AI Tutor • ${getTime()}
-            </span>
-
-        </div>
-
-    `;
-
-    messages.appendChild(div);
-
-    messages.scrollTop = messages.scrollHeight;
-
-}
-
-
-/* TYPING INDICATOR */
-
-function showTyping(){
-
-    const messages =
-        document.getElementById("messages");
-
-    const div =
-        document.createElement("div");
-
-    div.className = "message bot";
-    div.id = "typingMessage";
-
-    div.innerHTML = `
-
-        <div class="avatar">🤖</div>
-
-        <div class="bubble">
-
-            <div class="typing" style="display:flex;">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-            </div>
-
-        </div>
-
-    `;
-
-    messages.appendChild(div);
-
-    messages.scrollTop = messages.scrollHeight;
-
-}
-
-
-function hideTyping(){
-
-    const typing =
-        document.getElementById("typingMessage");
-
-    if(typing){
-
-        typing.remove();
-
-    }
-
-}
-
-
-/* AI PROMPT */
-
-function createTutorPrompt(question){
-
-    const subject =
-        document.getElementById("subject").value;
-
-    const history =
-        conversationHistory
-        .map(item =>
-            `${item.role}: ${item.content}`
-        )
-        .join("\n");
-
-    return `
-
-You are an AI Study Tutor.
-
-Subject:
-${subject}
-
-Student question:
-${question}
-
-Conversation history:
-${history}
-
-Teaching rules:
-
-1. Explain concepts in simple student-friendly language.
-2. Give step-by-step explanations when appropriate.
-3. Use examples whenever useful.
-4. Highlight important exam points.
-5. Do not unnecessarily complicate the answer.
-6. If the question is unclear, ask the student to clarify.
-7. Encourage understanding instead of blindly giving answers.
-8. Use headings and bullet points when useful.
-
-Answer the student's question as a helpful tutor.
-
-`;
-
-}
-
-
-/* DEMO AI */
-
-function generateDemoAnswer(question){
-
-    const q =
-        question.toLowerCase();
-
-    if(
-        q.includes("cia") ||
-        q.includes("triad")
-    ){
-
-        return `
-
-            <strong>🔐 CIA Triad</strong>
-
-            <p style="margin-top:7px;">
-            The CIA Triad is a basic model used in
-            Information Security. CIA stands for:
-            </p>
-
-            <ul>
-                <li><strong>Confidentiality</strong> – only authorized people can access information.</li>
-                <li><strong>Integrity</strong> – information should remain accurate and unchanged.</li>
-                <li><strong>Availability</strong> – information should be available when authorized users need it.</li>
-            </ul>
-
-            <p style="margin-top:7px;">
-            <strong>Example:</strong> In online banking,
-            confidentiality protects your account details,
-            integrity protects transaction information,
-            and availability ensures the banking service is accessible.
-            </p>
-
-        `;
-
-    }
-
-
-    if(
-        q.includes("rsa")
-    ){
-
-        return `
-
-            <strong>🔑 RSA Encryption</strong>
-
-            <p style="margin-top:7px;">
-            RSA is a public-key cryptographic algorithm.
-            It uses two related keys:
-            </p>
-
-            <ul>
-                <li><strong>Public key</strong> – can be shared with others.</li>
-                <li><strong>Private key</strong> – kept secret by the owner.</li>
-            </ul>
-
-            <p style="margin-top:7px;">
-            RSA is based on mathematical operations involving
-            large prime numbers and is commonly used for
-            secure communication and digital signatures.
-            </p>
-
-            <p style="margin-top:7px;">
-            <strong>Exam point:</strong> RSA belongs to
-            asymmetric/public-key cryptography.
-            </p>
-
-        `;
-
-    }
-
-
-    if(
-        q.includes("digital signature") ||
-        q.includes("signature")
-    ){
-
-        return `
-
-            <strong>✍️ Digital Signature</strong>
-
-            <p style="margin-top:7px;">
-            A digital signature is a cryptographic mechanism
-            used to verify the authenticity and integrity of
-            digital information.
-            </p>
-
-            <ul>
-                <li>It helps verify who sent the message.</li>
-                <li>It helps detect whether the message was changed.</li>
-                <li>It supports non-repudiation.</li>
-            </ul>
-
-            <p style="margin-top:7px;">
-            <strong>Simple example:</strong>
-            Think of it as a secure digital version of signing
-            a document, but based on cryptographic techniques.
-            </p>
-
-        `;
-
-    }
-
-
-    if(
-        q.includes("symmetric") ||
-        q.includes("asymmetric")
-    ){
-
-        return `
-
-            <strong>⚡ Symmetric vs Asymmetric Cryptography</strong>
-
-            <ul>
-
-                <li>
-                    <strong>Symmetric:</strong>
-                    generally uses the same secret key for
-                    encryption and decryption.
-                </li>
-
-                <li>
-                    <strong>Asymmetric:</strong>
-                    uses a public key and a private key.
-                </li>
-
-                <li>
-                    Symmetric methods are generally faster
-                    for processing large amounts of data.
-                </li>
-
-                <li>
-                    Asymmetric cryptography is useful for
-                    key exchange, authentication and digital signatures.
-                </li>
-
-            </ul>
-
-        `;
-
-    }
-
-
-    if(
-        q.includes("diffie") ||
-        q.includes("key exchange")
-    ){
-
-        return `
-
-            <strong>🔄 Diffie-Hellman Key Exchange</strong>
-
-            <p style="margin-top:7px;">
-            Diffie-Hellman is a method that allows two parties
-            to establish a shared secret over an insecure channel.
-            </p>
-
-            <p style="margin-top:7px;">
-            The important idea is that both parties exchange
-            public information and independently calculate
-            the same shared secret.
-            </p>
-
-            <p style="margin-top:7px;">
-            <strong>Exam point:</strong>
-            Diffie-Hellman is mainly used for establishing
-            a shared secret, not for directly encrypting
-            the entire message.
-            </p>
-
-        `;
-
-    }
-
-
-    if(
-        q.includes("normalization") ||
-        q.includes("database")
-    ){
-
-        return `
-
-            <strong>🗄️ Database Concept</strong>
-
-            <p style="margin-top:7px;">
-            Database concepts are easier to understand when
-            we break them into smaller ideas.
-            </p>
-
-            <ul>
-                <li>Tables store structured data.</li>
-                <li>Rows represent records.</li>
-                <li>Columns represent attributes.</li>
-                <li>Keys help identify and connect records.</li>
-            </ul>
-
-            <p style="margin-top:7px;">
-            Tell me the exact database concept you want
-            to understand and I can explain it step-by-step.
-            </p>
-
-        `;
-
-    }
-
-
-    return `
-
-        <strong>💡 Let's understand this step-by-step.</strong>
-
-        <p style="margin-top:7px;">
-        Your question is:
-        <em>${escapeHTML(question)}</em>
-        </p>
-
-        <p style="margin-top:7px;">
-        Start by identifying the main concept involved.
-        Then break it into its definition, working,
-        example and important points.
-        </p>
-
-        <p style="margin-top:7px;">
-        <strong>Study tip:</strong>
-        For exams, remember the definition first,
-        then learn the working process and one practical example.
-        </p>
-
-        <p style="margin-top:7px;">
-        You can also ask me to explain this
-        <strong>in simple words</strong>,
-        <strong>with an example</strong>, or
-        <strong>for exam preparation</strong>.
-        </p>
-
-    `;
-
-}
-
-
-/* SEND QUESTION */
-
-function sendQuestion(){
 
     const input =
-        document.getElementById("questionInput");
+        document.getElementById(
+            "chatInput"
+        );
 
-    const question =
+
+    const message =
         input.value.trim();
 
-    if(!question){
 
-        showToast("Please type a question first.");
+    if(!message){
+
+        showToast(
+            "Please enter your doubt first."
+        );
 
         input.focus();
 
@@ -1414,71 +2579,806 @@ function sendQuestion(){
     }
 
 
-    addUserMessage(question);
-
-    conversationHistory.push({
-        role:"student",
-        content:question
-    });
-
-    input.value = "";
-
-    showTyping();
+    const subject =
+        document.getElementById(
+            "subject"
+        ).value;
 
 
-    const prompt =
-        createTutorPrompt(question);
+    const level =
+        document.getElementById(
+            "level"
+        ).value;
 
-    console.log(
-        "AI Tutor Prompt:",
-        prompt
+
+    /*
+       Remove welcome screen.
+    */
+
+    const welcome =
+        document.getElementById(
+            "welcome"
+        );
+
+
+    if(welcome){
+
+        welcome.remove();
+
+    }
+
+
+    /*
+       Add user message.
+    */
+
+    addMessage(
+        "user",
+        message
     );
 
 
-    setTimeout(function(){
+    /*
+       Save conversation.
+    */
 
-        hideTyping();
+    conversation.push({
+
+        role:"user",
+
+        text:message
+
+    });
+
+
+    input.value = "";
+
+    autoResize(input);
+
+
+    sending = true;
+
+
+    const sendButton =
+        document.getElementById(
+            "sendBtn"
+        );
+
+
+    sendButton.disabled =
+        true;
+
+
+    showTyping(true);
+
+
+    try{
+
+
+        const prompt =
+            buildTutorPrompt(
+                subject,
+                level,
+                selectedMode,
+                message
+            );
+
+
+        const response =
+            await fetch(
+                GEMINI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        prompt:prompt
+                    })
+                }
+            );
+
+
+        let data;
+
+
+        try{
+
+            data =
+                await response.json();
+
+        }
+        catch(error){
+
+            throw new Error(
+                "The Gemini backend returned an invalid response."
+            );
+
+        }
+
+
+        if(!response.ok){
+
+            if(response.status === 429){
+
+                throw new Error(
+                    "Gemini quota or rate limit reached. Please wait and try again later."
+                );
+
+            }
+
+
+            if(response.status === 503){
+
+                throw new Error(
+                    "Gemini service is temporarily unavailable. Please try again."
+                );
+
+            }
+
+
+            throw new Error(
+                data.error ||
+                `Gemini request failed (${response.status}).`
+            );
+
+        }
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.error ||
+                "Gemini could not answer your question."
+            );
+
+        }
+
 
         const answer =
-            generateDemoAnswer(question);
+            String(
+                data.text || ""
+            ).trim();
 
-        addBotMessage(answer);
 
-        conversationHistory.push({
-            role:"tutor",
-            content:answer.replace(/<[^>]*>/g," ")
+        if(!answer){
+
+            throw new Error(
+                "Gemini returned an empty answer."
+            );
+
+        }
+
+
+        /*
+           Add AI message.
+        */
+
+        conversation.push({
+
+            role:"assistant",
+
+            text:answer
+
         });
 
-    },1100);
+
+        addMessage(
+            "ai",
+            answer
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Chatbot Error:",
+            error
+        );
+
+
+        let message =
+            error.message ||
+            "Unable to get an answer.";
+
+
+        if(
+            error.name === "TypeError" &&
+            message.toLowerCase()
+                .includes("fetch")
+        ){
+
+            message =
+                "Gemini backend is not reachable. Please run node server.js in the backend folder.";
+
+        }
+
+
+        addMessage(
+            "ai",
+            `⚠️ ${message}`
+        );
+
+
+        showToast(
+            message
+        );
+
+    }
+    finally{
+
+        sending = false;
+
+        sendButton.disabled =
+            false;
+
+        showTyping(false);
+
+        input.focus();
+
+    }
 
 }
 
 
-/* CLEAR CHAT */
+/* ==================================================
+   BUILD TUTOR PROMPT
+================================================== */
+
+function buildTutorPrompt(
+    subject,
+    level,
+    mode,
+    currentQuestion
+){
+
+    /*
+       Include recent conversation so
+       follow-up questions understand
+       the context.
+
+       Limit to recent messages to
+       keep prompts manageable.
+    */
+
+    const recentConversation =
+        conversation
+            .slice(-8)
+            .map(
+                function(item){
+
+                    return `${
+                        item.role === "user"
+                            ? "Student"
+                            : "Tutor"
+                    }: ${item.text}`;
+
+                }
+            )
+            .join("\n\n");
+
+
+    let styleInstruction;
+
+
+    if(mode === "Simple"){
+
+        styleInstruction = `
+Explain the concept in very simple,
+student-friendly language.
+
+Use short sentences and easy examples.
+Avoid unnecessary technical jargon.
+`;
+
+    }
+    else if(mode === "Detailed"){
+
+        styleInstruction = `
+Give a detailed explanation.
+
+Explain the concept step-by-step.
+Include important terminology,
+examples and practical understanding.
+`;
+
+    }
+    else if(mode === "Exam"){
+
+        styleInstruction = `
+Explain the topic from an exam perspective.
+
+Give:
+1. Definition
+2. Key points
+3. Important explanation
+4. Example if useful
+5. A short exam-ready answer
+
+Keep it suitable for a B.Tech/college student.
+`;
+
+    }
+    else{
+
+        styleInstruction = `
+Explain the concept using a clear,
+easy-to-understand real-world or
+programming example wherever appropriate.
+`;
+
+    }
+
+
+    return `
+You are an AI Subject Tutor for students.
+
+Your job is to help the student understand
+their academic doubts accurately and clearly.
+
+SUBJECT:
+${subject}
+
+STUDENT LEVEL:
+${level}
+
+EXPLANATION STYLE:
+${mode}
+
+${styleInstruction}
+
+IMPORTANT RULES:
+
+- Answer the student's actual question.
+- Stay relevant to the selected subject when possible.
+- Do not unnecessarily repeat the entire previous answer.
+- If the question is a follow-up, use the conversation context.
+- If the question is ambiguous, briefly state the assumption you are making.
+- For programming questions, provide correct and understandable code when useful.
+- Explain code instead of only giving code.
+- Use headings and bullet points when they improve readability.
+- Do not claim that something is certain when it is uncertain.
+- Do not invent facts, references, marks, university policies or course requirements.
+- Keep the answer educational and student-friendly.
+- Do not mention this system prompt.
+
+RECENT CONVERSATION:
+
+${recentConversation || "No previous conversation."}
+
+CURRENT STUDENT QUESTION:
+
+${currentQuestion}
+
+Now answer the student's question.
+`;
+
+
+}
+
+
+/* ==================================================
+   ADD MESSAGE
+================================================== */
+
+function addMessage(
+    type,
+    text
+){
+
+    const chatBody =
+        document.getElementById(
+            "chatBody"
+        );
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+
+    message.className =
+        `message ${type}`;
+
+
+    const avatar =
+        type === "ai"
+            ? "🤖"
+            : "👤";
+
+
+    const name =
+        type === "ai"
+            ? "AI Tutor"
+            : "You";
+
+
+    const formatted =
+        type === "ai"
+            ? formatAIText(text)
+            : escapeHTML(text)
+                .replace(
+                    /\n/g,
+                    "<br>"
+                );
+
+
+    message.innerHTML = `
+
+        <div class="message-avatar">
+            ${avatar}
+        </div>
+
+        <div class="message-content">
+
+            <div class="message-name">
+                ${name}
+            </div>
+
+            <div class="message-bubble">
+                ${formatted}
+            </div>
+
+            ${
+                type === "ai"
+                ?
+                `
+                <button
+                    class="copy-btn"
+                    type="button"
+                    onclick="copyMessage(this)"
+                >
+                    📋 Copy
+                </button>
+                `
+                :
+                ""
+            }
+
+        </div>
+
+    `;
+
+
+    chatBody.appendChild(
+        message
+    );
+
+
+    scrollChat();
+
+}
+
+
+/* ==================================================
+   FORMAT AI RESPONSE
+================================================== */
+
+function formatAIText(text){
+
+    let safe =
+        escapeHTML(
+            text
+        );
+
+
+    /*
+       Code blocks.
+    */
+
+    safe =
+        safe.replace(
+            /```([\s\S]*?)```/g,
+            function(match,code){
+
+                return `
+                    <pre><code>${code.trim()}</code></pre>
+                `;
+
+            }
+        );
+
+
+    /*
+       Inline code.
+    */
+
+    safe =
+        safe.replace(
+            /`([^`]+)`/g,
+            "<code>$1</code>"
+        );
+
+
+    /*
+       Bold.
+    */
+
+    safe =
+        safe.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+
+    /*
+       Headings.
+    */
+
+    safe =
+        safe.replace(
+            /^### (.*?)$/gm,
+            "<strong>$1</strong>"
+        );
+
+
+    safe =
+        safe.replace(
+            /^## (.*?)$/gm,
+            "<strong>$1</strong>"
+        );
+
+
+    safe =
+        safe.replace(
+            /^# (.*?)$/gm,
+            "<strong>$1</strong>"
+        );
+
+
+    /*
+       Bullet lists.
+    */
+
+    safe =
+        safe.replace(
+            /(?:^|\n)[•*-]\s+(.*)/g,
+            function(match,item){
+
+                return `
+                    <br>• ${item}
+                `;
+
+            }
+        );
+
+
+    /*
+       Numbered lists.
+    */
+
+    safe =
+        safe.replace(
+            /(?:^|\n)(\d+)\.\s+(.*)/g,
+            function(
+                match,
+                number,
+                item
+            ){
+
+                return `
+                    <br>${number}. ${item}
+                `;
+
+            }
+        );
+
+
+    /*
+       New lines.
+    */
+
+    safe =
+        safe.replace(
+            /\n{2,}/g,
+            "<br><br>"
+        );
+
+
+    safe =
+        safe.replace(
+            /\n/g,
+            "<br>"
+        );
+
+
+    return safe;
+
+}
+
+
+/* ==================================================
+   COPY AI MESSAGE
+================================================== */
+
+async function copyMessage(button){
+
+    const content =
+        button
+            .parentElement
+            .querySelector(
+                ".message-bubble"
+            );
+
+
+    if(!content){
+
+        return;
+
+    }
+
+
+    const text =
+        content.innerText;
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+
+        button.textContent =
+            "✓ Copied";
+
+
+        setTimeout(
+            function(){
+
+                button.textContent =
+                    "📋 Copy";
+
+            },
+            1500
+        );
+
+
+    }
+    catch(error){
+
+        showToast(
+            "Could not copy the response."
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   SUGGESTION
+================================================== */
+
+function useSuggestion(
+    text
+){
+
+    const input =
+        document.getElementById(
+            "chatInput"
+        );
+
+
+    input.value =
+        text;
+
+
+    autoResize(
+        input
+    );
+
+
+    input.focus();
+
+}
+
+
+/* ==================================================
+   CLEAR CHAT
+================================================== */
 
 function clearChat(){
 
-    const messages =
-        document.getElementById("messages");
+    if(sending){
 
-    messages.innerHTML = `
+        showToast(
+            "Please wait for the current answer to finish."
+        );
 
-        <div class="message bot">
+        return;
 
-            <div class="avatar">🤖</div>
+    }
 
-            <div class="bubble">
 
-                <strong>Chat cleared! 👋</strong>
+    conversation = [];
 
-                <p style="margin-top:7px;">
-                I'm ready for your next question.
-                What would you like to learn?
-                </p>
 
-                <span class="message-time">
-                    AI Tutor • ${getTime()}
-                </span>
+    const chatBody =
+        document.getElementById(
+            "chatBody"
+        );
+
+
+    chatBody.innerHTML = `
+
+        <div
+            class="welcome"
+            id="welcome"
+        >
+
+            <div class="welcome-icon">
+                🤖
+            </div>
+
+            <h3>
+                Hi! I'm your AI Tutor 👋
+            </h3>
+
+            <p>
+                Ask me anything about your
+                subject. I'll explain concepts
+                step-by-step and help you
+                understand them.
+            </p>
+
+            <div class="suggestions">
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('Explain inheritance in Java with a simple example.')"
+                >
+                    💻 Explain Java inheritance
+                </button>
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('Explain the difference between primary key and foreign key in DBMS.')"
+                >
+                    🗄️ Primary key vs foreign key
+                </button>
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('Explain the OSI model in simple language.')"
+                >
+                    🌐 Explain OSI model
+                </button>
+
+                <button
+                    type="button"
+                    class="suggestion"
+                    onclick="useSuggestion('What is the CIA Triad in Information Security?')"
+                >
+                    🔐 What is CIA Triad?
+                </button>
+
+            </div>
+
+        </div>
+
+        <div
+            class="typing"
+            id="typing"
+        >
+
+            <div class="typing-avatar">
+                🤖
+            </div>
+
+            <div class="typing-bubble">
+
+                <span></span>
+                <span></span>
+                <span></span>
 
             </div>
 
@@ -1486,33 +3386,243 @@ function clearChat(){
 
     `;
 
-    conversationHistory = [];
 
-    showToast("Chat cleared.");
+    showToast(
+        "Conversation cleared."
+    );
 
 }
 
 
-/* TOAST */
+/* ==================================================
+   TYPING
+================================================== */
+
+function showTyping(show){
+
+    const typing =
+        document.getElementById(
+            "typing"
+        );
+
+
+    if(!typing){
+
+        return;
+
+    }
+
+
+    if(show){
+
+        typing.classList.add(
+            "show"
+        );
+
+    }
+    else{
+
+        typing.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    scrollChat();
+
+}
+
+
+/* ==================================================
+   SCROLL
+================================================== */
+
+function scrollChat(){
+
+    const chatBody =
+        document.getElementById(
+            "chatBody"
+        );
+
+
+    setTimeout(
+        function(){
+
+            chatBody.scrollTop =
+                chatBody.scrollHeight;
+
+        },
+        30
+    );
+
+}
+
+
+/* ==================================================
+   ENTER KEY
+================================================== */
+
+function handleKeyDown(event){
+
+    if(
+        event.key === "Enter" &&
+        !event.shiftKey
+    ){
+
+        event.preventDefault();
+
+        sendMessage();
+
+    }
+
+}
+
+
+/* ==================================================
+   AUTO RESIZE
+================================================== */
+
+const chatInput =
+    document.getElementById(
+        "chatInput"
+    );
+
+
+chatInput.addEventListener(
+    "input",
+    function(){
+
+        autoResize(
+            this
+        );
+
+    }
+);
+
+
+function autoResize(
+    textarea
+){
+
+    textarea.style.height =
+        "auto";
+
+
+    textarea.style.height =
+        Math.min(
+            textarea.scrollHeight,
+            130
+        ) + "px";
+
+}
+
+
+/* ==================================================
+   LOADING
+================================================== */
+
+function showLoading(show){
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+
+    if(show){
+
+        loading.classList.add(
+            "show"
+        );
+
+    }
+    else{
+
+        loading.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   TOAST
+================================================== */
 
 function showToast(message){
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
 
-    toast.textContent = message;
 
-    toast.classList.add("show");
+    toast.textContent =
+        message;
 
-    setTimeout(function(){
 
-        toast.classList.remove("show");
+    toast.classList.add(
+        "show"
+    );
 
-    },2200);
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            3500
+        );
+
+}
+
+
+/* ==================================================
+   ESCAPE HTML
+================================================== */
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
 </script>
 
 </body>
+
 </html>

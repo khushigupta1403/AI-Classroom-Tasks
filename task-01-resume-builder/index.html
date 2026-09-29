@@ -1,284 +1,1210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Resume Builder</title>
+<title>AI Resume Builder | AI StudyLab</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        body {
-            background: #f4f6fb;
-            color: #222;
-        }
+<style>
 
-        header {
-            background: #3ca7c4;
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
-        header h1 {
-            margin-bottom: 8px;
-        }
+:root{
+    --purple:#6d4aff;
+    --purple-dark:#5233d7;
+    --purple-light:#f0edff;
+    --green:#19b77a;
+    --green-light:#e9fff5;
+    --text:#202033;
+    --muted:#73738a;
+    --border:#e7e5ef;
+    --bg:#f7f7fb;
+    --white:#ffffff;
+    --danger:#e5484d;
+    --shadow:0 12px 35px rgba(39,29,82,.08);
+}
 
-        .container {
-            width: 90%;
-            max-width: 1100px;
-            margin: 30px auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
+body{
+    font-family:"Inter",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
 
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
+/* ================= SIDEBAR ================= */
 
-        .card h2 {
-            margin-bottom: 20px;
-            color: #3e3cc4;
-        }
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:24px 16px;
+    z-index:100;
+}
 
-        label {
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 7px;
-            font-weight: bold;
-        }
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:8px 12px 28px;
+}
 
-        input,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-        }
+.logo-icon{
+    width:40px;
+    height:40px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:19px;
+    font-weight:800;
+    background:linear-gradient(135deg,#7658ff,#9b7dff);
+    box-shadow:0 8px 20px rgba(109,74,255,.25);
+}
 
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
+.logo-text{
+    font-size:17px;
+    font-weight:800;
+}
 
-        button {
-            margin-top: 20px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            background: #5b3cc4;
-            color: white;
-            font-size: 15px;
-            cursor: pointer;
-        }
+.logo-text span{
+    color:var(--purple);
+}
 
-        button:hover {
-            background: #452ba3;
-        }
+.nav-title{
+    color:#aaa9b9;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    padding:0 12px 10px;
+}
 
-        #downloadBtn {
-            background: #198754;
-            display: none;
-        }
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
 
-        #downloadBtn:hover {
-            background: #146c43;
-        }
+.nav a{
+    text-decoration:none;
+    color:#686879;
+    padding:12px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:13px;
+    font-weight:600;
+    transition:.2s;
+}
 
-        #resumePreview {
-            line-height: 1.7;
-        }
+.nav a:hover{
+    background:#f6f4ff;
+    color:var(--purple);
+}
 
-        .resume-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.nav a.active{
+    background:var(--purple-light);
+    color:var(--purple);
+}
 
-        .resume-header h1 {
-            color: #5b3cc4;
-        }
+.nav-icon{
+    width:27px;
+    height:27px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f4f3f8;
+    font-size:14px;
+}
 
-        .resume-section {
-            margin-top: 20px;
-        }
+.nav a.active .nav-icon{
+    background:white;
+}
 
-        .resume-section h3 {
-            color: #5b3cc4;
-            border-bottom: 2px solid #5b3cc4;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
+/* ================= MAIN ================= */
 
-        .loading {
-            display: none;
-            color: #5b3cc4;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
 
-        @media (max-width: 800px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
+.topbar{
+    height:72px;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 35px;
+    position:sticky;
+    top:0;
+    z-index:50;
+}
 
-        @media print {
-            body {
-                background: white;
-            }
+.breadcrumb{
+    font-size:13px;
+    color:var(--muted);
+}
 
-            header,
-            .form-card,
-            #downloadBtn {
-                display: none;
-            }
+.breadcrumb strong{
+    color:var(--text);
+}
 
-            .container {
-                display: block;
-                width: 100%;
-                margin: 0;
-            }
+.status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 13px;
+    border-radius:30px;
+    background:var(--green-light);
+    color:#11865b;
+    font-size:12px;
+    font-weight:700;
+}
 
-            .preview-card {
-                box-shadow: none;
-            }
-        }
-    </style>
+.status-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--green);
+}
+
+/* ================= CONTENT ================= */
+
+.content{
+    padding:32px 35px 50px;
+    max-width:1500px;
+    margin:auto;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    border-radius:25px;
+    padding:34px 38px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 85% 20%,rgba(255,255,255,.18),transparent 24%),
+        linear-gradient(135deg,#6948ef,#8065ff 60%,#a082ff);
+    box-shadow:0 15px 40px rgba(91,64,210,.18);
+    margin-bottom:26px;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:240px;
+    height:240px;
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:50%;
+    right:-60px;
+    bottom:-100px;
+}
+
+.hero-badge{
+    display:inline-flex;
+    padding:7px 12px;
+    border-radius:30px;
+    background:rgba(255,255,255,.15);
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:13px;
+}
+
+.hero h1{
+    font-size:30px;
+    margin-bottom:9px;
+}
+
+.hero p{
+    max-width:650px;
+    font-size:14px;
+    line-height:1.7;
+    opacity:.9;
+}
+
+/* ================= WORKSPACE ================= */
+
+.workspace{
+    display:grid;
+    grid-template-columns:440px 1fr;
+    gap:25px;
+    align-items:start;
+}
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+}
+
+.card-header{
+    padding:22px 23px 17px;
+    border-bottom:1px solid var(--border);
+}
+
+.card-header h2{
+    font-size:17px;
+}
+
+.card-header p{
+    margin-top:5px;
+    font-size:12px;
+    color:var(--muted);
+}
+
+.form-body{
+    padding:22px;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+label{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+    font-size:12px;
+    font-weight:700;
+    color:#48485a;
+}
+
+input,
+textarea{
+    width:100%;
+    border:1px solid #dfddea;
+    background:#fbfbfd;
+    border-radius:11px;
+    padding:12px 13px;
+    font-family:inherit;
+    font-size:13px;
+    color:var(--text);
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+textarea:focus{
+    border-color:#947cff;
+    background:white;
+    box-shadow:0 0 0 3px rgba(109,74,255,.08);
+}
+
+textarea{
+    resize:vertical;
+    min-height:82px;
+    line-height:1.5;
+}
+
+.help{
+    color:#a09eae;
+    font-size:10px;
+    font-weight:500;
+}
+
+/* ================= BUTTONS ================= */
+
+.actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-top:20px;
+}
+
+button{
+    border:none;
+    border-radius:11px;
+    padding:12px 15px;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.primary{
+    background:var(--purple);
+    color:white;
+    box-shadow:0 8px 18px rgba(109,74,255,.22);
+}
+
+.primary:hover{
+    background:var(--purple-dark);
+    transform:translateY(-1px);
+}
+
+.secondary{
+    background:#f5f4f9;
+    color:#5d5b6d;
+}
+
+.secondary:hover{
+    background:#ebe9f3;
+}
+
+.green{
+    background:var(--green);
+    color:white;
+}
+
+.danger{
+    background:#fff0f0;
+    color:var(--danger);
+}
+
+/* ================= TIPS ================= */
+
+.ai-tip{
+    margin-top:18px;
+    padding:13px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#f7f4ff,#f1fff9);
+    border:1px solid #e8e3ff;
+}
+
+.ai-tip-title{
+    font-size:11px;
+    font-weight:800;
+    color:var(--purple);
+    margin-bottom:5px;
+}
+
+.ai-tip p{
+    font-size:10px;
+    color:#777589;
+    line-height:1.5;
+}
+
+/* ================= PREVIEW ================= */
+
+.preview-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 23px;
+    border-bottom:1px solid var(--border);
+}
+
+.preview-title{
+    font-size:17px;
+    font-weight:800;
+}
+
+.preview-tools{
+    display:flex;
+    gap:7px;
+}
+
+.tool-btn{
+    padding:9px 11px;
+    background:#f5f4fa;
+    color:#575568;
+}
+
+.tool-btn:hover{
+    background:var(--purple-light);
+    color:var(--purple);
+}
+
+.resume-paper-wrap{
+    padding:25px;
+    background:#f3f3f7;
+    min-height:760px;
+}
+
+.resume-paper{
+    background:white;
+    max-width:780px;
+    min-height:900px;
+    margin:auto;
+    padding:52px 58px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.resume-head{
+    border-bottom:3px solid var(--purple);
+    padding-bottom:18px;
+    margin-bottom:25px;
+}
+
+.resume-name{
+    font-size:31px;
+    font-weight:800;
+    color:#252238;
+    letter-spacing:-.03em;
+}
+
+.resume-contact{
+    color:#777487;
+    font-size:11px;
+    margin-top:7px;
+    line-height:1.7;
+}
+
+.resume-section{
+    margin-bottom:23px;
+}
+
+.resume-section h3{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--purple);
+    margin-bottom:9px;
+    border-bottom:1px solid #e7e3f5;
+    padding-bottom:6px;
+}
+
+.resume-section p{
+    font-size:12px;
+    line-height:1.7;
+    color:#4f4d5d;
+    white-space:pre-line;
+}
+
+.skills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+
+.skill{
+    padding:6px 9px;
+    background:#f1efff;
+    color:#6045d9;
+    border-radius:7px;
+    font-size:10px;
+    font-weight:700;
+}
+
+/* ================= EMPTY ================= */
+
+.empty-preview{
+    text-align:center;
+    padding:100px 30px;
+    color:#9997a8;
+}
+
+.empty-icon{
+    width:65px;
+    height:65px;
+    border-radius:20px;
+    margin:0 auto 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f0edff;
+    font-size:28px;
+}
+
+.empty-preview h3{
+    color:#575568;
+    font-size:16px;
+    margin-bottom:6px;
+}
+
+.empty-preview p{
+    font-size:12px;
+    line-height:1.6;
+}
+
+/* ================= LOADING ================= */
+
+.loading-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(20,17,40,.45);
+    backdrop-filter:blur(5px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:500;
+}
+
+.loading-box{
+    background:white;
+    width:330px;
+    padding:30px;
+    border-radius:22px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+
+.spinner{
+    width:42px;
+    height:42px;
+    border:4px solid #e8e3ff;
+    border-top-color:var(--purple);
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 18px;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+.loading-box h3{
+    font-size:16px;
+    margin-bottom:7px;
+}
+
+.loading-box p{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#242331;
+    color:white;
+    padding:13px 17px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+    transform:translateY(100px);
+    opacity:0;
+    transition:.3s;
+    z-index:700;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:1050px){
+
+    .sidebar{
+        width:72px;
+        padding:20px 10px;
+    }
+
+    .logo-text,
+    .nav-title,
+    .nav a span{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+        padding:8px 0 25px;
+    }
+
+    .nav a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:72px;
+    }
+
+    .workspace{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:650px){
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .content{
+        padding:20px 15px;
+    }
+
+    .hero{
+        padding:25px;
+    }
+
+    .hero h1{
+        font-size:23px;
+    }
+
+    .resume-paper-wrap{
+        padding:10px;
+    }
+
+    .resume-paper{
+        padding:30px 25px;
+    }
+
+    .preview-tools{
+        flex-wrap:wrap;
+    }
+
+    .actions{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .sidebar,
+    .topbar,
+    .hero,
+    .form-card,
+    .preview-top,
+    .loading-overlay,
+    .toast{
+        display:none !important;
+    }
+
+    .main{
+        margin:0;
+    }
+
+    .content{
+        padding:0;
+    }
+
+    .workspace{
+        display:block;
+    }
+
+    .preview-card{
+        border:none;
+        box-shadow:none;
+    }
+
+    .resume-paper-wrap{
+        padding:0;
+        background:white;
+    }
+
+    .resume-paper{
+        box-shadow:none;
+        max-width:none;
+        min-height:auto;
+        padding:35px;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
-<header>
-    <h1>AI Resume Builder</h1>
-    <p>Create a professional resume using AI</p>
-</header>
+<!-- ================= SIDEBAR ================= -->
 
-<div class="container">
+<aside class="sidebar">
 
-    <!-- FORM -->
-    <div class="card form-card">
+    <div class="logo">
 
-        <h2>Enter Your Details</h2>
+        <div class="logo-icon">✦</div>
 
-        <form id="resumeForm">
-
-            <label>Full Name</label>
-            <input type="text" id="name" placeholder="Enter your name" required>
-
-            <label>Contact</label>
-            <input type="text" id="contact" placeholder="Email | Phone | LinkedIn">
-
-            <label>Education</label>
-            <textarea id="education"
-                placeholder="Example: B.Tech Computer Science, XYZ University, 2027"></textarea>
-
-            <label>Skills</label>
-            <textarea id="skills"
-                placeholder="Java, HTML, CSS, JavaScript, Spring Boot"></textarea>
-
-            <label>Experience</label>
-            <textarea id="experience"
-                placeholder="Internship, projects, work experience..."></textarea>
-
-            <label>Career Objective</label>
-            <textarea id="objective"
-                placeholder="Write your career objective"></textarea>
-
-            <button type="submit">
-                Generate Resume
-            </button>
-
-            <div class="loading" id="loading">
-                Generating your resume...
-            </div>
-
-        </form>
+        <div class="logo-text">
+            AI <span>StudyLab</span>
+        </div>
 
     </div>
 
-    <!-- PREVIEW -->
-    <div class="card preview-card">
+    <div class="nav-title">
+        AI Classroom
+    </div>
 
-        <h2>Resume Preview</h2>
+    <nav class="nav">
 
-        <div id="resumePreview">
+        <a class="active" href="../task-01-resume-builder/index.html">
+            <div class="nav-icon">📄</div>
+            <span>Resume Builder</span>
+        </a>
 
-            <div class="resume-header">
-                <h1>Your Name</h1>
-                <p>Your contact information</p>
+        <a href="../task-02-notes-generator/index.html">
+            <div class="nav-icon">📝</div>
+            <span>Notes Generator</span>
+        </a>
+
+        <a href="../task-03-ppt-generator/index.html">
+            <div class="nav-icon">📊</div>
+            <span>Presentation</span>
+        </a>
+
+        <a href="../task-04-mind-map/index.html">
+            <div class="nav-icon">🧠</div>
+            <span>Mind Map</span>
+        </a>
+
+        <a href="../task-06-ai-quiz/index.html">
+            <div class="nav-icon">❓</div>
+            <span>AI Quiz</span>
+        </a>
+
+        <a href="../task-07-ai-chatbot/index.html">
+            <div class="nav-icon">💬</div>
+            <span>Doubt Solver</span>
+        </a>
+
+        <a href="../task-08-flashcards/index.html">
+            <div class="nav-icon">🗂️</div>
+            <span>Flashcards</span>
+        </a>
+
+        <a href="../task-09-study-planner/index.html">
+            <div class="nav-icon">📅</div>
+            <span>Study Planner</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div class="breadcrumb">
+            AI Classroom / <strong>Resume Builder</strong>
+        </div>
+
+        <div class="status">
+            <div class="status-dot"></div>
+            Gemini AI Connected
+        </div>
+
+    </div>
+
+
+    <section class="content">
+
+        <!-- HERO -->
+
+        <div class="hero">
+
+            <div class="hero-badge">
+                ✨ POWERED BY GEMINI AI
             </div>
 
-            <div class="resume-section">
-                <h3>Career Objective</h3>
-                <p>Your objective will appear here.</p>
+            <h1>
+                Build a Resume That Gets Noticed
+            </h1>
+
+            <p>
+                Enter your details and let Gemini transform your
+                information into a polished, professional resume
+                suitable for internships, placements and fresher roles.
+            </p>
+
+        </div>
+
+
+        <!-- WORKSPACE -->
+
+        <div class="workspace">
+
+
+            <!-- ================= FORM ================= -->
+
+            <div class="card form-card">
+
+                <div class="card-header">
+
+                    <h2>Resume Information</h2>
+
+                    <p>
+                        Add your details. Gemini will improve the presentation.
+                    </p>
+
+                </div>
+
+
+                <div class="form-body">
+
+                    <div class="form-group">
+
+                        <label>
+                            Full Name
+                            <span class="help">Required</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="e.g. Khushi Gupta"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Contact
+                        </label>
+
+                        <input
+                            type="text"
+                            id="contact"
+                            placeholder="Email | Phone | LinkedIn | GitHub"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Education
+                        </label>
+
+                        <textarea
+                            id="education"
+                            placeholder="B.Tech Computer Science, XYZ University, 2027&#10;CGPA: 8.2"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Skills
+                        </label>
+
+                        <textarea
+                            id="skills"
+                            placeholder="Java, Spring Boot, HTML, CSS, JavaScript, SQL, Git"
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Experience
+                        </label>
+
+                        <textarea
+                            id="experience"
+                            placeholder="Internship, projects, work experience, achievements..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Career Objective
+                        </label>
+
+                        <textarea
+                            id="objective"
+                            placeholder="Write a short objective, or leave it empty and let Gemini create one."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        <button
+                            class="secondary"
+                            onclick="loadSample()"
+                        >
+                            📋 Sample
+                        </button>
+
+                        <button
+                            class="secondary"
+                            onclick="clearForm()"
+                        >
+                            🧹 Clear
+                        </button>
+
+                    </div>
+
+
+                    <button
+                        class="primary"
+                        style="width:100%; margin-top:10px;"
+                        onclick="generateResume()"
+                    >
+                        ✨ Generate with Gemini
+                    </button>
+
+
+                    <div class="ai-tip">
+
+                        <div class="ai-tip-title">
+                            💡 AI Tip
+                        </div>
+
+                        <p>
+                            Give Gemini real information only. The AI improves
+                            wording but does not invent qualifications or experience.
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="resume-section">
-                <h3>Education</h3>
-                <p>Your education will appear here.</p>
-            </div>
 
-            <div class="resume-section">
-                <h3>Skills</h3>
-                <p>Your skills will appear here.</p>
-            </div>
+            <!-- ================= PREVIEW ================= -->
 
-            <div class="resume-section">
-                <h3>Experience</h3>
-                <p>Your experience will appear here.</p>
+            <div class="card preview-card">
+
+                <div class="preview-top">
+
+                    <div class="preview-title">
+                        Resume Preview
+                    </div>
+
+                    <div class="preview-tools">
+
+                        <button
+                            class="tool-btn"
+                            onclick="copyResume()"
+                        >
+                            📋 Copy
+                        </button>
+
+                        <button
+                            class="tool-btn"
+                            onclick="downloadText()"
+                        >
+                            ⬇ TXT
+                        </button>
+
+                        <button
+                            class="tool-btn"
+                            onclick="window.print()"
+                        >
+                            🖨 PDF
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="resume-paper-wrap">
+
+                    <div
+                        class="resume-paper"
+                        id="resumePreview"
+                    >
+
+                        <div class="empty-preview">
+
+                            <div class="empty-icon">
+                                📄
+                            </div>
+
+                            <h3>
+                                Your Resume Will Appear Here
+                            </h3>
+
+                            <p>
+                                Fill in your information and click
+                                <strong>Generate with Gemini</strong>
+                                to create your professional resume.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
 
-        <button id="downloadBtn" onclick="window.print()">
-            Download / Save as PDF
-        </button>
+    </section>
+
+</main>
+
+
+<!-- ================= LOADING ================= -->
+
+<div
+    class="loading-overlay"
+    id="loadingOverlay"
+>
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <h3>
+            Gemini is writing your resume
+        </h3>
+
+        <p>
+            Improving your content and creating a professional structure...
+        </p>
 
     </div>
 
 </div>
 
+
+<!-- ================= TOAST ================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
 <script>
 
-    const form = document.getElementById("resumeForm");
-    const preview = document.getElementById("resumePreview");
-    const loading = document.getElementById("loading");
-    const downloadBtn = document.getElementById("downloadBtn");
+/* ============================================
+   GEMINI BACKEND
+============================================ */
 
-    form.addEventListener("submit", function(event) {
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
 
-        event.preventDefault();
 
-        loading.style.display = "block";
+async function askGemini(prompt){
 
-        const name = document.getElementById("name").value;
-        const contact = document.getElementById("contact").value;
-        const education = document.getElementById("education").value;
-        const skills = document.getElementById("skills").value;
-        const experience = document.getElementById("experience").value;
-        const objective = document.getElementById("objective").value;
+    const response = await fetch(
+        GEMINI_API_URL,
+        {
+            method:"POST",
 
-        /*
-         * AI PROMPT
-         *
-         * This prompt will later be sent to an AI API.
-         */
+            headers:{
+                "Content-Type":"application/json"
+            },
 
-        const prompt = `
-You are a professional resume writer.
+            body:JSON.stringify({
+                prompt:prompt
+            })
+        }
+    );
 
-Create a polished professional resume using the following information.
+
+    const data =
+        await response.json();
+
+
+    if(!response.ok || !data.success){
+
+        throw new Error(
+            data.error ||
+            "Gemini request failed."
+        );
+
+    }
+
+
+    return data.text;
+
+}
+
+
+/* ============================================
+   GENERATE RESUME
+============================================ */
+
+async function generateResume(){
+
+    const name =
+        document.getElementById("name")
+        .value
+        .trim();
+
+    const contact =
+        document.getElementById("contact")
+        .value
+        .trim();
+
+    const education =
+        document.getElementById("education")
+        .value
+        .trim();
+
+    const skills =
+        document.getElementById("skills")
+        .value
+        .trim();
+
+    const experience =
+        document.getElementById("experience")
+        .value
+        .trim();
+
+    const objective =
+        document.getElementById("objective")
+        .value
+        .trim();
+
+
+    if(!name){
+
+        showToast(
+            "Please enter your full name."
+        );
+
+        return;
+
+    }
+
+
+    const prompt = `
+
+You are an expert professional resume writer.
+
+Create a polished resume for a college student,
+fresher or internship applicant.
+
+IMPORTANT RULES:
+
+1. Never invent information.
+2. Never create fake companies.
+3. Never create fake internships.
+4. Never create fake achievements.
+5. Never create fake marks or CGPA.
+6. Improve grammar and professional wording.
+7. Keep the information truthful.
+8. Make the resume ATS-friendly.
+9. Keep the writing concise.
+10. Use professional software/technology terminology where appropriate.
+
+CANDIDATE:
 
 Name:
 ${name}
@@ -298,57 +1224,558 @@ ${experience}
 Career Objective:
 ${objective}
 
-Make the resume concise, professional and suitable
-for a fresher/job applicant.
-        `;
+Return ONLY valid JSON.
 
-        console.log("AI Prompt:", prompt);
+Use exactly this structure:
 
-        /*
-         * For now we generate the resume directly
-         * using the user's input.
-         *
-         * In the next step we will connect this
-         * website to an AI API.
-         */
+{
+    "objective": "professional career objective",
+    "education": [
+        {
+            "title": "",
+            "details": ""
+        }
+    ],
+    "skills": [],
+    "experience": [
+        {
+            "title": "",
+            "details": ""
+        }
+    ]
+}
 
-        setTimeout(function() {
+If a section has no information,
+return an empty array or empty string.
 
-            preview.innerHTML = `
+Do not add Markdown.
+Do not add code fences.
+`;
 
-                <div class="resume-header">
-                    <h1>${name}</h1>
-                    <p>${contact}</p>
-                </div>
 
-                <div class="resume-section">
-                    <h3>Career Objective</h3>
-                    <p>${objective}</p>
-                </div>
+    console.log(
+        "Gemini Resume Prompt:",
+        prompt
+    );
 
-                <div class="resume-section">
-                    <h3>Education</h3>
-                    <p>${education}</p>
-                </div>
 
-                <div class="resume-section">
-                    <h3>Skills</h3>
-                    <p>${skills}</p>
-                </div>
+    showLoading(true);
 
-                <div class="resume-section">
-                    <h3>Experience</h3>
-                    <p>${experience}</p>
-                </div>
 
-            `;
+    try{
 
-            loading.style.display = "none";
-            downloadBtn.style.display = "inline-block";
+        const result =
+            await askGemini(prompt);
 
-        }, 800);
 
-    });
+        console.log(
+            "Gemini Response:",
+            result
+        );
+
+
+        let cleaned =
+            result
+            .replace(/```json/gi,"")
+            .replace(/```/g,"")
+            .trim();
+
+
+        const firstBrace =
+            cleaned.indexOf("{");
+
+        const lastBrace =
+            cleaned.lastIndexOf("}");
+
+
+        if(
+            firstBrace !== -1 &&
+            lastBrace !== -1
+        ){
+
+            cleaned =
+                cleaned.substring(
+                    firstBrace,
+                    lastBrace + 1
+                );
+
+        }
+
+
+        const resume =
+            JSON.parse(cleaned);
+
+
+        renderResume(
+            name,
+            contact,
+            resume
+        );
+
+
+        showToast(
+            "✨ Resume generated by Gemini!"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Resume generation error:",
+            error
+        );
+
+
+        showToast(
+            "Gemini error: " +
+            error.message
+        );
+
+    }finally{
+
+        showLoading(false);
+
+    }
+
+}
+
+
+/* ============================================
+   RENDER RESUME
+============================================ */
+
+function renderResume(
+    name,
+    contact,
+    resume
+){
+
+    const preview =
+        document.getElementById(
+            "resumePreview"
+        );
+
+
+    const educationHTML =
+        Array.isArray(resume.education)
+        ?
+        resume.education.map(item => `
+
+            <div style="margin-bottom:12px;">
+
+                <strong
+                    style="
+                        font-size:12px;
+                        color:#302d3d;
+                    "
+                >
+                    ${escapeHTML(item.title || "")}
+                </strong>
+
+                <p>
+                    ${escapeHTML(item.details || "")}
+                </p>
+
+            </div>
+
+        `).join("")
+        :
+        `<p>${escapeHTML(
+            resume.education || ""
+        )}</p>`;
+
+
+    const skillsHTML =
+        Array.isArray(resume.skills)
+        ?
+        resume.skills.map(skill => `
+
+            <span class="skill">
+                ${escapeHTML(skill)}
+            </span>
+
+        `).join("")
+        :
+        `<span class="skill">
+            ${escapeHTML(resume.skills || "")}
+        </span>`;
+
+
+    const experienceHTML =
+        Array.isArray(resume.experience)
+        ?
+        resume.experience.map(item => `
+
+            <div style="margin-bottom:13px;">
+
+                <strong
+                    style="
+                        font-size:12px;
+                        color:#302d3d;
+                    "
+                >
+                    ${escapeHTML(item.title || "")}
+                </strong>
+
+                <p>
+                    ${escapeHTML(item.details || "")}
+                </p>
+
+            </div>
+
+        `).join("")
+        :
+        `<p>${escapeHTML(
+            resume.experience || ""
+        )}</p>`;
+
+
+    preview.innerHTML = `
+
+        <div class="resume-head">
+
+            <div class="resume-name">
+                ${escapeHTML(name)}
+            </div>
+
+            <div class="resume-contact">
+                ${escapeHTML(contact)}
+            </div>
+
+        </div>
+
+
+        <div class="resume-section">
+
+            <h3>
+                Professional Objective
+            </h3>
+
+            <p>
+                ${escapeHTML(
+                    resume.objective || ""
+                )}
+            </p>
+
+        </div>
+
+
+        <div class="resume-section">
+
+            <h3>
+                Education
+            </h3>
+
+            ${educationHTML}
+
+        </div>
+
+
+        <div class="resume-section">
+
+            <h3>
+                Technical Skills
+            </h3>
+
+            <div class="skills">
+                ${skillsHTML}
+            </div>
+
+        </div>
+
+
+        <div class="resume-section">
+
+            <h3>
+                Experience & Projects
+            </h3>
+
+            ${experienceHTML}
+
+        </div>
+
+    `;
+
+}
+
+
+/* ============================================
+   SAMPLE PROFILE
+============================================ */
+
+function loadSample(){
+
+    document.getElementById("name").value =
+        "Khushi Gupta";
+
+
+    document.getElementById("contact").value =
+        "khushi@example.com | +91 98765 43210 | LinkedIn | GitHub";
+
+
+    document.getElementById("education").value =
+        "B.Tech in Computer Science and Engineering, 2027\nCGPA: 8.2";
+
+
+    document.getElementById("skills").value =
+        "Java, Spring Boot, HTML, CSS, JavaScript, SQL, Git, REST APIs";
+
+
+    document.getElementById("experience").value =
+        "Web Development Internship\nBuilt responsive web pages and worked on frontend development.\n\nRoyal Fashion Mart\nFull-stack e-commerce project using HTML, CSS, JavaScript and Spring Boot.";
+
+
+    document.getElementById("objective").value =
+        "Seeking a software development opportunity where I can apply my programming and web development skills while continuing to learn.";
+
+    showToast(
+        "Sample profile loaded."
+    );
+
+}
+
+
+/* ============================================
+   CLEAR
+============================================ */
+
+function clearForm(){
+
+    document.getElementById("name").value = "";
+    document.getElementById("contact").value = "";
+    document.getElementById("education").value = "";
+    document.getElementById("skills").value = "";
+    document.getElementById("experience").value = "";
+    document.getElementById("objective").value = "";
+
+
+    document.getElementById(
+        "resumePreview"
+    ).innerHTML = `
+
+        <div class="empty-preview">
+
+            <div class="empty-icon">
+                📄
+            </div>
+
+            <h3>
+                Your Resume Will Appear Here
+            </h3>
+
+            <p>
+                Fill in your information and click
+                <strong>Generate with Gemini</strong>
+                to create your professional resume.
+            </p>
+
+        </div>
+
+    `;
+
+
+    showToast(
+        "Form cleared."
+    );
+
+}
+
+
+/* ============================================
+   COPY
+============================================ */
+
+async function copyResume(){
+
+    const preview =
+        document.getElementById(
+            "resumePreview"
+        );
+
+
+    const text =
+        preview.innerText.trim();
+
+
+    if(
+        !text ||
+        text.includes(
+            "Your Resume Will Appear Here"
+        )
+    ){
+
+        showToast(
+            "Generate a resume first."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+        showToast(
+            "Resume copied to clipboard!"
+        );
+
+    }catch(error){
+
+        showToast(
+            "Could not copy the resume."
+        );
+
+    }
+
+}
+
+
+/* ============================================
+   DOWNLOAD TXT
+============================================ */
+
+function downloadText(){
+
+    const preview =
+        document.getElementById(
+            "resumePreview"
+        );
+
+
+    const text =
+        preview.innerText.trim();
+
+
+    if(
+        !text ||
+        text.includes(
+            "Your Resume Will Appear Here"
+        )
+    ){
+
+        showToast(
+            "Generate a resume first."
+        );
+
+        return;
+
+    }
+
+
+    const blob =
+        new Blob(
+            [text],
+            {
+                type:"text/plain"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "AI-Generated-Resume.txt";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(url);
+
+
+    showToast(
+        "Resume downloaded!"
+    );
+
+}
+
+
+/* ============================================
+   LOADING
+============================================ */
+
+function showLoading(show){
+
+    document.getElementById(
+        "loadingOverlay"
+    ).style.display =
+        show
+        ? "flex"
+        : "none";
+
+}
+
+
+/* ============================================
+   TOAST
+============================================ */
+
+let toastTimer;
+
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            3500
+        );
+
+}
+
+
+/* ============================================
+   SECURITY
+============================================ */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
 
 </script>
 

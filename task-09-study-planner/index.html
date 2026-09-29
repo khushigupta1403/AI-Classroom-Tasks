@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>AI Study Planner | AI StudyLab</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
 <style>
+
+/* ==================================================
+   RESET
+================================================== */
 
 *{
     margin:0;
@@ -19,1413 +31,2961 @@
 }
 
 :root{
-    --purple:#6d5dfc;
-    --purple-dark:#5545e8;
-    --green:#20c997;
-    --text:#20233a;
-    --muted:#777b8f;
-    --bg:#f6f7fb;
-    --white:#fff;
-    --border:#e7e8f0;
-    --blue:#4d8df7;
-    --orange:#f4a340;
-    --pink:#ed6b9b;
-    --teal:#23b8a5;
+
+    --purple:#7657e8;
+    --purple-dark:#6246d2;
+    --purple-light:#f1edff;
+
+    --green:#28b681;
+    --green-light:#eafaf4;
+
+    --orange:#f29a4a;
+    --orange-light:#fff5e9;
+
+    --blue:#4d8fe8;
+    --blue-light:#edf5ff;
+
+    --red:#e45d6a;
+    --red-light:#fff0f2;
+
+    --text:#202033;
+    --muted:#77768a;
+
+    --border:#e7e5ef;
+
+    --bg:#f7f7fb;
+    --white:#ffffff;
+
 }
 
 body{
-    font-family:'Inter',sans-serif;
+
+    font-family:"Inter",sans-serif;
+
     background:var(--bg);
+
     color:var(--text);
-    min-height:100vh;
+
 }
 
-/* SIDEBAR */
+button,
+input,
+select,
+textarea{
+
+    font-family:inherit;
+
+}
+
+button{
+
+    cursor:pointer;
+
+}
+
+
+/* ==================================================
+   SIDEBAR
+================================================== */
 
 .sidebar{
+
     position:fixed;
+
     left:0;
     top:0;
+
     width:250px;
     height:100vh;
-    background:#fff;
-    border-right:1px solid var(--border);
-    padding:25px 17px;
-    z-index:20;
+
+    background:white;
+
+    border-right:
+        1px solid var(--border);
+
+    padding:25px 16px;
+
+    z-index:30;
+
 }
 
 .logo{
+
     display:flex;
+
     align-items:center;
+
     gap:11px;
-    padding:0 10px 28px;
+
+    padding:
+        0 10px 28px;
+
 }
 
 .logo-icon{
+
     width:40px;
     height:40px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#786cff,#5748e9);
-    color:white;
+
+    border-radius:13px;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
-    font-size:19px;
-    box-shadow:0 8px 18px rgba(109,93,252,.25);
+
+    color:white;
+
+    font-size:20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8669f3,
+            #6245d1
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(118,87,232,.25);
+
 }
 
-.logo-text{
-    font-size:17px;
-    font-weight:800;
+.logo strong{
+
+    font-size:18px;
+
 }
 
-.logo-text span{
+.logo span{
+
     color:var(--purple);
+
 }
 
-.section-label{
-    color:#a2a5b5;
-    font-size:10px;
-    font-weight:800;
-    letter-spacing:1.1px;
-    padding:0 12px;
-    margin-bottom:10px;
+.menu-title{
+
+    padding:
+        0 12px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+    color:#aaa9b8;
+
+    margin-bottom:9px;
+
 }
 
-.nav{
+.nav-item{
+
     display:flex;
-    flex-direction:column;
-    gap:5px;
-}
 
-.nav a{
-    text-decoration:none;
-    color:#6d7082;
-    display:flex;
     align-items:center;
+
     gap:12px;
-    padding:11px 12px;
-    border-radius:11px;
-    font-size:12px;
+
+    padding:12px 13px;
+
+    border-radius:12px;
+
+    color:#656579;
+
+    text-decoration:none;
+
+    font-size:13px;
+
     font-weight:600;
+
+    margin-bottom:4px;
+
     transition:.2s;
+
 }
 
-.nav a:hover{
-    background:#f4f2ff;
+.nav-item:hover{
+
+    background:#f6f3ff;
+
     color:var(--purple);
+
 }
 
-.nav a.active{
-    background:#efedff;
+.nav-item.active{
+
+    background:var(--purple-light);
+
     color:var(--purple);
+
 }
 
 .nav-icon{
-    width:25px;
+
+    width:28px;
+
     text-align:center;
-    font-size:15px;
+
+    font-size:17px;
+
 }
 
 .assistant-card{
+
     position:absolute;
+
+    left:16px;
+    right:16px;
     bottom:22px;
-    left:17px;
-    right:17px;
-    background:linear-gradient(145deg,#f0edff,#effcf7);
-    border:1px solid #e5e1ff;
-    border-radius:17px;
-    padding:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f2eeff,
+            #ecfaf5
+        );
+
+    border:
+        1px solid #e4defd;
+
+    border-radius:18px;
+
+    padding:17px;
+
 }
 
-.assistant-card .small-icon{
+.assistant-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-bottom:9px;
+
+}
+
+.assistant-avatar{
+
     width:33px;
     height:33px;
-    background:#fff;
+
     border-radius:10px;
+
+    background:white;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
-    margin-bottom:10px;
+
 }
 
 .assistant-card strong{
+
     font-size:12px;
-    display:block;
-    margin-bottom:4px;
+
 }
 
 .assistant-card p{
-    font-size:10px;
-    color:#777b90;
-    line-height:1.5;
+
+    color:#76758a;
+
+    font-size:11px;
+
+    line-height:1.6;
+
 }
 
-/* MAIN */
+
+/* ==================================================
+   MAIN
+================================================== */
 
 .main{
+
     margin-left:250px;
+
     min-height:100vh;
+
 }
 
 .topbar{
-    height:72px;
-    background:rgba(255,255,255,.92);
-    border-bottom:1px solid var(--border);
+
+    height:70px;
+
+    background:
+        rgba(255,255,255,.92);
+
+    border-bottom:
+        1px solid var(--border);
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
-    padding:0 34px;
+
+    padding:
+        0 34px;
+
     position:sticky;
+
     top:0;
-    z-index:10;
-    backdrop-filter:blur(12px);
+
+    z-index:20;
+
+    backdrop-filter:
+        blur(10px);
+
 }
 
 .breadcrumb{
-    font-size:12px;
-    color:#999caf;
+
+    font-size:13px;
+
+    color:var(--muted);
+
 }
 
 .breadcrumb strong{
+
     color:var(--text);
+
 }
 
-.ready{
+.status{
+
     display:flex;
+
     align-items:center;
-    gap:8px;
-    padding:8px 13px;
-    border:1px solid #d9f4eb;
-    background:#f2fffb;
+
+    gap:7px;
+
+    background:var(--green-light);
+
+    color:#1a9365;
+
+    padding:
+        8px 13px;
+
     border-radius:20px;
+
     font-size:11px;
+
     font-weight:700;
-    color:#159a73;
+
 }
 
-.ready-dot{
+.status-dot{
+
     width:7px;
     height:7px;
+
+    background:var(--green);
+
     border-radius:50%;
-    background:#20c997;
+
 }
 
-/* HERO */
+
+/* ==================================================
+   CONTENT
+================================================== */
+
+.content{
+
+    padding:
+        30px 34px 45px;
+
+    max-width:1500px;
+
+    margin:auto;
+
+}
+
+
+/* ==================================================
+   HERO
+================================================== */
 
 .hero{
-    margin:30px 34px 20px;
-    min-height:190px;
-    border-radius:24px;
-    padding:34px 38px;
-    color:#fff;
+
     background:
-        radial-gradient(circle at 85% 15%,rgba(255,255,255,.18),transparent 28%),
-        linear-gradient(125deg,#6655ef,#7969fa 52%,#5dcbad);
+
+        radial-gradient(
+            circle at 88% 15%,
+            rgba(255,255,255,.18),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            135deg,
+            #7657e8,
+            #684bd4 55%,
+            #5f46c7
+        );
+
+    color:white;
+
+    border-radius:26px;
+
+    padding:
+        38px 42px;
+
     position:relative;
+
     overflow:hidden;
+
+    margin-bottom:24px;
+
 }
 
 .hero::after{
+
     content:"";
+
     position:absolute;
-    width:260px;
-    height:260px;
-    border:1px solid rgba(255,255,255,.13);
+
+    width:240px;
+    height:240px;
+
+    border:
+        35px solid
+        rgba(255,255,255,.08);
+
     border-radius:50%;
-    right:-90px;
-    bottom:-140px;
+
+    right:-70px;
+    top:-100px;
+
 }
 
-.badge{
+.hero-badge{
+
     display:inline-flex;
-    padding:6px 10px;
-    background:rgba(255,255,255,.15);
-    border:1px solid rgba(255,255,255,.2);
+
+    align-items:center;
+
+    gap:7px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    padding:
+        7px 12px;
+
     border-radius:20px;
-    font-size:10px;
+
+    font-size:11px;
+
     font-weight:700;
-    margin-bottom:13px;
+
+    margin-bottom:15px;
+
 }
 
 .hero h1{
-    font-size:27px;
-    letter-spacing:-.7px;
-    margin-bottom:9px;
+
+    font-size:31px;
+
+    line-height:1.2;
+
+    margin-bottom:10px;
+
+    max-width:800px;
+
 }
 
 .hero p{
-    max-width:680px;
-    font-size:12px;
+
+    font-size:14px;
+
     line-height:1.7;
-    opacity:.9;
+
+    color:
+        rgba(255,255,255,.83);
+
+    max-width:790px;
+
 }
 
-/* INPUT AREA */
 
-.input-area{
-    margin:0 34px 20px;
+/* ==================================================
+   SETUP GRID
+================================================== */
+
+.setup-grid{
+
     display:grid;
-    grid-template-columns:1.15fr .85fr;
+
+    grid-template-columns:
+        370px
+        minmax(0,1fr);
+
     gap:20px;
+
+    margin-bottom:20px;
+
 }
 
 .card{
-    background:#fff;
-    border:1px solid var(--border);
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
     border-radius:20px;
-    padding:21px;
-    box-shadow:0 8px 28px rgba(30,35,70,.04);
+
+    box-shadow:
+        0 8px 30px
+        rgba(39,35,65,.035);
+
 }
 
-.card-title{
-    font-size:14px;
-    font-weight:800;
-    margin-bottom:5px;
+
+/* ==================================================
+   SETUP CARD
+================================================== */
+
+.setup-card{
+
+    padding:23px;
+
 }
 
-.card-subtitle{
-    color:#9296a8;
-    font-size:10px;
-    line-height:1.6;
-    margin-bottom:18px;
-}
+.card-heading{
 
-/* SUBJECTS */
-
-.subjects{
     display:flex;
-    flex-direction:column;
-    gap:9px;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin-bottom:20px;
+
 }
 
-.subject-row{
-    display:grid;
-    grid-template-columns:1.5fr .7fr .9fr 40px;
-    gap:8px;
-    align-items:center;
+.card-heading h2{
+
+    font-size:16px;
+
 }
 
-.subject-row input{
-    width:100%;
-    border:1px solid var(--border);
-    border-radius:9px;
-    padding:10px;
-    font-family:inherit;
+.card-heading p{
+
+    color:var(--muted);
+
     font-size:10px;
-    outline:none;
+
+    margin-top:5px;
+
+    line-height:1.6;
+
 }
 
-.subject-row input:focus{
-    border-color:var(--purple);
-}
+.ai-label{
 
-.remove-btn{
-    width:34px;
-    height:34px;
-    border:1px solid #f0d9dd;
-    background:#fff8f9;
-    color:#df6575;
-    border-radius:9px;
-    cursor:pointer;
-}
+    background:var(--purple-light);
 
-.add-btn{
-    margin-top:10px;
-    border:1px dashed #cfcaf9;
-    background:#faf9ff;
     color:var(--purple);
-    border-radius:10px;
-    padding:9px;
-    width:100%;
-    cursor:pointer;
-    font-family:inherit;
-    font-size:10px;
-    font-weight:700;
+
+    padding:
+        7px 9px;
+
+    border-radius:9px;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    white-space:nowrap;
+
 }
 
-/* SETTINGS */
+.field{
 
-.settings-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
+    margin-bottom:16px;
+
 }
 
 .field label{
+
     display:block;
-    font-size:9px;
+
+    font-size:11px;
+
     font-weight:700;
-    color:#707487;
-    margin-bottom:6px;
+
+    margin-bottom:7px;
+
+}
+
+.field textarea{
+
+    width:100%;
+
+    min-height:145px;
+
+    resize:vertical;
+
+    border:
+        1px solid var(--border);
+
+    background:#fbfbfd;
+
+    border-radius:12px;
+
+    padding:12px;
+
+    font-size:11px;
+
+    line-height:1.6;
+
+    outline:none;
+
+}
+
+.field textarea:focus{
+
+    border-color:#9d89ef;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(118,87,232,.08);
+
+    background:white;
+
+}
+
+.two-fields{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px;
+
 }
 
 .field input,
 .field select{
+
     width:100%;
-    border:1px solid var(--border);
-    border-radius:9px;
-    padding:10px;
-    background:#fff;
-    font-family:inherit;
+
+    border:
+        1px solid var(--border);
+
+    background:#fbfbfd;
+
+    border-radius:11px;
+
+    padding:11px;
+
     font-size:10px;
+
     outline:none;
+
 }
 
 .field input:focus,
 .field select:focus{
-    border-color:var(--purple);
-}
 
-.full{
-    grid-column:1/-1;
+    border-color:#9d89ef;
+
+    background:white;
+
 }
 
 .generate-btn{
+
     width:100%;
-    border:none;
-    background:var(--purple);
-    color:#fff;
-    border-radius:11px;
-    padding:12px;
-    margin-top:16px;
-    font-family:inherit;
+
+    border:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c5bea,
+            #6548d2
+        );
+
+    color:white;
+
+    border-radius:12px;
+
+    padding:13px;
+
     font-size:11px;
-    font-weight:700;
-    cursor:pointer;
+
+    font-weight:800;
+
+    box-shadow:
+        0 8px 20px
+        rgba(105,76,215,.2);
+
     transition:.2s;
+
 }
 
 .generate-btn:hover{
-    background:var(--purple-dark);
+
     transform:translateY(-1px);
+
 }
 
-.secondary-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:8px;
+.generate-btn:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+    transform:none;
+
 }
 
-.secondary-btn{
-    border:1px solid var(--border);
-    background:#fff;
-    color:#65697d;
-    padding:10px;
-    border-radius:10px;
-    cursor:pointer;
-    font-family:inherit;
-    font-size:10px;
-    font-weight:600;
-}
+.small-actions{
 
-/* STATS */
-
-.stats{
-    margin:0 34px 20px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:13px;
-}
-
-.stat{
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:16px;
-}
-
-.stat-icon{
-    width:32px;
-    height:32px;
     display:flex;
+
+    gap:8px;
+
+    margin-top:9px;
+
+}
+
+.small-btn{
+
+    flex:1;
+
+    border:
+        1px solid var(--border);
+
+    background:white;
+
+    color:#646377;
+
+    border-radius:10px;
+
+    padding:9px;
+
+    font-size:10px;
+
+    font-weight:700;
+
+}
+
+.small-btn:hover{
+
+    color:var(--purple);
+
+    background:#faf9ff;
+
+}
+
+.sample-box{
+
+    margin-top:17px;
+
+    background:#faf9fd;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:12px;
+
+    padding:13px;
+
+}
+
+.sample-title{
+
+    font-size:10px;
+
+    font-weight:800;
+
+    margin-bottom:7px;
+
+}
+
+.sample-box p{
+
+    font-size:9px;
+
+    line-height:1.6;
+
+    color:var(--muted);
+
+}
+
+
+/* ==================================================
+   PREFERENCES CARD
+================================================== */
+
+.preferences{
+
+    padding:23px;
+
+}
+
+.preference-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:12px;
+
+}
+
+.preference{
+
+    border:
+        1px solid var(--border);
+
+    border-radius:13px;
+
+    padding:13px;
+
+    background:#fcfcfe;
+
+}
+
+.preference-icon{
+
+    width:34px;
+    height:34px;
+
+    border-radius:10px;
+
+    display:flex;
+
     align-items:center;
     justify-content:center;
-    background:#f2f0ff;
-    border-radius:9px;
+
+    background:var(--purple-light);
+
     margin-bottom:10px;
+
+    font-size:17px;
+
 }
 
-.stat strong{
+.preference.green
+.preference-icon{
+
+    background:var(--green-light);
+
+}
+
+.preference strong{
+
     display:block;
-    font-size:18px;
+
+    font-size:11px;
+
+    margin-bottom:4px;
+
 }
 
-.stat span{
+.preference span{
+
+    display:block;
+
     font-size:9px;
-    color:#9498a9;
+
+    line-height:1.5;
+
+    color:var(--muted);
+
 }
 
-/* TIMETABLE */
 
-.schedule-card{
-    margin:0 34px 35px;
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:21px;
-    box-shadow:0 8px 28px rgba(30,35,70,.04);
+/* ==================================================
+   PLANNER OUTPUT
+================================================== */
+
+.planner-card{
+
+    padding:23px;
+
 }
 
-.schedule-header{
+.planner-header{
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
-    margin-bottom:17px;
+
+    gap:12px;
+
+    margin-bottom:18px;
+
 }
 
-.schedule-header h2{
-    font-size:15px;
+.planner-header h2{
+
+    font-size:16px;
+
 }
 
-.schedule-header span{
-    color:#9699aa;
-    font-size:10px;
+.header-actions{
+
+    display:flex;
+
+    gap:7px;
+
+    flex-wrap:wrap;
+
+    justify-content:flex-end;
+
 }
 
-.table-wrap{
-    overflow-x:auto;
-}
+.action-btn{
 
-.timetable{
-    width:100%;
-    min-width:850px;
-    border-collapse:separate;
-    border-spacing:5px;
-}
+    border:
+        1px solid var(--border);
 
-.timetable th{
-    font-size:9px;
-    color:#818598;
-    font-weight:700;
-    padding:9px 5px;
-}
+    background:white;
 
-.timetable th:first-child{
-    width:100px;
-}
+    color:#646377;
 
-.timetable td{
-    height:73px;
-    background:#fafafe;
-    border:1px solid #eeeef5;
     border-radius:10px;
-    padding:7px;
-    vertical-align:top;
+
+    padding:
+        9px 11px;
+
+    font-size:9px;
+
+    font-weight:800;
+
 }
 
-.time-cell{
-    background:#fff !important;
-    border:none !important;
-    color:#777b8e;
-    font-size:9px;
-    font-weight:700;
-    vertical-align:middle !important;
+.action-btn:hover{
+
+    color:var(--purple);
+
+    background:#faf9ff;
+
+}
+
+.action-btn.primary{
+
+    background:var(--purple-light);
+
+    border-color:#ddd5fa;
+
+    color:var(--purple);
+
+}
+
+
+/* ==================================================
+   EMPTY STATE
+================================================== */
+
+.empty-state{
+
+    min-height:430px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
     text-align:center;
+
+    padding:35px;
+
+}
+
+.empty-icon{
+
+    width:78px;
+    height:78px;
+
+    border-radius:24px;
+
+    background:var(--purple-light);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:36px;
+
+    margin:
+        0 auto 17px;
+
+}
+
+.empty-state h3{
+
+    font-size:18px;
+
+    margin-bottom:7px;
+
+}
+
+.empty-state p{
+
+    color:var(--muted);
+
+    font-size:10px;
+
+    line-height:1.7;
+
+    max-width:500px;
+
+}
+
+
+/* ==================================================
+   PLANNER RESULT
+================================================== */
+
+.result{
+
+    display:none;
+
+}
+
+.result.show{
+
+    display:block;
+
+}
+
+
+/* ==================================================
+   SUMMARY
+================================================== */
+
+.summary-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:10px;
+
+    margin-bottom:17px;
+
+}
+
+.summary-card{
+
+    border:
+        1px solid var(--border);
+
+    background:#fcfcfe;
+
+    border-radius:13px;
+
+    padding:14px;
+
+}
+
+.summary-card .summary-icon{
+
+    width:30px;
+    height:30px;
+
+    border-radius:9px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:var(--purple-light);
+
+    margin-bottom:9px;
+
+}
+
+.summary-card:nth-child(2)
+.summary-icon{
+
+    background:var(--green-light);
+
+}
+
+.summary-card:nth-child(3)
+.summary-icon{
+
+    background:var(--orange-light);
+
+}
+
+.summary-card:nth-child(4)
+.summary-icon{
+
+    background:var(--blue-light);
+
+}
+
+.summary-card span{
+
+    display:block;
+
+    font-size:9px;
+
+    color:var(--muted);
+
+    margin-bottom:3px;
+
+}
+
+.summary-card strong{
+
+    font-size:17px;
+
+}
+
+
+/* ==================================================
+   EXAM BANNER
+================================================== */
+
+.exam-banner{
+
+    display:none;
+
+    align-items:center;
+
+    gap:13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff5e9,
+            #fffaf4
+        );
+
+    border:
+        1px solid #f5dfc6;
+
+    border-radius:14px;
+
+    padding:13px 15px;
+
+    margin-bottom:17px;
+
+}
+
+.exam-banner.show{
+
+    display:flex;
+
+}
+
+.exam-icon{
+
+    width:39px;
+    height:39px;
+
+    border-radius:11px;
+
+    background:white;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+
+    flex-shrink:0;
+
+}
+
+.exam-banner strong{
+
+    font-size:11px;
+
+}
+
+.exam-banner p{
+
+    font-size:9px;
+
+    color:var(--muted);
+
+    margin-top:3px;
+
+}
+
+
+/* ==================================================
+   TABLE
+================================================== */
+
+.table-wrapper{
+
+    overflow-x:auto;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:15px;
+
+}
+
+.schedule-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:950px;
+
+}
+
+.schedule-table th{
+
+    background:#faf9fd;
+
+    color:#777589;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    text-align:left;
+
+    padding:12px;
+
+    border-bottom:
+        1px solid var(--border);
+
+    white-space:nowrap;
+
+}
+
+.schedule-table td{
+
+    padding:10px;
+
+    border-bottom:
+        1px solid #f0eef5;
+
+    vertical-align:top;
+
+    font-size:9px;
+
+}
+
+.schedule-table tr:last-child td{
+
+    border-bottom:0;
+
+}
+
+.day-cell{
+
+    font-weight:800;
+
+    color:#4d4b5d;
+
+    min-width:95px;
+
+}
+
+.day-date{
+
+    display:block;
+
+    color:#aaa8b5;
+
+    font-size:8px;
+
+    margin-top:3px;
+
+    font-weight:500;
+
 }
 
 .session{
-    height:100%;
-    border-radius:8px;
-    padding:8px;
-    background:#efedff;
-    border-left:3px solid var(--purple);
+
+    border-radius:10px;
+
+    padding:9px;
+
+    min-height:67px;
+
+    border-left:
+        3px solid var(--purple);
+
+    background:#f7f4ff;
+
 }
 
 .session.green{
-    background:#eafbf5;
-    border-left-color:var(--green);
-}
 
-.session.blue{
-    background:#edf4ff;
-    border-left-color:var(--blue);
+    border-left-color:var(--green);
+
+    background:#effbf6;
+
 }
 
 .session.orange{
-    background:#fff5e8;
+
     border-left-color:var(--orange);
+
+    background:#fff8ee;
+
 }
 
-.session.pink{
-    background:#fff0f6;
-    border-left-color:var(--pink);
+.session.blue{
+
+    border-left-color:var(--blue);
+
+    background:#f2f7ff;
+
 }
 
-.session.teal{
-    background:#eafaf8;
-    border-left-color:var(--teal);
+.session.red{
+
+    border-left-color:var(--red);
+
+    background:#fff3f5;
+
 }
 
-.session strong{
-    display:block;
+.session-title{
+
+    font-weight:800;
+
     font-size:9px;
-    color:#44475d;
+
     margin-bottom:4px;
+
 }
 
-.session span{
+.session-time{
+
     font-size:8px;
-    color:#85899a;
+
+    color:#777589;
+
+    margin-bottom:4px;
+
 }
 
-/* BOTTOM */
+.session-type{
 
-.bottom-grid{
-    margin:0 34px 35px;
+    font-size:7px;
+
+    color:#8a8798;
+
+    text-transform:uppercase;
+
+    font-weight:700;
+
+    letter-spacing:.05em;
+
+}
+
+.break-cell{
+
+    color:#aaa8b5;
+
+    text-align:center;
+
+    font-size:8px;
+
+}
+
+
+/* ==================================================
+   DAILY DETAILS
+================================================== */
+
+.detail-grid{
+
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:12px;
+
+    margin-top:17px;
+
 }
 
-.info-box{
+.day-detail{
+
+    border:
+        1px solid var(--border);
+
+    border-radius:14px;
+
+    padding:14px;
+
     background:#fff;
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:20px;
+
 }
 
-.info-box h3{
-    font-size:13px;
-    margin-bottom:6px;
-}
+.day-detail-header{
 
-.info-box p{
-    font-size:10px;
-    color:#85899a;
-    line-height:1.6;
-}
-
-.tip-list{
-    margin-top:12px;
     display:flex;
-    flex-direction:column;
-    gap:8px;
-}
 
-.tip-item{
-    display:flex;
-    gap:8px;
-    align-items:flex-start;
-    font-size:10px;
-    color:#65697b;
-}
-
-.tip-item span:first-child{
-    color:var(--green);
-}
-
-/* EMPTY */
-
-.empty-schedule{
-    padding:70px 20px;
-    text-align:center;
-    color:#9296a8;
-}
-
-.empty-schedule .icon{
-    font-size:35px;
-    margin-bottom:12px;
-}
-
-.empty-schedule h3{
-    font-size:14px;
-    color:#45485d;
-    margin-bottom:5px;
-}
-
-.empty-schedule p{
-    font-size:10px;
-}
-
-/* TOAST */
-
-.toast{
-    position:fixed;
-    right:25px;
-    bottom:25px;
-    background:#20233a;
-    color:#fff;
-    padding:11px 15px;
-    border-radius:10px;
-    font-size:10px;
-    opacity:0;
-    transform:translateY(10px);
-    pointer-events:none;
-    transition:.25s;
-    z-index:100;
-}
-
-.toast.show{
-    opacity:1;
-    transform:translateY(0);
-}
-
-/* LOADING */
-
-.loading-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(255,255,255,.72);
-    backdrop-filter:blur(4px);
-    display:none;
     align-items:center;
-    justify-content:center;
-    z-index:200;
+
+    justify-content:space-between;
+
+    margin-bottom:11px;
+
 }
 
-.loading-box{
-    background:#fff;
-    border:1px solid var(--border);
-    box-shadow:0 15px 50px rgba(30,35,70,.12);
-    border-radius:18px;
-    padding:25px 30px;
+.day-detail-header strong{
+
+    font-size:11px;
+
+}
+
+.day-total{
+
+    background:var(--green-light);
+
+    color:#18845d;
+
+    padding:
+        5px 8px;
+
+    border-radius:8px;
+
+    font-size:8px;
+
+    font-weight:800;
+
+}
+
+.task-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+
+}
+
+.task-item{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:8px;
+
+    padding:8px;
+
+    background:#fafafd;
+
+    border-radius:9px;
+
+}
+
+.task-dot{
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:var(--purple);
+
+    margin-top:4px;
+
+    flex-shrink:0;
+
+}
+
+.task-item strong{
+
+    font-size:9px;
+
+    display:block;
+
+}
+
+.task-item span{
+
+    font-size:8px;
+
+    color:var(--muted);
+
+    display:block;
+
+    margin-top:2px;
+
+}
+
+
+/* ==================================================
+   LEGEND
+================================================== */
+
+.legend{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:9px;
+
+    margin-top:16px;
+
+}
+
+.legend-item{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    font-size:8px;
+
+    color:var(--muted);
+
+}
+
+.legend-dot{
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--purple);
+
+}
+
+.legend-dot.green{
+
+    background:var(--green);
+
+}
+
+.legend-dot.orange{
+
+    background:var(--orange);
+
+}
+
+.legend-dot.blue{
+
+    background:var(--blue);
+
+}
+
+.legend-dot.red{
+
+    background:var(--red);
+
+}
+
+
+/* ==================================================
+   LOADING
+================================================== */
+
+.loading{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(255,255,255,.78);
+
+    backdrop-filter:
+        blur(5px);
+
+    z-index:100;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.loading.show{
+
+    display:flex;
+
+}
+
+.loading-card{
+
+    background:white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:28px 35px;
+
     text-align:center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(30,25,55,.15);
+
+    max-width:350px;
+
 }
 
 .spinner{
-    width:35px;
-    height:35px;
-    border:3px solid #e9e7ff;
-    border-top-color:var(--purple);
+
+    width:38px;
+    height:38px;
+
+    border:
+        4px solid #eeeafa;
+
+    border-top-color:
+        var(--purple);
+
     border-radius:50%;
-    animation:spin .8s linear infinite;
-    margin:0 auto 12px;
+
+    animation:
+        spin .8s linear infinite;
+
+    margin:
+        0 auto 13px;
+
+}
+
+.loading-card strong{
+
+    font-size:13px;
+
+}
+
+.loading-card p{
+
+    font-size:10px;
+
+    color:var(--muted);
+
+    margin-top:5px;
+
 }
 
 @keyframes spin{
+
     to{
         transform:rotate(360deg);
     }
+
 }
 
-.loading-box strong{
-    display:block;
-    font-size:12px;
-    margin-bottom:5px;
+
+/* ==================================================
+   TOAST
+================================================== */
+
+.toast{
+
+    position:fixed;
+
+    right:25px;
+    bottom:25px;
+
+    background:#222132;
+
+    color:white;
+
+    padding:
+        12px 17px;
+
+    border-radius:11px;
+
+    font-size:11px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.2);
+
+    transform:
+        translateY(80px);
+
+    opacity:0;
+
+    transition:.3s;
+
+    z-index:110;
+
+    max-width:410px;
+
 }
 
-.loading-box span{
-    font-size:9px;
-    color:#9296a8;
+.toast.show{
+
+    transform:
+        translateY(0);
+
+    opacity:1;
+
 }
 
-/* RESPONSIVE */
+
+/* ==================================================
+   PRINT
+================================================== */
+
+@media print{
+
+    body{
+
+        background:white;
+
+    }
+
+    .sidebar,
+    .topbar,
+    .hero,
+    .setup-grid,
+    .header-actions,
+    .loading,
+    .toast{
+
+        display:none !important;
+
+    }
+
+    .main{
+
+        margin-left:0;
+
+    }
+
+    .content{
+
+        padding:0;
+
+        max-width:none;
+
+    }
+
+    .planner-card{
+
+        border:0;
+
+        box-shadow:none;
+
+    }
+
+    .result{
+
+        display:block !important;
+
+    }
+
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
 
 @media(max-width:1100px){
 
+    .setup-grid{
+
+        grid-template-columns:
+            320px
+            minmax(0,1fr);
+
+    }
+
+    .summary-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:900px){
+
     .sidebar{
+
         width:72px;
-        padding:20px 9px;
+
+        padding:
+            20px 9px;
+
     }
 
     .logo{
+
         justify-content:center;
-        padding:0 0 25px;
+
+        padding:
+            0 0 25px;
+
     }
 
-    .logo-text,
-    .section-label,
-    .nav a span:not(.nav-icon),
+    .logo strong,
+    .menu-title,
+    .nav-item span,
     .assistant-card{
+
         display:none;
+
     }
 
-    .nav a{
+    .nav-item{
+
         justify-content:center;
-        padding:12px;
+
+        padding:
+            12px 5px;
+
     }
 
     .main{
+
         margin-left:72px;
+
     }
 
-    .input-area{
+    .setup-grid{
+
         grid-template-columns:1fr;
+
     }
 
 }
 
-@media(max-width:800px){
-
-    .stats{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .bottom-grid{
-        grid-template-columns:1fr;
-    }
-
-}
-
-@media(max-width:700px){
-
-    .sidebar{
-        display:none;
-    }
-
-    .main{
-        margin-left:0;
-    }
+@media(max-width:650px){
 
     .topbar{
-        padding:0 17px;
+
+        padding:
+            0 16px;
+
+    }
+
+    .content{
+
+        padding:
+            18px 14px 35px;
+
     }
 
     .hero{
-        margin:18px 15px;
-        padding:25px;
+
+        padding:
+            27px 24px;
+
+        border-radius:20px;
+
     }
 
     .hero h1{
-        font-size:22px;
+
+        font-size:24px;
+
     }
 
-    .input-area,
-    .stats,
-    .schedule-card,
-    .bottom-grid{
-        margin-left:15px;
-        margin-right:15px;
+    .two-fields{
+
+        grid-template-columns:1fr;
+
     }
 
-    .subject-row{
-        grid-template-columns:1fr 1fr 1fr 35px;
+    .preference-grid{
+
+        grid-template-columns:1fr;
+
     }
 
-    .stats{
-        grid-template-columns:1fr 1fr;
+    .summary-grid{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+    .detail-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .planner-header{
+
+        align-items:flex-start;
+
+        flex-direction:column;
+
+    }
+
+    .header-actions{
+
+        justify-content:flex-start;
+
+    }
+
+    .toast{
+
+        left:15px;
+        right:15px;
+        bottom:15px;
+
+        max-width:none;
+
     }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
-<!-- SIDEBAR -->
+
+<!-- ==================================================
+     SIDEBAR
+================================================== -->
 
 <aside class="sidebar">
 
+
     <div class="logo">
 
-        <div class="logo-icon">✦</div>
-
-        <div class="logo-text">
-            AI <span>StudyLab</span>
-        </div>
-
-    </div>
-
-    <div class="section-label">
-        LEARNING TOOLS
-    </div>
-
-    <nav class="nav">
-
-        <a href="../task-01-resume-builder/index.html">
-            <span class="nav-icon">📄</span>
-            <span>Resume Builder</span>
-        </a>
-
-        <a href="../task-02-notes-generator/index.html">
-            <span class="nav-icon">📝</span>
-            <span>Notes Generator</span>
-        </a>
-
-        <a href="../task-03-ppt-generator/index.html">
-            <span class="nav-icon">📊</span>
-            <span>Presentation</span>
-        </a>
-
-        <a href="../task-04-mind-map/index.html">
-            <span class="nav-icon">🧠</span>
-            <span>Mind Map</span>
-        </a>
-
-        <a href="../task-06-ai-quiz/index.html">
-            <span class="nav-icon">🎯</span>
-            <span>AI Quiz</span>
-        </a>
-
-        <a href="../task-07-ai-chatbot/index.html">
-            <span class="nav-icon">🤖</span>
-            <span>Doubt Solver</span>
-        </a>
-
-        <a href="../task-08-flashcards/index.html">
-            <span class="nav-icon">🗂️</span>
-            <span>Flashcards</span>
-        </a>
-
-        <a class="active" href="#">
-            <span class="nav-icon">📅</span>
-            <span>Study Planner</span>
-        </a>
-
-    </nav>
-
-    <div class="assistant-card">
-
-        <div class="small-icon">
-            ✨
+        <div class="logo-icon">
+            ✦
         </div>
 
         <strong>
-            AI Learning Assistant
+            AI <span>StudyLab</span>
         </strong>
 
+    </div>
+
+
+    <div class="menu-title">
+        AI Learning
+    </div>
+
+
+    <a
+        class="nav-item"
+        href="../task-01-resume-builder/index.html"
+    >
+
+        <div class="nav-icon">
+            📄
+        </div>
+
+        <span>
+            Resume Builder
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-02-notes-generator/index.html"
+    >
+
+        <div class="nav-icon">
+            📝
+        </div>
+
+        <span>
+            Notes Generator
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-03-ppt-generator/index.html"
+    >
+
+        <div class="nav-icon">
+            📊
+        </div>
+
+        <span>
+            Presentation
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-04-mind-map/index.html"
+    >
+
+        <div class="nav-icon">
+            🧠
+        </div>
+
+        <span>
+            Mind Map
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-05-google-sheets/index.html"
+    >
+
+        <div class="nav-icon">
+            📋
+        </div>
+
+        <span>
+            Google Sheets
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-06-ai-quiz/index.html"
+    >
+
+        <div class="nav-icon">
+            ❓
+        </div>
+
+        <span>
+            AI Quiz
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-07-ai-chatbot/index.html"
+    >
+
+        <div class="nav-icon">
+            💬
+        </div>
+
+        <span>
+            Doubt Solver
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item"
+        href="../task-08-flashcards/index.html"
+    >
+
+        <div class="nav-icon">
+            🎴
+        </div>
+
+        <span>
+            Flashcards
+        </span>
+
+    </a>
+
+
+    <a
+        class="nav-item active"
+        href="#"
+    >
+
+        <div class="nav-icon">
+            📅
+        </div>
+
+        <span>
+            Study Planner
+        </span>
+
+    </a>
+
+
+    <div class="assistant-card">
+
+        <div class="assistant-top">
+
+            <div class="assistant-avatar">
+                🤖
+            </div>
+
+            <strong>
+                AI Study Planner
+            </strong>
+
+        </div>
+
         <p>
-            Build a balanced study schedule
-            around your subjects and exams.
+            Build a realistic weekly
+            study schedule with AI and
+            stay consistent with your goals.
         </p>
 
     </div>
+
 
 </aside>
 
 
+<!-- ==================================================
+     MAIN
+================================================== -->
+
 <main class="main">
 
-    <!-- TOPBAR -->
 
-    <header class="topbar">
+<header class="topbar">
 
-        <div class="breadcrumb">
-            Learning Tools &nbsp;/&nbsp;
-            <strong>Study Planner</strong>
+
+    <div class="breadcrumb">
+
+        AI StudyLab
+        &nbsp;/&nbsp;
+
+        <strong>
+            Study Planner
+        </strong>
+
+    </div>
+
+
+    <div class="status">
+
+        <div class="status-dot"></div>
+
+        Gemini AI Connected
+
+    </div>
+
+
+</header>
+
+
+<section class="content">
+
+
+<!-- ==================================================
+     HERO
+================================================== -->
+
+<div class="hero">
+
+
+    <div class="hero-badge">
+        ✨ AI-Powered Planning
+    </div>
+
+
+    <h1>
+        Build Your Personalized AI Study Plan
+    </h1>
+
+
+    <p>
+        Tell Gemini what you need to study,
+        when your exams are, and how much time
+        you have. AI will organize your subjects
+        into a practical weekly timetable.
+    </p>
+
+
+</div>
+
+
+<!-- ==================================================
+     SETUP
+================================================== -->
+
+<div class="setup-grid">
+
+
+<!-- LEFT SETUP -->
+
+<div class="card setup-card">
+
+
+    <div class="card-heading">
+
+
+        <div>
+
+            <h2>
+                Study Preferences
+            </h2>
+
+            <p>
+                Give AI the information it needs
+                to create your timetable.
+            </p>
+
         </div>
 
-        <div class="ready">
-            <span class="ready-dot"></span>
-            AI Studio Ready
+
+        <div class="ai-label">
+            AI PLANNER
         </div>
 
-    </header>
+
+    </div>
 
 
-    <!-- HERO -->
+    <div class="field">
 
-    <section class="hero">
 
-        <div class="badge">
-            📅 AI STUDY PLANNER
+        <label>
+            Subjects & Priorities
+        </label>
+
+
+        <textarea
+            id="subjects"
+            placeholder="Example:
+Java - High
+DBMS - High
+Computer Networks - Medium
+Operating Systems - Medium
+AI - Low"
+        ></textarea>
+
+
+    </div>
+
+
+    <div class="two-fields">
+
+
+        <div class="field">
+
+            <label>
+                Exam Date
+            </label>
+
+            <input
+                type="date"
+                id="examDate"
+            >
+
         </div>
 
-        <h1>
-            Build a Smarter Study Schedule
-        </h1>
+
+        <div class="field">
+
+            <label>
+                Study Hours / Day
+            </label>
+
+            <select id="studyHours">
+
+                <option value="2">
+                    2 hours
+                </option>
+
+                <option value="3">
+                    3 hours
+                </option>
+
+                <option value="4" selected>
+                    4 hours
+                </option>
+
+                <option value="5">
+                    5 hours
+                </option>
+
+                <option value="6">
+                    6 hours
+                </option>
+
+                <option value="7">
+                    7 hours
+                </option>
+
+                <option value="8">
+                    8 hours
+                </option>
+
+            </select>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="two-fields">
+
+
+        <div class="field">
+
+            <label>
+                Preferred Study Time
+            </label>
+
+
+            <select id="studyTime">
+
+                <option value="Morning">
+                    Morning
+                </option>
+
+                <option value="Afternoon">
+                    Afternoon
+                </option>
+
+                <option value="Evening" selected>
+                    Evening
+                </option>
+
+                <option value="Night">
+                    Night
+                </option>
+
+                <option value="Flexible">
+                    Flexible
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Break Duration
+            </label>
+
+
+            <select id="breakDuration">
+
+                <option value="5">
+                    5 min
+                </option>
+
+                <option value="10" selected>
+                    10 min
+                </option>
+
+                <option value="15">
+                    15 min
+                </option>
+
+                <option value="20">
+                    20 min
+                </option>
+
+            </select>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="field">
+
+
+        <label>
+            Available Days
+        </label>
+
+
+        <select id="availableDays">
+
+            <option value="Monday-Friday">
+                Monday – Friday
+            </option>
+
+            <option value="Monday-Saturday" selected>
+                Monday – Saturday
+            </option>
+
+            <option value="Monday-Sunday">
+                Monday – Sunday
+            </option>
+
+            <option value="Weekends">
+                Weekends Only
+            </option>
+
+        </select>
+
+
+    </div>
+
+
+    <button
+        class="generate-btn"
+        id="generateBtn"
+        onclick="generatePlanner()"
+    >
+        ✨ Generate AI Study Plan
+    </button>
+
+
+    <div class="small-actions">
+
+
+        <button
+            class="small-btn"
+            type="button"
+            onclick="loadSample()"
+        >
+            Load Sample
+        </button>
+
+
+        <button
+            class="small-btn"
+            type="button"
+            onclick="clearAll()"
+        >
+            Clear
+        </button>
+
+
+    </div>
+
+
+    <div class="sample-box">
+
+
+        <div class="sample-title">
+            💡 Quick Tip
+        </div>
+
 
         <p>
-            Tell AI what you need to study, how much time you have,
-            and when your exams are. Get a structured weekly timetable
-            designed for focused and balanced revision.
+            Give realistic study hours. AI will
+            distribute high-priority subjects
+            more frequently and include revision
+            sessions.
         </p>
 
-    </section>
+
+    </div>
 
 
-    <!-- INPUT AREA -->
-
-    <section class="input-area">
-
-        <!-- SUBJECTS -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Your Subjects
-            </div>
-
-            <div class="card-subtitle">
-                Add your subjects and the number of hours
-                you want to study each week.
-            </div>
-
-            <div
-                class="subjects"
-                id="subjects"
-            >
-
-                <div class="subject-row">
-
-                    <input
-                        class="subject-name"
-                        value="Information Security"
-                        placeholder="Subject"
-                    >
-
-                    <input
-                        class="subject-hours"
-                        type="number"
-                        min="1"
-                        value="6"
-                        placeholder="Hours"
-                    >
-
-                    <input
-                        class="subject-exam"
-                        type="date"
-                        value="2026-10-15"
-                    >
-
-                    <button
-                        class="remove-btn"
-                        onclick="removeSubject(this)"
-                    >
-                        ×
-                    </button>
-
-                </div>
+</div>
 
 
-                <div class="subject-row">
+<!-- PREFERENCES -->
 
-                    <input
-                        class="subject-name"
-                        value="Data Structures"
-                        placeholder="Subject"
-                    >
-
-                    <input
-                        class="subject-hours"
-                        type="number"
-                        min="1"
-                        value="7"
-                        placeholder="Hours"
-                    >
-
-                    <input
-                        class="subject-exam"
-                        type="date"
-                        value="2026-10-20"
-                    >
-
-                    <button
-                        class="remove-btn"
-                        onclick="removeSubject(this)"
-                    >
-                        ×
-                    </button>
-
-                </div>
+<div class="card preferences">
 
 
-                <div class="subject-row">
+    <div class="card-heading">
 
-                    <input
-                        class="subject-name"
-                        value="Database Management"
-                        placeholder="Subject"
-                    >
+        <div>
 
-                    <input
-                        class="subject-hours"
-                        type="number"
-                        min="1"
-                        value="5"
-                    >
+            <h2>
+                Your Planner Will Include
+            </h2>
 
-                    <input
-                        class="subject-exam"
-                        type="date"
-                        value="2026-10-25"
-                    >
-
-                    <button
-                        class="remove-btn"
-                        onclick="removeSubject(this)"
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <button
-                class="add-btn"
-                onclick="addSubject()"
-            >
-                + Add Another Subject
-            </button>
+            <p>
+                Gemini uses your preferences to
+                organize a balanced weekly schedule.
+            </p>
 
         </div>
 
-
-        <!-- SETTINGS -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Study Preferences
-            </div>
-
-            <div class="card-subtitle">
-                Tell AI how you prefer to organize
-                your study time.
-            </div>
-
-            <div class="settings-grid">
-
-                <div class="field">
-
-                    <label>
-                        DAILY STUDY HOURS
-                    </label>
-
-                    <input
-                        id="dailyHours"
-                        type="number"
-                        min="1"
-                        max="12"
-                        value="4"
-                    >
-
-                </div>
+    </div>
 
 
-                <div class="field">
-
-                    <label>
-                        STUDY DAYS
-                    </label>
-
-                    <select id="studyDays">
-
-                        <option value="5">
-                            5 Days
-                        </option>
-
-                        <option value="6" selected>
-                            6 Days
-                        </option>
-
-                        <option value="7">
-                            7 Days
-                        </option>
-
-                    </select>
-
-                </div>
+    <div class="preference-grid">
 
 
-                <div class="field">
+        <div class="preference">
 
-                    <label>
-                        PREFERRED SESSION
-                    </label>
-
-                    <select id="session">
-
-                        <option>
-                            Morning
-                        </option>
-
-                        <option selected>
-                            Morning + Evening
-                        </option>
-
-                        <option>
-                            Evening
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="field">
-
-                    <label>
-                        BREAK TIME
-                    </label>
-
-                    <select id="breakTime">
-
-                        <option>
-                            10 minutes
-                        </option>
-
-                        <option selected>
-                            15 minutes
-                        </option>
-
-                        <option>
-                            20 minutes
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <button
-                class="generate-btn"
-                onclick="generatePlanner()"
-            >
-                ✨ Generate AI Timetable
-            </button>
-
-
-            <div class="secondary-row">
-
-                <button
-                    class="secondary-btn"
-                    onclick="loadSample()"
-                >
-                    📚 Load Sample
-                </button>
-
-                <button
-                    class="secondary-btn"
-                    onclick="regenerate()"
-                >
-                    🔄 Regenerate
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- STATS -->
-
-    <section class="stats">
-
-        <div class="stat">
-
-            <div class="stat-icon">
+            <div class="preference-icon">
                 📚
             </div>
 
-            <strong id="totalSubjects">
-                3
+            <strong>
+                Subject Distribution
             </strong>
 
             <span>
-                Total Subjects
+                Important subjects receive
+                appropriate study frequency.
             </span>
 
         </div>
 
 
-        <div class="stat">
+        <div class="preference">
 
-            <div class="stat-icon">
-                ⏰
-            </div>
-
-            <strong id="totalHours">
-                18h
-            </strong>
-
-            <span>
-                Weekly Study Hours
-            </span>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                📅
-            </div>
-
-            <strong id="studyDaysStat">
-                6
-            </strong>
-
-            <span>
-                Study Days
-            </span>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-icon">
+            <div class="preference-icon">
                 🎯
             </div>
 
             <strong>
-                AI
+                Priority Based
             </strong>
 
             <span>
-                Personalized Planning
+                High-priority topics receive
+                more attention.
             </span>
 
         </div>
 
-    </section>
 
+        <div class="preference">
 
-    <!-- TIMETABLE -->
-
-    <section class="schedule-card">
-
-        <div class="schedule-header">
-
-            <div>
-                <h2>
-                    Weekly Study Timetable
-                </h2>
-
-                <span>
-                    AI-generated schedule based on your preferences
-                </span>
+            <div class="preference-icon">
+                ⏱️
             </div>
 
+            <strong>
+                Time Blocks
+            </strong>
+
+            <span>
+                Study sessions are divided into
+                manageable blocks.
+            </span>
+
         </div>
+
+
+        <div class="preference">
+
+            <div class="preference-icon">
+                🔄
+            </div>
+
+            <strong>
+                Revision
+            </strong>
+
+            <span>
+                Revision and practice sessions
+                are included.
+            </span>
+
+        </div>
+
+
+        <div class="preference">
+
+            <div class="preference-icon">
+                ☕
+            </div>
+
+            <strong>
+                Breaks
+            </strong>
+
+            <span>
+                Short breaks are considered
+                between study sessions.
+            </span>
+
+        </div>
+
+
+        <div class="preference">
+
+            <div class="preference-icon">
+                📝
+            </div>
+
+            <strong>
+                Exam Preparation
+            </strong>
+
+            <span>
+                The plan considers your
+                upcoming exam date.
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ==================================================
+     PLANNER OUTPUT
+================================================== -->
+
+<div class="card planner-card">
+
+
+    <div class="planner-header">
+
+
+        <h2>
+            Weekly Study Timetable
+        </h2>
 
 
         <div
-            id="scheduleContent"
+            class="header-actions"
+            id="headerActions"
+            style="display:none;"
         >
 
-            <div class="table-wrap">
 
-                <table class="timetable">
+            <button
+                class="action-btn"
+                onclick="copyPlanner()"
+            >
+                📋 Copy
+            </button>
 
-                    <thead>
 
-                        <tr>
+            <button
+                class="action-btn"
+                onclick="downloadJSON()"
+            >
+                ↓ JSON
+            </button>
 
-                            <th>
-                                TIME
-                            </th>
 
-                            <th>
-                                MON
-                            </th>
+            <button
+                class="action-btn"
+                onclick="downloadTXT()"
+            >
+                ↓ TXT
+            </button>
 
-                            <th>
-                                TUE
-                            </th>
 
-                            <th>
-                                WED
-                            </th>
+            <button
+                class="action-btn"
+                onclick="printPlanner()"
+            >
+                🖨 Print / PDF
+            </button>
 
-                            <th>
-                                THU
-                            </th>
 
-                            <th>
-                                FRI
-                            </th>
+            <button
+                class="action-btn primary"
+                onclick="generatePlanner()"
+            >
+                ↻ Regenerate
+            </button>
 
-                            <th>
-                                SAT
-                            </th>
-
-                            <th>
-                                SUN
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="timetableBody">
-
-                    </tbody>
-
-                </table>
-
-            </div>
 
         </div>
 
-    </section>
+
+    </div>
 
 
-    <!-- BOTTOM -->
+    <!-- EMPTY -->
 
-    <section class="bottom-grid">
+    <div
+        class="empty-state"
+        id="emptyState"
+    >
 
-        <div class="info-box">
+        <div>
+
+            <div class="empty-icon">
+                📅
+            </div>
+
 
             <h3>
-                🧠 AI Study Strategy
+                Your AI Timetable Will Appear Here
             </h3>
 
+
             <p>
-                Your timetable balances difficult subjects,
-                revision and breaks so that you can study
-                consistently without unnecessary overload.
+                Enter your subjects and study
+                preferences on the left. Gemini
+                will create a personalized weekly
+                timetable with study sessions,
+                revision and breaks.
             </p>
 
-            <div class="tip-list">
+        </div>
 
-                <div class="tip-item">
-                    <span>✓</span>
-                    Start difficult subjects when your concentration is highest.
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        class="result"
+        id="result"
+    >
+
+
+        <!-- SUMMARY -->
+
+        <div
+            class="summary-grid"
+            id="summaryGrid"
+        >
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    📚
                 </div>
 
-                <div class="tip-item">
-                    <span>✓</span>
-                    Use short revision sessions before exams.
-                </div>
+                <span>
+                    Subjects
+                </span>
 
-                <div class="tip-item">
-                    <span>✓</span>
-                    Keep one flexible session for unfinished work.
-                </div>
+                <strong id="summarySubjects">
+                    0
+                </strong>
 
             </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ⏱️
+                </div>
+
+                <span>
+                    Study Hours
+                </span>
+
+                <strong id="summaryHours">
+                    0h
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    📅
+                </div>
+
+                <span>
+                    Study Days
+                </span>
+
+                <strong id="summaryDays">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    🎯
+                </div>
+
+                <span>
+                    Exam Countdown
+                </span>
+
+                <strong id="summaryCountdown">
+                    —
+                </strong>
+
+            </div>
+
 
         </div>
 
 
-        <div class="info-box">
+        <!-- EXAM -->
 
-            <h3>
-                💡 Smart Study Tips
-            </h3>
+        <div
+            class="exam-banner"
+            id="examBanner"
+        >
 
-            <p>
-                A timetable works best when it is realistic
-                and followed consistently.
-            </p>
 
-            <div class="tip-list">
+            <div class="exam-icon">
+                🎯
+            </div>
 
-                <div class="tip-item">
-                    <span>✓</span>
-                    Follow active recall for theory subjects.
-                </div>
 
-                <div class="tip-item">
-                    <span>✓</span>
-                    Practice problems instead of only reading notes.
-                </div>
+            <div>
 
-                <div class="tip-item">
-                    <span>✓</span>
-                    Review difficult topics at the end of each week.
-                </div>
+                <strong id="examTitle">
+                    Exam Preparation
+                </strong>
+
+                <p id="examDescription">
+                    Your exam is approaching.
+                </p>
 
             </div>
 
+
         </div>
 
-    </section>
+
+        <!-- TABLE -->
+
+        <div class="table-wrapper">
+
+
+            <table class="schedule-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Day
+                        </th>
+
+                        <th>
+                            Session 1
+                        </th>
+
+                        <th>
+                            Session 2
+                        </th>
+
+                        <th>
+                            Session 3
+                        </th>
+
+                        <th>
+                            Session 4
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="scheduleBody">
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+        <!-- LEGEND -->
+
+        <div
+            class="legend"
+            id="legend"
+        ></div>
+
+
+        <!-- DAILY DETAILS -->
+
+        <div
+            class="detail-grid"
+            id="detailGrid"
+        ></div>
+
+
+    </div>
+
+
+</div>
+
+
+</section>
+
 
 </main>
 
 
-<!-- TOAST -->
+<!-- ==================================================
+     LOADING
+================================================== -->
+
+<div
+    class="loading"
+    id="loading"
+>
+
+
+    <div class="loading-card">
+
+
+        <div class="spinner"></div>
+
+
+        <strong>
+            AI is building your study plan...
+        </strong>
+
+
+        <p>
+            Gemini is balancing subjects,
+            priorities, revision and study time.
+        </p>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ==================================================
+     TOAST
+================================================== -->
 
 <div
     class="toast"
@@ -1433,198 +2993,100 @@ body{
 ></div>
 
 
-<!-- LOADING -->
-
-<div
-    class="loading-overlay"
-    id="loadingOverlay"
->
-
-    <div class="loading-box">
-
-        <div class="spinner"></div>
-
-        <strong>
-            Building your timetable...
-        </strong>
-
-        <span>
-            AI is balancing subjects, study hours and exams
-        </span>
-
-    </div>
-
-</div>
-
-
 <script>
 
-/* COLORS */
+/* ==================================================
+   GEMINI BACKEND
+================================================== */
 
-const colors = [
-    "purple",
-    "green",
-    "blue",
-    "orange",
-    "pink",
-    "teal"
-];
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
 
 
-/* ADD SUBJECT */
+/* ==================================================
+   STATE
+================================================== */
 
-function addSubject(){
+let plannerData = null;
 
-    const container =
-        document.getElementById("subjects");
+let generating = false;
 
-    const row =
-        document.createElement("div");
-
-    row.className = "subject-row";
-
-    row.innerHTML = `
-
-        <input
-            class="subject-name"
-            placeholder="Subject"
-        >
-
-        <input
-            class="subject-hours"
-            type="number"
-            min="1"
-            value="4"
-            placeholder="Hours"
-        >
-
-        <input
-            class="subject-exam"
-            type="date"
-        >
-
-        <button
-            class="remove-btn"
-            onclick="removeSubject(this)"
-        >
-            ×
-        </button>
-
-    `;
-
-    container.appendChild(row);
-
-    updateStats();
-
-}
+let toastTimer = null;
 
 
-/* REMOVE SUBJECT */
+/* ==================================================
+   GENERATE PLANNER
+================================================== */
 
-function removeSubject(button){
+async function generatePlanner(){
 
-    const rows =
-        document.querySelectorAll(".subject-row");
-
-    if(rows.length <= 1){
-
-        showToast(
-            "Keep at least one subject."
-        );
+    if(generating){
 
         return;
 
     }
 
-    button.parentElement.remove();
 
-    updateStats();
-
-}
-
-
-/* GET SUBJECTS */
-
-function getSubjects(){
-
-    const rows =
-        document.querySelectorAll(".subject-row");
-
-    const subjects = [];
-
-    rows.forEach(function(row){
-
-        const name =
-            row.querySelector(".subject-name")
+    const subjects =
+        document
+            .getElementById("subjects")
             .value
             .trim();
 
-        const hours =
-            Number(
-                row.querySelector(".subject-hours")
-                .value
-            ) || 0;
 
-        const exam =
-            row.querySelector(".subject-exam")
+    const examDate =
+        document
+            .getElementById("examDate")
             .value;
 
-        if(name){
 
-            subjects.push({
-                name:name,
-                hours:hours,
-                exam:exam
-            });
-
-        }
-
-    });
-
-    return subjects;
-
-}
-
-
-/* UPDATE STATS */
-
-function updateStats(){
-
-    const subjects =
-        getSubjects();
-
-    const totalHours =
-        subjects.reduce(
-            function(total,item){
-                return total + item.hours;
-            },
-            0
+    const studyHours =
+        Number(
+            document
+                .getElementById("studyHours")
+                .value
         );
 
-    document.getElementById("totalSubjects")
-        .textContent = subjects.length;
 
-    document.getElementById("totalHours")
-        .textContent = totalHours + "h";
-
-    document.getElementById("studyDaysStat")
-        .textContent =
-        document.getElementById("studyDays").value;
-
-}
+    const studyTime =
+        document
+            .getElementById("studyTime")
+            .value;
 
 
-/* GENERATE */
+    const breakDuration =
+        Number(
+            document
+                .getElementById("breakDuration")
+                .value
+        );
 
-function generatePlanner(){
 
-    const subjects =
-        getSubjects();
+    const availableDays =
+        document
+            .getElementById("availableDays")
+            .value;
 
-    if(!subjects.length){
+
+    if(!subjects){
 
         showToast(
-            "Add at least one subject."
+            "Please enter your subjects and priorities."
+        );
+
+        document
+            .getElementById("subjects")
+            .focus();
+
+        return;
+
+    }
+
+
+    if(subjects.length < 10){
+
+        showToast(
+            "Please enter at least one or two subjects with useful details."
         );
 
         return;
@@ -1632,475 +3094,2130 @@ function generatePlanner(){
     }
 
 
-    const dailyHours =
-        Number(
-            document.getElementById("dailyHours")
-            .value
-        );
-
-    const studyDays =
-        document.getElementById("studyDays")
-        .value;
-
-    const session =
-        document.getElementById("session")
-        .value;
-
-    const breakTime =
-        document.getElementById("breakTime")
-        .value;
-
-
     const prompt = `
+You are an expert academic study planner.
 
-You are an AI Study Planner.
+Create a realistic weekly study timetable based ONLY on the student's supplied information.
 
-Create a realistic weekly study timetable.
+STUDENT SUBJECTS AND PRIORITIES:
+${subjects}
 
-Subjects:
-${JSON.stringify(subjects,null,2)}
+EXAM DATE:
+${examDate || "Not provided"}
 
-Student preferences:
+AVAILABLE STUDY HOURS PER DAY:
+${studyHours}
 
-Daily study hours:
-${dailyHours}
+PREFERRED STUDY TIME:
+${studyTime}
 
-Study days:
-${studyDays}
+BREAK DURATION:
+${breakDuration} minutes
 
-Preferred session:
-${session}
+AVAILABLE DAYS:
+${availableDays}
 
-Break time:
-${breakTime}
+IMPORTANT REQUIREMENTS:
 
-Requirements:
+1. Create a practical weekly timetable.
+2. Respect the student's available study hours.
+3. Do not overload a day.
+4. Give higher priority subjects more study attention.
+5. Include revision sessions where appropriate.
+6. Include practice/problem-solving sessions where useful.
+7. Include reasonable breaks.
+8. Use clear time ranges such as "6:00 PM - 7:00 PM".
+9. Do not invent subjects that were not provided.
+10. If an exam date is provided, make the plan exam-oriented.
+11. Keep the schedule realistic for a college student.
+12. Do not schedule study sessions outside the preferred time unless the preference is Flexible.
+13. Use only the available days.
+14. Return ONLY valid JSON.
+15. Do not use Markdown code fences.
+16. Do not add any explanation before or after the JSON.
 
-- Generate a weekly timetable.
-- Balance all subjects.
-- Give more attention to subjects with earlier exam dates.
-- Respect the available daily study hours.
-- Include revision sessions.
-- Include short breaks.
-- Avoid overloading a single day.
-- Keep at least one flexible/revision period.
-- Return structured JSON.
-- Include day, time, subject and activity.
+Return EXACTLY this structure:
 
-Example format:
-
-[
+{
+  "title": "Personalized AI Study Plan",
+  "overview": "Short description of the strategy",
+  "totalStudyHours": 24,
+  "studyDays": 6,
+  "subjects": [
     {
-        "day":"Monday",
-        "time":"7:00 AM - 8:00 AM",
-        "subject":"Data Structures",
-        "activity":"Practice problems"
+      "name": "Java",
+      "priority": "High",
+      "hours": 6
     }
-]
+  ],
+  "days": [
+    {
+      "day": "Monday",
+      "date": "",
+      "totalHours": 4,
+      "sessions": [
+        {
+          "start": "6:00 PM",
+          "end": "7:00 PM",
+          "subject": "Java",
+          "type": "Concept Study",
+          "duration": 60
+        },
+        {
+          "start": "7:00 PM",
+          "end": "7:10 PM",
+          "subject": "Break",
+          "type": "Break",
+          "duration": 10
+        }
+      ]
+    }
+  ]
+}
 
+RULES FOR THE JSON:
+
+- "subjects" must contain the subjects supplied by the student.
+- "days" must contain only the requested available study days.
+- Each day should contain a practical number of sessions.
+- Study session duration must be positive.
+- Break duration should approximately match the requested break duration.
+- "totalHours" should represent study hours, excluding breaks.
+- "totalStudyHours" should be the approximate sum of study hours across all scheduled days.
+- "studyDays" should equal the number of scheduled days.
+- "type" should be one of:
+  "Concept Study",
+  "Practice",
+  "Revision",
+  "Mock Test",
+  "Problem Solving",
+  "Break"
+- Break sessions must use subject "Break".
+- Do not add a fake exam date.
 `;
 
-    console.log(
-        "AI Study Planner Prompt:",
-        prompt
-    );
+
+    generating = true;
 
 
-    showLoading();
+    showLoading(true);
 
 
-    setTimeout(function(){
-
-        createDemoSchedule(subjects);
-
-        updateStats();
-
-        hideLoading();
-
-        showToast(
-            "AI timetable generated!"
+    const generateButton =
+        document.getElementById(
+            "generateBtn"
         );
 
-    },1000);
+
+    generateButton.disabled =
+        true;
+
+
+    generateButton.textContent =
+        "⏳ Building Study Plan...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                GEMINI_API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        prompt:prompt
+                    })
+                }
+            );
+
+
+        let data;
+
+
+        try{
+
+            data =
+                await response.json();
+
+        }
+        catch(error){
+
+            throw new Error(
+                "Invalid response received from the Gemini backend."
+            );
+
+        }
+
+
+        if(!response.ok){
+
+            if(response.status === 429){
+
+                throw new Error(
+                    "Gemini quota or rate limit reached. Please wait and try again later."
+                );
+
+            }
+
+
+            if(response.status === 503){
+
+                throw new Error(
+                    "Gemini service is temporarily unavailable. Please try again."
+                );
+
+            }
+
+
+            throw new Error(
+                data.error ||
+                `Gemini request failed (${response.status}).`
+            );
+
+        }
+
+
+        if(!data.success){
+
+            throw new Error(
+                data.error ||
+                "Gemini could not create the study plan."
+            );
+
+        }
+
+
+        const rawText =
+            String(
+                data.text || ""
+            ).trim();
+
+
+        if(!rawText){
+
+            throw new Error(
+                "Gemini returned an empty response."
+            );
+
+        }
+
+
+        const parsed =
+            parsePlannerJSON(
+                rawText
+            );
+
+
+        validatePlanner(
+            parsed
+        );
+
+
+        plannerData =
+            parsed;
+
+
+        renderPlanner();
+
+
+        showToast(
+            "AI study plan generated successfully."
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Study Planner Error:",
+            error
+        );
+
+
+        let message =
+            error.message ||
+            "Unable to generate the study plan.";
+
+
+        if(
+            error.name === "TypeError" &&
+            message.toLowerCase()
+                .includes("fetch")
+        ){
+
+            message =
+                "Gemini backend is not reachable. Please run node server.js in the backend folder.";
+
+        }
+
+
+        showToast(
+            message
+        );
+
+    }
+    finally{
+
+        generating = false;
+
+        showLoading(false);
+
+
+        generateButton.disabled =
+            false;
+
+
+        generateButton.textContent =
+            "✨ Generate AI Study Plan";
+
+    }
 
 }
 
 
-/* DEMO SCHEDULE */
+/* ==================================================
+   PARSE JSON
+================================================== */
 
-function createDemoSchedule(subjects){
+function parsePlannerJSON(
+    text
+){
 
-    const days = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-    ];
+    let cleaned =
+        String(
+            text || ""
+        ).trim();
 
-    const times = [
-        "7:00 - 8:00",
-        "8:15 - 9:15",
-        "6:00 - 7:00",
-        "7:15 - 8:15"
-    ];
 
+    /*
+       Remove markdown fences.
+    */
+
+    cleaned =
+        cleaned.replace(
+            /^```json\s*/i,
+            ""
+        );
+
+
+    cleaned =
+        cleaned.replace(
+            /^```\s*/i,
+            ""
+        );
+
+
+    cleaned =
+        cleaned.replace(
+            /\s*```$/i,
+            ""
+        );
+
+
+    cleaned =
+        cleaned.trim();
+
+
+    /*
+       Find JSON object.
+    */
+
+    const firstBrace =
+        cleaned.indexOf("{");
+
+
+    const lastBrace =
+        cleaned.lastIndexOf("}");
+
+
+    if(
+        firstBrace !== -1 &&
+        lastBrace !== -1 &&
+        lastBrace > firstBrace
+    ){
+
+        cleaned =
+            cleaned.substring(
+                firstBrace,
+                lastBrace + 1
+            );
+
+    }
+
+
+    try{
+
+        return JSON.parse(
+            cleaned
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Invalid Gemini JSON:",
+            cleaned
+        );
+
+
+        throw new Error(
+            "Gemini returned an invalid timetable format. Please regenerate."
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   VALIDATE PLANNER
+================================================== */
+
+function validatePlanner(
+    data
+){
+
+    if(
+        !data ||
+        typeof data !== "object"
+    ){
+
+        throw new Error(
+            "Study plan data is invalid."
+        );
+
+    }
+
+
+    if(
+        !Array.isArray(
+            data.subjects
+        ) ||
+        data.subjects.length === 0
+    ){
+
+        throw new Error(
+            "Gemini did not return valid subjects."
+        );
+
+    }
+
+
+    if(
+        !Array.isArray(
+            data.days
+        ) ||
+        data.days.length === 0
+    ){
+
+        throw new Error(
+            "Gemini did not return any study days."
+        );
+
+    }
+
+
+    data.subjects.forEach(
+        function(subject,index){
+
+            if(
+                !subject ||
+                typeof subject.name !==
+                    "string" ||
+                !subject.name.trim()
+            ){
+
+                throw new Error(
+                    `Invalid subject at position ${index + 1}.`
+                );
+
+            }
+
+
+            if(
+                typeof subject.priority !==
+                    "string"
+            ){
+
+                subject.priority =
+                    "Medium";
+
+            }
+
+
+            if(
+                typeof subject.hours !==
+                    "number"
+            ){
+
+                subject.hours =
+                    Number(subject.hours) || 0;
+
+            }
+
+        }
+    );
+
+
+    data.days.forEach(
+        function(day,index){
+
+            if(
+                !day ||
+                typeof day.day !==
+                    "string"
+            ){
+
+                throw new Error(
+                    `Invalid day at position ${index + 1}.`
+                );
+
+            }
+
+
+            if(
+                !Array.isArray(
+                    day.sessions
+                )
+            ){
+
+                throw new Error(
+                    `No sessions found for ${day.day}.`
+                );
+
+            }
+
+
+            day.sessions.forEach(
+                function(session){
+
+                    if(
+                        !session ||
+                        typeof session.start !==
+                            "string" ||
+                        typeof session.end !==
+                            "string" ||
+                        typeof session.subject !==
+                            "string"
+                    ){
+
+                        throw new Error(
+                            `Invalid session found on ${day.day}.`
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* ==================================================
+   RENDER PLANNER
+================================================== */
+
+function renderPlanner(){
+
+    document
+        .getElementById(
+            "emptyState"
+        )
+        .style.display =
+            "none";
+
+
+    document
+        .getElementById(
+            "result"
+        )
+        .classList.add(
+            "show"
+        );
+
+
+    document
+        .getElementById(
+            "headerActions"
+        )
+        .style.display =
+            "flex";
+
+
+    renderSummary();
+
+    renderExamBanner();
+
+    renderSchedule();
+
+    renderLegend();
+
+    renderDailyDetails();
+
+}
+
+
+/* ==================================================
+   SUMMARY
+================================================== */
+
+function renderSummary(){
+
+    const subjectCount =
+        plannerData.subjects.length;
+
+
+    const totalHours =
+        calculateTotalStudyHours();
+
+
+    const studyDays =
+        plannerData.days.length;
+
+
+    document
+        .getElementById(
+            "summarySubjects"
+        )
+        .textContent =
+            subjectCount;
+
+
+    document
+        .getElementById(
+            "summaryHours"
+        )
+        .textContent =
+            formatHours(
+                totalHours
+            );
+
+
+    document
+        .getElementById(
+            "summaryDays"
+        )
+        .textContent =
+            studyDays;
+
+
+    const examDate =
+        document
+            .getElementById(
+                "examDate"
+            )
+            .value;
+
+
+    document
+        .getElementById(
+            "summaryCountdown"
+        )
+        .textContent =
+            getCountdownText(
+                examDate
+            );
+
+}
+
+
+/* ==================================================
+   TOTAL STUDY HOURS
+================================================== */
+
+function calculateTotalStudyHours(){
+
+    let totalMinutes = 0;
+
+
+    plannerData.days.forEach(
+        function(day){
+
+            day.sessions.forEach(
+                function(session){
+
+                    if(
+                        normalizeType(
+                            session.type
+                        ) !== "break"
+                    ){
+
+                        const duration =
+                            Number(
+                                session.duration
+                            );
+
+
+                        if(
+                            Number.isFinite(
+                                duration
+                            ) &&
+                            duration > 0
+                        ){
+
+                            totalMinutes +=
+                                duration;
+
+                        }
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    /*
+       Fallback to Gemini's total if
+       session durations are unavailable.
+    */
+
+    if(
+        totalMinutes === 0 &&
+        Number(
+            plannerData.totalStudyHours
+        ) > 0
+    ){
+
+        return Number(
+            plannerData.totalStudyHours
+        );
+
+    }
+
+
+    return totalMinutes / 60;
+
+}
+
+
+/* ==================================================
+   FORMAT HOURS
+================================================== */
+
+function formatHours(
+    hours
+){
+
+    const rounded =
+        Math.round(
+            hours * 10
+        ) / 10;
+
+
+    return `${rounded}h`;
+
+}
+
+
+/* ==================================================
+   EXAM COUNTDOWN
+================================================== */
+
+function getCountdownText(
+    dateValue
+){
+
+    if(!dateValue){
+
+        return "—";
+
+    }
+
+
+    const exam =
+        new Date(
+            dateValue +
+            "T00:00:00"
+        );
+
+
+    if(
+        Number.isNaN(
+            exam.getTime()
+        )
+    ){
+
+        return "—";
+
+    }
+
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,0,0,0
+    );
+
+
+    const difference =
+        exam.getTime() -
+        today.getTime();
+
+
+    const days =
+        Math.ceil(
+            difference /
+            (1000 * 60 * 60 * 24)
+        );
+
+
+    if(days < 0){
+
+        return "Passed";
+
+    }
+
+
+    if(days === 0){
+
+        return "Today";
+
+    }
+
+
+    return `${days}d`;
+
+}
+
+
+/* ==================================================
+   EXAM BANNER
+================================================== */
+
+function renderExamBanner(){
+
+    const banner =
+        document.getElementById(
+            "examBanner"
+        );
+
+
+    const examDate =
+        document
+            .getElementById(
+                "examDate"
+            )
+            .value;
+
+
+    if(!examDate){
+
+        banner.classList.remove(
+            "show"
+        );
+
+        return;
+
+    }
+
+
+    const exam =
+        new Date(
+            examDate +
+            "T00:00:00"
+        );
+
+
+    if(
+        Number.isNaN(
+            exam.getTime()
+        )
+    ){
+
+        banner.classList.remove(
+            "show"
+        );
+
+        return;
+
+    }
+
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,0,0,0
+    );
+
+
+    const days =
+        Math.ceil(
+            (
+                exam.getTime() -
+                today.getTime()
+            ) /
+            (1000 * 60 * 60 * 24)
+        );
+
+
+    const formatted =
+        exam.toLocaleDateString(
+            "en-IN",
+            {
+                day:"numeric",
+                month:"long",
+                year:"numeric"
+            }
+        );
+
+
+    document
+        .getElementById(
+            "examTitle"
+        )
+        .textContent =
+            `Exam Date: ${formatted}`;
+
+
+    let description;
+
+
+    if(days < 0){
+
+        description =
+            "The entered exam date has already passed.";
+
+    }
+    else if(days === 0){
+
+        description =
+            "Your exam is today. Focus on light revision and confidence.";
+
+    }
+    else{
+
+        description =
+            `${days} day${days === 1 ? "" : "s"} remaining. Your timetable is organized around this target.`;
+
+    }
+
+
+    document
+        .getElementById(
+            "examDescription"
+        )
+        .textContent =
+            description;
+
+
+    banner.classList.add(
+        "show"
+    );
+
+}
+
+
+/* ==================================================
+   NORMALIZE TYPE
+================================================== */
+
+function normalizeType(
+    type
+){
+
+    return String(
+        type || ""
+    )
+    .trim()
+    .toLowerCase();
+
+}
+
+
+/* ==================================================
+   SESSION COLOR
+================================================== */
+
+function getSessionClass(
+    session
+){
+
+    const type =
+        normalizeType(
+            session.type
+        );
+
+
+    if(type === "break"){
+
+        return "";
+
+    }
+
+
+    const text =
+        (
+            session.subject +
+            " " +
+            session.type
+        ).toLowerCase();
+
+
+    if(
+        text.includes("revision") ||
+        text.includes("review")
+    ){
+
+        return "green";
+
+    }
+
+
+    if(
+        text.includes("practice") ||
+        text.includes("problem") ||
+        text.includes("mock")
+    ){
+
+        return "orange";
+
+    }
+
+
+    if(
+        text.includes("test")
+    ){
+
+        return "red";
+
+    }
+
+
+    if(
+        text.includes("concept") ||
+        text.includes("study")
+    ){
+
+        return "blue";
+
+    }
+
+
+    return "";
+
+}
+
+
+/* ==================================================
+   SESSION HTML
+================================================== */
+
+function createSessionHTML(
+    session
+){
+
+    const type =
+        normalizeType(
+            session.type
+        );
+
+
+    if(
+        type === "break" ||
+        String(
+            session.subject
+        ).toLowerCase()
+        === "break"
+    ){
+
+        return `
+            <div class="break-cell">
+                ☕ ${escapeHTML(
+                    session.start
+                )}<br>
+                Break
+            </div>
+        `;
+
+    }
+
+
+    const color =
+        getSessionClass(
+            session
+        );
+
+
+    return `
+        <div class="session ${color}">
+            <div class="session-title">
+                ${escapeHTML(
+                    session.subject
+                )}
+            </div>
+
+            <div class="session-time">
+                ${escapeHTML(
+                    session.start
+                )}
+                -
+                ${escapeHTML(
+                    session.end
+                )}
+            </div>
+
+            <div class="session-type">
+                ${escapeHTML(
+                    session.type ||
+                    "Study"
+                )}
+            </div>
+        </div>
+    `;
+
+}
+
+
+/* ==================================================
+   RENDER SCHEDULE
+================================================== */
+
+function renderSchedule(){
 
     const body =
-        document.getElementById("timetableBody");
+        document.getElementById(
+            "scheduleBody"
+        );
+
 
     body.innerHTML = "";
 
 
-    for(let rowIndex = 0; rowIndex < 4; rowIndex++){
+    plannerData.days.forEach(
+        function(day){
 
-        const tr =
-            document.createElement("tr");
-
-
-        const time =
-            document.createElement("td");
-
-        time.className = "time-cell";
-
-        time.textContent =
-            times[rowIndex];
-
-        tr.appendChild(time);
+            const row =
+                document.createElement(
+                    "tr"
+                );
 
 
-        days.forEach(function(day,dayIndex){
+            const dayCell =
+                document.createElement(
+                    "td"
+                );
 
-            const td =
-                document.createElement("td");
+
+            dayCell.className =
+                "day-cell";
+
+
+            dayCell.innerHTML = `
+                ${escapeHTML(day.day)}
+
+                ${
+                    day.date
+                    ?
+                    `<span class="day-date">
+                        ${escapeHTML(
+                            day.date
+                        )}
+                    </span>`
+                    :
+                    ""
+                }
+            `;
+
+
+            row.appendChild(
+                dayCell
+            );
+
+
+            const sessions =
+                Array.isArray(
+                    day.sessions
+                )
+                ?
+                day.sessions
+                :
+                [];
 
 
             /*
-             * Sunday contains lighter revision
-             * and planning sessions.
-             */
+               Keep the weekly grid clean:
+               show up to four sessions.
+            */
 
-            if(dayIndex === 6){
+            const visibleSessions =
+                sessions.slice(
+                    0,
+                    4
+                );
 
-                if(rowIndex === 0){
 
-                    td.innerHTML = `
-                        <div class="session green">
+            while(
+                visibleSessions.length < 4
+            ){
 
-                            <strong>Weekly Revision</strong>
+                visibleSessions.push(
+                    null
+                );
 
-                            <span>
-                                Review important concepts
-                            </span>
+            }
 
-                        </div>
-                    `;
 
-                }else if(rowIndex === 1){
+            visibleSessions.forEach(
+                function(session){
 
-                    td.innerHTML = `
-                        <div class="session teal">
+                    const cell =
+                        document.createElement(
+                            "td"
+                        );
 
-                            <strong>Mock Test</strong>
 
-                            <span>
-                                Practice & self-assessment
-                            </span>
+                    if(session){
 
-                        </div>
-                    `;
+                        cell.innerHTML =
+                            createSessionHTML(
+                                session
+                            );
 
-                }else{
+                    }
+                    else{
 
-                    td.innerHTML = `
-                        <div class="session">
+                        cell.innerHTML = `
+                            <div class="break-cell">
+                                —
+                            </div>
+                        `;
 
-                            <strong>Free / Rest</strong>
+                    }
 
-                            <span>
-                                Flexible study time
-                            </span>
 
-                        </div>
-                    `;
+                    row.appendChild(
+                        cell
+                    );
 
                 }
-
-                tr.appendChild(td);
-
-                return;
-
-            }
+            );
 
 
-            const subject =
-                subjects[
-                    (dayIndex + rowIndex)
-                    % subjects.length
-                ];
+            body.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
 
 
-            const color =
-                colors[
-                    (dayIndex + rowIndex)
-                    % colors.length
-                ];
+/* ==================================================
+   LEGEND
+================================================== */
+
+function renderLegend(){
+
+    const legend =
+        document.getElementById(
+            "legend"
+        );
 
 
-            let activity =
-                "Concept Study";
+    legend.innerHTML = `
+        <div class="legend-item">
+            <span class="legend-dot"></span>
+            Concept / General Study
+        </div>
+
+        <div class="legend-item">
+            <span class="legend-dot green"></span>
+            Revision
+        </div>
+
+        <div class="legend-item">
+            <span class="legend-dot orange"></span>
+            Practice
+        </div>
+
+        <div class="legend-item">
+            <span class="legend-dot blue"></span>
+            Study
+        </div>
+
+        <div class="legend-item">
+            <span class="legend-dot red"></span>
+            Test
+        </div>
+    `;
+
+}
 
 
-            if(rowIndex === 1){
-                activity = "Practice";
-            }
+/* ==================================================
+   DAILY DETAILS
+================================================== */
 
-            if(rowIndex === 2){
-                activity = "Revision";
-            }
+function renderDailyDetails(){
 
-            if(rowIndex === 3){
-                activity = "Questions & Notes";
-            }
+    const container =
+        document.getElementById(
+            "detailGrid"
+        );
 
 
-            td.innerHTML = `
+    container.innerHTML = "";
 
-                <div class="session ${color}">
+
+    plannerData.days.forEach(
+        function(day){
+
+            const studySessions =
+                day.sessions.filter(
+                    function(session){
+
+                        return normalizeType(
+                            session.type
+                        ) !== "break";
+
+                    }
+                );
+
+
+            let totalMinutes = 0;
+
+
+            studySessions.forEach(
+                function(session){
+
+                    const duration =
+                        Number(
+                            session.duration
+                        );
+
+
+                    if(
+                        Number.isFinite(
+                            duration
+                        )
+                    ){
+
+                        totalMinutes +=
+                            duration;
+
+                    }
+
+                }
+            );
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "day-detail";
+
+
+            const taskHTML =
+                studySessions
+                    .map(
+                        function(session){
+
+                            return `
+                                <div class="task-item">
+
+                                    <div class="task-dot"></div>
+
+                                    <div>
+
+                                        <strong>
+                                            ${escapeHTML(
+                                                session.subject
+                                            )}
+                                        </strong>
+
+                                        <span>
+                                            ${escapeHTML(
+                                                session.start
+                                            )}
+                                            -
+                                            ${escapeHTML(
+                                                session.end
+                                            )}
+                                            ·
+                                            ${escapeHTML(
+                                                session.type ||
+                                                "Study"
+                                            )}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+
+            card.innerHTML = `
+
+                <div class="day-detail-header">
 
                     <strong>
-                        ${escapeHTML(subject.name)}
+                        ${escapeHTML(
+                            day.day
+                        )}
                     </strong>
 
-                    <span>
-                        ${activity}
-                    </span>
+                    <div class="day-total">
+                        ${formatMinutes(
+                            totalMinutes
+                        )}
+                    </div>
+
+                </div>
+
+
+                <div class="task-list">
+
+                    ${
+                        taskHTML ||
+                        `
+                            <div class="task-item">
+                                <div class="task-dot"></div>
+                                <div>
+                                    <strong>
+                                        No study session
+                                    </strong>
+                                    <span>
+                                        Rest / free day
+                                    </span>
+                                </div>
+                            </div>
+                        `
+                    }
 
                 </div>
 
             `;
 
 
-            tr.appendChild(td);
+            container.appendChild(
+                card
+            );
 
-        });
+        }
+    );
+
+}
 
 
-        body.appendChild(tr);
+/* ==================================================
+   FORMAT MINUTES
+================================================== */
+
+function formatMinutes(
+    minutes
+){
+
+    const rounded =
+        Math.round(
+            Number(minutes) || 0
+        );
+
+
+    if(rounded < 60){
+
+        return `${rounded}m`;
 
     }
 
-}
+
+    const hours =
+        Math.floor(
+            rounded / 60
+        );
 
 
-/* SAMPLE */
-
-function loadSample(){
-
-    const container =
-        document.getElementById("subjects");
-
-    container.innerHTML = `
-
-        <div class="subject-row">
-
-            <input
-                class="subject-name"
-                value="Information Security"
-            >
-
-            <input
-                class="subject-hours"
-                type="number"
-                value="6"
-            >
-
-            <input
-                class="subject-exam"
-                type="date"
-                value="2026-10-15"
-            >
-
-            <button
-                class="remove-btn"
-                onclick="removeSubject(this)"
-            >
-                ×
-            </button>
-
-        </div>
+    const mins =
+        rounded % 60;
 
 
-        <div class="subject-row">
+    if(!mins){
 
-            <input
-                class="subject-name"
-                value="Data Structures"
-            >
+        return `${hours}h`;
 
-            <input
-                class="subject-hours"
-                type="number"
-                value="7"
-            >
-
-            <input
-                class="subject-exam"
-                type="date"
-                value="2026-10-20"
-            >
-
-            <button
-                class="remove-btn"
-                onclick="removeSubject(this)"
-            >
-                ×
-            </button>
-
-        </div>
+    }
 
 
-        <div class="subject-row">
-
-            <input
-                class="subject-name"
-                value="Database Management"
-            >
-
-            <input
-                class="subject-hours"
-                type="number"
-                value="5"
-            >
-
-            <input
-                class="subject-exam"
-                type="date"
-                value="2026-10-25"
-            >
-
-            <button
-                class="remove-btn"
-                onclick="removeSubject(this)"
-            >
-                ×
-            </button>
-
-        </div>
-
-    `;
-
-
-    document.getElementById("dailyHours")
-        .value = 4;
-
-    document.getElementById("studyDays")
-        .value = 6;
-
-    updateStats();
-
-    createDemoSchedule(
-        getSubjects()
-    );
-
-    showToast(
-        "Sample timetable loaded!"
-    );
+    return `${hours}h ${mins}m`;
 
 }
 
 
-/* REGENERATE */
+/* ==================================================
+   COPY PLANNER
+================================================== */
 
-function regenerate(){
+async function copyPlanner(){
 
-    if(!getSubjects().length){
+    if(!plannerData){
 
         showToast(
-            "Add subjects first."
+            "Generate a study plan first."
         );
 
         return;
 
     }
 
-    generatePlanner();
+
+    const text =
+        plannerToText();
+
+
+    try{
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+
+        showToast(
+            "Study timetable copied to clipboard."
+        );
+
+    }
+    catch(error){
+
+        showToast(
+            "Could not copy the timetable."
+        );
+
+    }
 
 }
 
 
-/* ESCAPE HTML */
+/* ==================================================
+   PLANNER TO TEXT
+================================================== */
 
-function escapeHTML(value){
+function plannerToText(){
 
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    if(!plannerData){
 
-}
+        return "";
 
-
-/* LOADING */
-
-function showLoading(){
-
-    document.getElementById("loadingOverlay")
-        .style.display = "flex";
-
-}
+    }
 
 
-function hideLoading(){
-
-    document.getElementById("loadingOverlay")
-        .style.display = "none";
-
-}
+    let output = "";
 
 
-/* TOAST */
+    output +=
+        `${plannerData.title || "AI Study Plan"}\n`;
 
-function showToast(message){
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    setTimeout(function(){
-
-        toast.classList.remove("show");
-
-    },2200);
-
-}
+    output +=
+        `${plannerData.overview || ""}\n\n`;
 
 
-/* UPDATE WHEN STUDY DAYS CHANGES */
+    output +=
+        "SUBJECT PRIORITIES\n";
 
-document.getElementById("studyDays")
-    .addEventListener(
-        "change",
-        updateStats
+    output +=
+        "------------------\n";
+
+
+    plannerData.subjects.forEach(
+        function(subject){
+
+            output +=
+                `${subject.name} | ${subject.priority} | ${subject.hours || 0}h\n`;
+
+        }
     );
 
 
-/* INITIAL DATA */
+    output +=
+        "\nWEEKLY TIMETABLE\n";
 
-updateStats();
+    output +=
+        "-----------------\n";
 
-createDemoSchedule(
-    getSubjects()
-);
+
+    plannerData.days.forEach(
+        function(day){
+
+            output +=
+                `\n${day.day}${day.date ? " - " + day.date : ""}\n`;
+
+
+            day.sessions.forEach(
+                function(session){
+
+                    output +=
+                        `  ${session.start} - ${session.end} | ${session.subject} | ${session.type} | ${session.duration || 0} min\n`;
+
+                }
+            );
+
+        }
+    );
+
+
+    return output;
+
+}
+
+
+/* ==================================================
+   DOWNLOAD TXT
+================================================== */
+
+function downloadTXT(){
+
+    if(!plannerData){
+
+        showToast(
+            "Generate a study plan first."
+        );
+
+        return;
+
+    }
+
+
+    const blob =
+        new Blob(
+            [
+                plannerToText()
+            ],
+            {
+                type:
+                    "text/plain;charset=utf-8"
+            }
+        );
+
+
+    downloadBlob(
+        blob,
+        "ai-study-plan.txt"
+    );
+
+
+    showToast(
+        "Study plan downloaded as TXT."
+    );
+
+}
+
+
+/* ==================================================
+   DOWNLOAD JSON
+================================================== */
+
+function downloadJSON(){
+
+    if(!plannerData){
+
+        showToast(
+            "Generate a study plan first."
+        );
+
+        return;
+
+    }
+
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    plannerData,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:
+                    "application/json"
+            }
+        );
+
+
+    downloadBlob(
+        blob,
+        "ai-study-plan.json"
+    );
+
+
+    showToast(
+        "Study plan downloaded as JSON."
+    );
+
+}
+
+
+/* ==================================================
+   DOWNLOAD HELPER
+================================================== */
+
+function downloadBlob(
+    blob,
+    filename
+){
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        url;
+
+
+    link.download =
+        filename;
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+    setTimeout(
+        function(){
+
+            URL.revokeObjectURL(
+                url
+            );
+
+        },
+        1000
+    );
+
+}
+
+
+/* ==================================================
+   PRINT
+================================================== */
+
+function printPlanner(){
+
+    if(!plannerData){
+
+        showToast(
+            "Generate a study plan first."
+        );
+
+        return;
+
+    }
+
+
+    window.print();
+
+}
+
+
+/* ==================================================
+   SAMPLE
+================================================== */
+
+function loadSample(){
+
+    document
+        .getElementById(
+            "subjects"
+        )
+        .value =
+`Java - High
+DBMS - High
+Computer Networks - Medium
+Operating Systems - Medium
+Artificial Intelligence - Low`;
+
+
+    document
+        .getElementById(
+            "studyHours"
+        )
+        .value =
+            "4";
+
+
+    document
+        .getElementById(
+            "studyTime"
+        )
+        .value =
+            "Evening";
+
+
+    document
+        .getElementById(
+            "breakDuration"
+        )
+        .value =
+            "10";
+
+
+    document
+        .getElementById(
+            "availableDays"
+        )
+        .value =
+            "Monday-Saturday";
+
+
+    /*
+       Set an exam date approximately
+       three weeks from today.
+    */
+
+    const date =
+        new Date();
+
+
+    date.setDate(
+        date.getDate() + 21
+    );
+
+
+    document
+        .getElementById(
+            "examDate"
+        )
+        .value =
+            formatDateInput(
+                date
+            );
+
+
+    showToast(
+        "Sample study preferences loaded."
+    );
+
+}
+
+
+/* ==================================================
+   DATE INPUT FORMAT
+================================================== */
+
+function formatDateInput(
+    date
+){
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+/* ==================================================
+   CLEAR
+================================================== */
+
+function clearAll(){
+
+    if(generating){
+
+        showToast(
+            "Please wait for generation to finish."
+        );
+
+        return;
+
+    }
+
+
+    plannerData = null;
+
+
+    document
+        .getElementById(
+            "subjects"
+        )
+        .value =
+            "";
+
+
+    document
+        .getElementById(
+            "examDate"
+        )
+        .value =
+            "";
+
+
+    document
+        .getElementById(
+            "studyHours"
+        )
+        .value =
+            "4";
+
+
+    document
+        .getElementById(
+            "studyTime"
+        )
+        .value =
+            "Evening";
+
+
+    document
+        .getElementById(
+            "breakDuration"
+        )
+        .value =
+            "10";
+
+
+    document
+        .getElementById(
+            "availableDays"
+        )
+        .value =
+            "Monday-Saturday";
+
+
+    document
+        .getElementById(
+            "result"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    document
+        .getElementById(
+            "headerActions"
+        )
+        .style.display =
+            "none";
+
+
+    document
+        .getElementById(
+            "emptyState"
+        )
+        .style.display =
+            "flex";
+
+
+    document
+        .getElementById(
+            "examBanner"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    document
+        .getElementById(
+            "scheduleBody"
+        )
+        .innerHTML =
+            "";
+
+
+    document
+        .getElementById(
+            "detailGrid"
+        )
+        .innerHTML =
+            "";
+
+
+    document
+        .getElementById(
+            "legend"
+        )
+        .innerHTML =
+            "";
+
+
+    showToast(
+        "Study planner cleared."
+    );
+
+}
+
+
+/* ==================================================
+   LOADING
+================================================== */
+
+function showLoading(
+    show
+){
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+
+    if(show){
+
+        loading.classList.add(
+            "show"
+        );
+
+    }
+    else{
+
+        loading.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   TOAST
+================================================== */
+
+function showToast(
+    message
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4500
+        );
+
+}
+
+
+/* ==================================================
+   ESCAPE HTML
+================================================== */
+
+function escapeHTML(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* ==================================================
+   INITIAL SAMPLE OPTIONAL
+================================================== */
+
+/*
+   Uncomment the next line if you want
+   the page to start with sample data.
+
+   loadSample();
+*/
 
 </script>
 
 </body>
+
 </html>

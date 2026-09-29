@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AI Notes Generator</title>
+<title>AI Study Assistant | AI StudyLab</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -17,525 +20,1420 @@
 }
 
 body {
-    font-family: Inter, sans-serif;
+    font-family: "Inter", sans-serif;
+    background: #f7f7fb;
+    color: #202033;
+}
+
+button,
+textarea,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+.app {
     min-height: 100vh;
-    background:
-        radial-gradient(circle at top left, #e7dcff, transparent 35%),
-        radial-gradient(circle at bottom right, #d9f8ed, transparent 35%),
-        #f7f8fc;
-    color: #222;
-}
-
-header {
-    background: rgba(255,255,255,.9);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid #e8e8ef;
-}
-
-.nav {
-    max-width: 1300px;
-    margin: auto;
-    padding: 18px 30px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    background: #fff;
+    border-right: 1px solid #e9e7f2;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    padding: 28px 16px;
+    z-index: 10;
 }
 
 .logo {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-weight: 800;
-    color: #5d39d4;
+    padding: 0 12px 28px;
 }
 
 .logo-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: linear-gradient(135deg,#6237db,#9b68ff);
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #7250ff, #8d67ff);
     color: white;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    box-shadow: 0 8px 20px rgba(103,70,220,.25);
 }
 
-.badge {
-    background: #f0ebff;
-    color: #633bd0;
-    padding: 8px 14px;
-    border-radius: 30px;
+.logo-text {
+    font-size: 18px;
+    font-weight: 800;
+    color: #6844ef;
+}
+
+.section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #a09db2;
+    padding: 0 12px 10px;
+    letter-spacing: .5px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #5f5c70;
+    padding: 13px 12px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.nav a:hover {
+    background: #f6f2ff;
+    color: #6946e9;
+}
+
+.nav a.active {
+    background: #eee9ff;
+    color: #6541eb;
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: #f4f2fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.nav a.active .nav-icon {
+    background: white;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 72px;
+    background: rgba(255,255,255,.95);
+    border-bottom: 1px solid #e9e7f2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.breadcrumb {
+    color: #9996aa;
+    font-size: 13px;
+}
+
+.breadcrumb strong {
+    color: #29263b;
+}
+
+.status {
+    background: #e9fbf3;
+    color: #159b68;
+    padding: 10px 15px;
+    border-radius: 22px;
     font-size: 12px;
     font-weight: 700;
+}
+
+/* CONTENT */
+
+.content {
+    padding: 34px;
+    max-width: 1500px;
+    margin: auto;
 }
 
 .hero {
-    max-width: 1300px;
-    margin: auto;
-    padding: 45px 30px 25px;
+    background: linear-gradient(135deg, #6942e9, #8a63f5);
+    border-radius: 24px;
+    padding: 32px;
+    color: white;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    right: -70px;
+    top: -100px;
+}
+
+.hero-label {
+    display: inline-flex;
+    background: rgba(255,255,255,.15);
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 14px;
 }
 
 .hero h1 {
-    font-size: 40px;
-    letter-spacing: -1px;
-}
-
-.gradient {
-    background: linear-gradient(90deg,#6338dc,#a258ff);
-    -webkit-background-clip: text;
-    color: transparent;
+    font-size: 30px;
+    margin-bottom: 9px;
 }
 
 .hero p {
-    margin-top: 12px;
-    color: #70717c;
+    font-size: 14px;
+    line-height: 1.7;
+    opacity: .88;
+    max-width: 720px;
 }
 
-.main {
-    max-width: 1300px;
-    margin: auto;
-    padding: 20px 30px 60px;
+/* WORKSPACE */
+
+.workspace {
     display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: 25px;
+    grid-template-columns: minmax(350px, 1fr) minmax(400px, 1.2fr);
+    gap: 24px;
 }
 
 .card {
-    background: rgba(255,255,255,.92);
-    border: 1px solid #e7e7ee;
-    border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(30,20,70,.07);
+    background: white;
+    border: 1px solid #e8e5f0;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(45,36,75,.06);
+    overflow: hidden;
 }
 
-.input-card {
-    padding: 25px;
-    height: fit-content;
+.card-header {
+    padding: 22px 24px;
+    border-bottom: 1px solid #eeeaf4;
 }
 
-.title {
-    margin-bottom: 18px;
+.card-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 5px;
 }
 
-.title h2 {
-    font-size: 19px;
-}
-
-.title p {
-    margin-top: 5px;
-    color: #858691;
+.card-subtitle {
     font-size: 12px;
+    color: #9692a6;
+}
+
+.card-body {
+    padding: 24px;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #484459;
+    margin-bottom: 9px;
+}
+
+textarea,
+select {
+    width: 100%;
+    border: 1px solid #dedbe8;
+    border-radius: 14px;
+    background: #fbfaff;
+    outline: none;
+    color: #29263a;
+    font-size: 13px;
+    transition: .2s;
 }
 
 textarea {
-    width: 100%;
-    min-height: 350px;
+    min-height: 260px;
     resize: vertical;
-    border: 1px solid #dddde6;
-    border-radius: 13px;
-    padding: 15px;
-    outline: none;
-    font-family: inherit;
-    font-size: 13px;
-    line-height: 1.6;
-    background: #fafafd;
-}
-
-textarea:focus {
-    background: white;
-    border-color: #754be0;
-    box-shadow: 0 0 0 4px rgba(117,75,224,.08);
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-button {
-    border: none;
-    cursor: pointer;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-family: inherit;
-    font-weight: 700;
-}
-
-.generate {
-    flex: 1;
-    background: linear-gradient(135deg,#6238dc,#8957ed);
-    color: white;
-}
-
-.secondary {
-    background: #f0f0f5;
-    color: #555660;
-}
-
-.generate:hover {
-    transform: translateY(-1px);
-}
-
-.output-card {
-    padding: 25px;
-}
-
-.output-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-}
-
-.output {
-    min-height: 500px;
-    border: 1px solid #e7e7ed;
-    border-radius: 14px;
-    padding: 30px;
-    background: white;
+    padding: 16px;
     line-height: 1.7;
 }
 
-.output h2 {
-    color: #5936ca;
-    margin: 20px 0 8px;
+select {
+    padding: 13px 14px;
 }
 
-.output h2:first-child {
-    margin-top: 0;
+textarea:focus,
+select:focus {
+    border-color: #7650ed;
+    box-shadow: 0 0 0 3px rgba(118,80,237,.09);
+    background: white;
 }
 
-.output h3 {
+/* MODE CARDS */
+
+.mode-title {
+    margin-top: 18px;
+    margin-bottom: 10px;
+}
+
+.mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mode {
+    padding: 11px 10px;
+    border: 1px solid #e3dfed;
+    background: #fbfaff;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: #615d70;
+    transition: .2s;
+}
+
+.mode:hover {
+    border-color: #a991f4;
+    background: #f7f3ff;
+}
+
+.mode.active {
+    background: #eee8ff;
+    border-color: #7650ed;
+    color: #603ce4;
+}
+
+.mode-icon {
+    font-size: 15px;
+    margin-right: 5px;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
     margin-top: 16px;
 }
 
-.output ul {
-    padding-left: 25px;
+.btn {
+    padding: 13px 16px;
+    border-radius: 13px;
+    font-size: 12px;
+    font-weight: 700;
+    transition: .2s;
 }
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-light {
+    background: #f5f3fa;
+    color: #5c586d;
+}
+
+.btn-primary {
+    width: 100%;
+    margin-top: 10px;
+    background: linear-gradient(135deg,#6338e5,#7047ee);
+    color: white;
+    box-shadow: 0 10px 22px rgba(99,56,229,.22);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 14px 28px rgba(99,56,229,.30);
+}
+
+.tip {
+    margin-top: 18px;
+    background: linear-gradient(135deg,#faf6ff,#f2fffb);
+    border: 1px solid #e8e1ff;
+    border-radius: 15px;
+    padding: 14px;
+    font-size: 11px;
+    color: #7b778b;
+    line-height: 1.6;
+}
+
+.tip strong {
+    display: block;
+    color: #6541eb;
+    margin-bottom: 4px;
+}
+
+/* OUTPUT */
+
+.output-card {
+    min-height: 620px;
+}
+
+.output-header {
+    padding: 22px 24px;
+    border-bottom: 1px solid #eeeaf4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.output-actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.small-btn {
+    padding: 8px 11px;
+    border-radius: 10px;
+    background: #f5f3fa;
+    color: #625d72;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.small-btn:hover {
+    background: #eee9ff;
+    color: #6341e4;
+}
+
+.output-content {
+    padding: 30px;
+    min-height: 520px;
+    overflow-wrap: anywhere;
+}
+
+.empty-state {
+    min-height: 470px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #9a96a9;
+}
+
+.empty-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 19px;
+    background: #f0ebff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 27px;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    color: #5b576b;
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 12px;
+    max-width: 440px;
+    line-height: 1.7;
+}
+
+/* MARKDOWN */
+
+.markdown h1 {
+    font-size: 27px;
+    color: #2c2740;
+    margin-bottom: 20px;
+}
+
+.markdown h2 {
+    font-size: 19px;
+    color: #633fe4;
+    margin-top: 24px;
+    margin-bottom: 10px;
+}
+
+.markdown h3 {
+    font-size: 15px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+.markdown p {
+    color: #595568;
+    line-height: 1.75;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.markdown ul,
+.markdown ol {
+    padding-left: 22px;
+    margin-bottom: 15px;
+}
+
+.markdown li {
+    color: #595568;
+    font-size: 13px;
+    line-height: 1.75;
+    margin-bottom: 4px;
+}
+
+.markdown strong {
+    color: #332e46;
+}
+
+.markdown code {
+    background: #f1edff;
+    padding: 3px 6px;
+    border-radius: 5px;
+    color: #633fe4;
+}
+
+.markdown blockquote {
+    border-left: 4px solid #7650ed;
+    padding: 10px 15px;
+    background: #faf8ff;
+    margin: 15px 0;
+    color: #666174;
+}
+
+.markdown pre {
+    background: #252231;
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 15px 0;
+}
+
+/* LOADING */
 
 .loading {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,.78);
+    backdrop-filter: blur(5px);
     display: none;
-    margin-top: 12px;
-    color: #6840d5;
-    font-size: 13px;
-    font-weight: 600;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
 }
 
-@media(max-width:900px) {
-    .main {
+.loading-box {
+    background: white;
+    border: 1px solid #e7e2f2;
+    border-radius: 20px;
+    padding: 30px 38px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(40,30,80,.15);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #eee9ff;
+    border-top-color: #6843e9;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: auto auto 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-box h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.loading-box p {
+    font-size: 11px;
+    color: #9692a6;
+}
+
+/* TOAST */
+
+.toast {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    background: #252231;
+    color: white;
+    padding: 13px 17px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: none;
+    z-index: 200;
+    max-width: 430px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px) {
+    .workspace {
         grid-template-columns: 1fr;
     }
 }
 
-@media(max-width:600px) {
-    .main,
+@media(max-width:750px) {
+
+    .sidebar {
+        width: 72px;
+        padding: 20px 8px;
+    }
+
+    .logo {
+        justify-content: center;
+        padding: 0 0 25px;
+    }
+
+    .logo-text,
+    .section-title,
+    .nav a span {
+        display: none;
+    }
+
+    .nav a {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .main {
+        margin-left: 72px;
+        width: calc(100% - 72px);
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+
+    .content {
+        padding: 18px;
+    }
+
     .hero {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding: 24px;
     }
 
     .hero h1 {
-        font-size: 30px;
+        font-size: 24px;
+    }
+}
+
+@media(max-width:520px) {
+
+    .status {
+        display: none;
+    }
+
+    .controls,
+    .mode-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-body,
+    .output-content {
+        padding: 18px;
+    }
+}
+
+/* PRINT */
+
+@media print {
+
+    .sidebar,
+    .topbar,
+    .hero,
+    .input-card,
+    .output-actions,
+    .output-header {
+        display: none !important;
+    }
+
+    .main {
+        margin: 0;
+        width: 100%;
+    }
+
+    .content {
+        padding: 0;
+    }
+
+    .output-card {
+        border: none;
+        box-shadow: none;
+    }
+
+    .output-content {
+        padding: 0;
     }
 }
 </style>
-
 </head>
 
 <body>
 
-<header>
-    <div class="nav">
+<div class="app">
 
-```
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
     <div class="logo">
         <div class="logo-icon">✦</div>
-        AI Notes Generator
+        <div class="logo-text">AI StudyLab</div>
     </div>
 
-    <div class="badge">
-        AI STUDY TOOL
-    </div>
+    <div class="section-title">AI CLASSROOM</div>
 
-</div>
-```
+    <nav class="nav">
 
-</header>
+        <a href="../task-01-resume-builder/index.html">
+            <div class="nav-icon">📄</div>
+            <span>Resume Builder</span>
+        </a>
 
-<section class="hero">
+        <a href="#" class="active">
+            <div class="nav-icon">📝</div>
+            <span>AI Study Assistant</span>
+        </a>
 
-```
-<h1>
-    Turn long text into
-    <span class="gradient">smart notes.</span>
-</h1>
+        <a href="../task-03-ppt-generator/index.html">
+            <div class="nav-icon">📊</div>
+            <span>Presentation</span>
+        </a>
 
-<p>
-    Paste your textbook content, topic or chapter summary and
-    generate clean revision notes instantly.
-</p>
-```
+        <a href="../task-04-mind-map/index.html">
+            <div class="nav-icon">🧠</div>
+            <span>Mind Map</span>
+        </a>
 
-</section>
+        <a href="../task-06-ai-quiz/index.html">
+            <div class="nav-icon">❓</div>
+            <span>AI Quiz</span>
+        </a>
+
+        <a href="../task-07-ai-chatbot/index.html">
+            <div class="nav-icon">💬</div>
+            <span>Doubt Solver</span>
+        </a>
+
+        <a href="../task-08-flashcards/index.html">
+            <div class="nav-icon">📚</div>
+            <span>Flashcards</span>
+        </a>
+
+        <a href="../task-09-study-planner/index.html">
+            <div class="nav-icon">🗓️</div>
+            <span>Study Planner</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
 
 <main class="main">
 
-```
-<section class="card input-card">
+<header class="topbar">
 
-    <div class="title">
+    <div class="breadcrumb">
+        AI Classroom / <strong>AI Study Assistant</strong>
+    </div>
 
-        <h2>Enter Study Material</h2>
+    <div class="status">
+        ● Gemini AI Connected
+    </div>
 
-        <p>
-            Paste your textbook paragraph or topic below.
-        </p>
+</header>
+
+
+<section class="content">
+
+<!-- HERO -->
+
+<div class="hero">
+
+    <div class="hero-label">
+        ✨ Real Gemini AI
+    </div>
+
+    <h1>AI Study Assistant</h1>
+
+    <p>
+        Ask Gemini anything about your studies. Get explanations,
+        answers, exam-ready notes and summaries from one simple workspace.
+    </p>
+
+</div>
+
+
+<div class="workspace">
+
+<!-- INPUT CARD -->
+
+<div class="card input-card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+            💡 Ask Gemini
+        </div>
+
+        <div class="card-subtitle">
+            Enter a topic, question, chapter or study material.
+        </div>
 
     </div>
 
-    <textarea
-        id="inputText"
-        placeholder="Example:
-```
 
-Information security is the practice of protecting information
-from unauthorized access, use, disclosure, disruption,
-modification or destruction..."></textarea>
+    <div class="card-body">
 
-```
-    <div class="actions">
+        <label for="topic">
+            Your Question / Topic
+        </label>
+
+        <textarea
+            id="topic"
+            placeholder="Examples:
+
+• Explain RSA encryption in simple words.
+• What is the CIA Triad?
+• Give me exam notes on DBMS.
+• Explain inheritance in Java with an example.
+• Summarize this chapter..."
+        ></textarea>
+
+
+        <label class="mode-title">
+            What should Gemini do?
+        </label>
+
+
+        <div class="mode-grid">
+
+            <button
+                class="mode active"
+                data-mode="notes"
+                onclick="selectMode(this)"
+            >
+                <span class="mode-icon">📝</span>
+                Generate Notes
+            </button>
+
+            <button
+                class="mode"
+                data-mode="explain"
+                onclick="selectMode(this)"
+            >
+                <span class="mode-icon">💡</span>
+                Explain Topic
+            </button>
+
+            <button
+                class="mode"
+                data-mode="question"
+                onclick="selectMode(this)"
+            >
+                <span class="mode-icon">❓</span>
+                Answer Question
+            </button>
+
+            <button
+                class="mode"
+                data-mode="exam"
+                onclick="selectMode(this)"
+            >
+                <span class="mode-icon">🎯</span>
+                Exam Answer
+            </button>
+
+            <button
+                class="mode"
+                data-mode="summary"
+                onclick="selectMode(this)"
+            >
+                <span class="mode-icon">📌</span>
+                Summarize
+            </button>
+
+            <button
+                class="mode"
+                data-mode="simple"
+                onclick="selectMode(this)"
+            >
+                <span class="mode-icon">🌱</span>
+                Explain Simply
+            </button>
+
+        </div>
+
+
+        <div class="controls">
+
+            <button
+                class="btn btn-light"
+                onclick="loadSample()"
+            >
+                📋 Sample
+            </button>
+
+            <button
+                class="btn btn-light"
+                onclick="clearAssistant()"
+            >
+                🧹 Clear
+            </button>
+
+        </div>
+
 
         <button
-            class="secondary"
-            onclick="loadSample()">
-            Sample
+            class="btn btn-primary"
+            id="generateBtn"
+            onclick="askGeminiAssistant()"
+        >
+            ✨ Ask Gemini
         </button>
 
-        <button
-            class="secondary"
-            onclick="clearText()">
-            Clear
-        </button>
 
-        <button
-            class="generate"
-            onclick="generateNotes()">
-            ✨ Generate Notes
-        </button>
+        <div class="tip">
+
+            <strong>💡 AI Study Tip</strong>
+
+            You can ask Gemini a question, give it a complete
+            chapter, or simply type a topic. Select the response
+            style that matches what you need.
+
+        </div>
 
     </div>
 
-    <div
-        class="loading"
-        id="loading">
-        ✨ AI is creating your study notes...
-    </div>
-
-</section>
+</div>
 
 
-<section class="card output-card">
+<!-- OUTPUT CARD -->
 
-    <div class="output-top">
+<div class="card output-card">
 
-        <h2>Generated Notes</h2>
+    <div class="output-header">
 
         <div>
 
+            <div class="card-title">
+                🤖 Gemini Response
+            </div>
+
+            <div class="card-subtitle">
+                Your AI-generated answer will appear here.
+            </div>
+
+        </div>
+
+
+        <div class="output-actions">
+
             <button
-                class="secondary"
-                onclick="copyNotes()">
+                class="small-btn"
+                onclick="copyResponse()"
+            >
                 📋 Copy
             </button>
 
             <button
-                class="secondary"
-                onclick="downloadNotes()">
-                ↓ Download
+                class="small-btn"
+                onclick="downloadResponse()"
+            >
+                💾 Download
+            </button>
+
+            <button
+                class="small-btn"
+                onclick="printResponse()"
+            >
+                🖨️ PDF
             </button>
 
         </div>
 
     </div>
 
-    <div
-        class="output"
-        id="output">
 
-        <h2>Ready to study?</h2>
+    <div
+        class="output-content"
+        id="output"
+    >
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ✨
+            </div>
+
+            <h3>Ask Gemini Anything</h3>
+
+            <p>
+                Enter your question or study topic,
+                select a response style and click
+                <strong>Ask Gemini</strong>.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- LOADING -->
+
+<div
+    class="loading"
+    id="loading"
+>
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <h3>Gemini is thinking...</h3>
 
         <p>
-            Enter your study material and click
-            <b>Generate Notes</b>.
+            Preparing your study response
         </p>
 
     </div>
 
-</section>
-```
+</div>
 
-</main>
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
 
 <script>
 
+/* ==========================================
+   BACKEND
+========================================== */
+
+const GEMINI_API_URL =
+    "http://localhost:10000/api/gemini";
+
+
+/* ==========================================
+   CURRENT MODE
+========================================== */
+
+let currentMode = "notes";
+
+
+/* ==========================================
+   SELECT MODE
+========================================== */
+
+function selectMode(button) {
+
+    document
+        .querySelectorAll(".mode")
+        .forEach(item => {
+            item.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    currentMode =
+        button.dataset.mode;
+
+}
+
+
+/* ==========================================
+   SAMPLE
+========================================== */
+
 function loadSample() {
 
-    document.getElementById("inputText").value = `
+    document.getElementById("topic").value =
+`Explain the CIA Triad in Information Security.
 
-Information Security
+Cover:
+- Confidentiality
+- Integrity
+- Availability
+- Real-world examples`;
 
-Information security is the practice of protecting
-information and information systems from unauthorized
-access, use, disclosure, disruption, modification,
-or destruction.
+    currentMode = "explain";
 
-The main goals of information security are
-confidentiality, integrity and availability.
+    document
+        .querySelectorAll(".mode")
+        .forEach(item => {
+            item.classList.remove("active");
+        });
 
-Confidentiality ensures that information is accessible
-only to authorized users.
+    document
+        .querySelector('[data-mode="explain"]')
+        .classList.add("active");
 
-Integrity ensures that information remains accurate
-and is not modified without authorization.
+    showToast("Sample question loaded.");
 
-Availability ensures that authorized users can access
-information whenever required.
+}
 
+
+/* ==========================================
+   CLEAR
+========================================== */
+
+function clearAssistant() {
+
+    document.getElementById("topic").value = "";
+
+    document.getElementById("output").innerHTML = `
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ✨
+            </div>
+
+            <h3>Ask Gemini Anything</h3>
+
+            <p>
+                Enter your question or study topic,
+                select a response style and click
+                <strong>Ask Gemini</strong>.
+            </p>
+
+        </div>
+    `;
+
+    showToast("Cleared successfully.");
+
+}
+
+
+/* ==========================================
+   GEMINI API
+========================================== */
+
+async function askGemini(prompt) {
+
+    const response = await fetch(
+        GEMINI_API_URL,
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                prompt: prompt
+            })
+        }
+    );
+
+    const data =
+        await response.json();
+
+    if (!response.ok || !data.success) {
+
+        throw new Error(
+            data.error ||
+            "Gemini request failed."
+        );
+
+    }
+
+    return data.text;
+
+}
+
+
+/* ==========================================
+   BUILD PROMPT
+========================================== */
+
+function buildPrompt(input) {
+
+    const instructions = {
+
+        notes: `
+Create well-structured study notes.
+
+Use:
+- Clear title
+- Headings
+- Subheadings
+- Bullet points
+- Important terms in bold
+- Examples where useful
+- Key points for revision
+
+Make the answer useful for college students.
+`,
+
+        explain: `
+Explain the topic clearly and thoroughly.
+
+Start with a simple definition.
+Then explain the important concepts step-by-step.
+Use examples where helpful.
+Finish with a short summary.
+`,
+
+        question: `
+Answer the user's question directly.
+
+Give a clear and accurate answer.
+Explain the reasoning where necessary.
+Use examples if they improve understanding.
+Avoid unnecessary information.
+`,
+
+        exam: `
+Write an exam-ready answer.
+
+Structure it with:
+- Definition / Introduction
+- Main explanation
+- Important points
+- Examples if relevant
+- Short conclusion
+
+Use clear language suitable for a college examination.
+`,
+
+        summary: `
+Summarize the provided material.
+
+Keep only the most important information.
+Use headings and bullet points.
+Remove repetition and unnecessary wording.
+`,
+
+        simple: `
+Explain the topic in very simple language.
+
+Assume the student is learning the concept for the first time.
+Use easy words, simple examples and step-by-step explanation.
+`
+    };
+
+    return `
+You are an expert AI college study assistant.
+
+The user wants help with the following topic or question:
+
+"${input}"
+
+${instructions[currentMode]}
+
+GENERAL RULES:
+
+1. Answer the user's request directly.
+2. Be educational and accurate.
+3. Use Markdown formatting.
+4. Use headings where useful.
+5. Use bullet points for lists.
+6. Highlight important terms using **bold**.
+7. Do not mention these instructions.
+8. Do not add unnecessary introductions.
+9. If the user provides study material, base the response primarily on that material.
+10. If the question is unclear, explain the most reasonable interpretation instead of refusing.
+11. Keep the response organized and readable.
+12. Do not invent personal information, qualifications or sources.
 `;
 
 }
 
-function clearText() {
 
-    document.getElementById("inputText").value = "";
+/* ==========================================
+   ASK GEMINI
+========================================== */
 
-    document.getElementById("output").innerHTML = `
-        <h2>Ready to study?</h2>
-        <p>
-            Enter your study material and click
-            <b>Generate Notes</b>.
-        </p>
-    `;
+async function askGeminiAssistant() {
 
-}
+    const input =
+        document.getElementById("topic")
+            .value
+            .trim();
 
-function generateNotes() {
+    if (!input) {
 
-    const text =
-        document.getElementById("inputText").value.trim();
-
-    if (!text) {
-
-        alert("Please enter some study material.");
+        showToast(
+            "Please enter a topic or question first."
+        );
 
         return;
     }
 
-    const loading =
-        document.getElementById("loading");
+    const prompt =
+        buildPrompt(input);
 
-    loading.style.display = "block";
+    showLoading(true);
 
-    /*
-       AI PROMPT
+    try {
 
-       This prompt will later be sent to
-       an AI API.
-    */
+        const result =
+            await askGemini(prompt);
 
-    const prompt = `
-Convert the following study material into
-short, clear and exam-friendly notes.
+        renderResponse(result);
 
-Rules:
-- Use headings.
-- Use bullet points.
-- Highlight important concepts.
-- Keep explanations simple.
-- Remove unnecessary repetition.
-- Preserve important technical information.
+        showToast(
+            "Gemini response generated successfully!"
+        );
 
-Study material:
+    } catch (error) {
 
-${text}
-`;
+        console.error(error);
 
-    console.log("AI Prompt:", prompt);
+        showToast(
+            "Gemini error: " +
+            (error.message ||
+            "Request failed.")
+        );
+
+    } finally {
+
+        showLoading(false);
+
+    }
+
+}
 
 
-    setTimeout(() => {
+/* ==========================================
+   RENDER
+========================================== */
 
-        document.getElementById("output").innerHTML = `
+function renderResponse(markdown) {
 
-            <h2>📚 Study Notes</h2>
-
-            <h3>Definition</h3>
-
-            <p>
-                Information security is the practice of
-                protecting information and information
-                systems from unauthorized access, use,
-                disclosure, modification or destruction.
-            </p>
-
-            <h3>🔐 Main Goals</h3>
-
-            <ul>
-                <li>
-                    <b>Confidentiality:</b>
-                    Information should only be accessible
-                    to authorized users.
-                </li>
-
-                <li>
-                    <b>Integrity:</b>
-                    Information should remain accurate
-                    and protected from unauthorized changes.
-                </li>
-
-                <li>
-                    <b>Availability:</b>
-                    Authorized users should be able to
-                    access information when required.
-                </li>
-            </ul>
-
-            <h3>⭐ Key Point</h3>
-
-            <p>
-                The three fundamental principles of
-                information security are
-                <b>Confidentiality, Integrity and Availability (CIA)</b>.
-            </p>
-
+    document.getElementById("output")
+        .innerHTML = `
+            <div class="markdown">
+                ${marked.parse(markdown)}
+            </div>
         `;
 
-        loading.style.display = "none";
+}
 
-    }, 1200);
+
+/* ==========================================
+   COPY
+========================================== */
+
+async function copyResponse() {
+
+    const response =
+        document.querySelector(
+            "#output .markdown"
+        );
+
+    if (!response) {
+
+        showToast(
+            "Ask Gemini first."
+        );
+
+        return;
+    }
+
+    try {
+
+        await navigator.clipboard
+            .writeText(
+                response.innerText
+            );
+
+        showToast(
+            "Response copied."
+        );
+
+    } catch {
+
+        showToast(
+            "Could not copy response."
+        );
+
+    }
 
 }
 
 
-function copyNotes() {
+/* ==========================================
+   DOWNLOAD
+========================================== */
 
-    const text =
-        document.getElementById("output").innerText;
+function downloadResponse() {
 
-    navigator.clipboard.writeText(text);
+    const response =
+        document.querySelector(
+            "#output .markdown"
+        );
 
-    alert("Notes copied successfully!");
+    if (!response) {
 
-}
+        showToast(
+            "Ask Gemini first."
+        );
 
-
-function downloadNotes() {
-
-    const text =
-        document.getElementById("output").innerText;
+        return;
+    }
 
     const blob =
-        new Blob([text], {type:"text/plain"});
+        new Blob(
+            [response.innerText],
+            {
+                type:
+                    "text/markdown;charset=utf-8"
+            }
+        );
 
     const url =
         URL.createObjectURL(blob);
@@ -545,11 +1443,95 @@ function downloadNotes() {
 
     link.href = url;
 
-    link.download = "AI-Study-Notes.txt";
+    link.download =
+        "Gemini-Study-Response.md";
+
+    document.body.appendChild(link);
 
     link.click();
 
+    link.remove();
+
     URL.revokeObjectURL(url);
+
+    showToast(
+        "Response downloaded."
+    );
+
+}
+
+
+/* ==========================================
+   PRINT
+========================================== */
+
+function printResponse() {
+
+    const response =
+        document.querySelector(
+            "#output .markdown"
+        );
+
+    if (!response) {
+
+        showToast(
+            "Ask Gemini first."
+        );
+
+        return;
+    }
+
+    window.print();
+
+}
+
+
+/* ==========================================
+   LOADING
+========================================== */
+
+function showLoading(show) {
+
+    document.getElementById(
+        "loading"
+    ).style.display =
+        show ? "flex" : "none";
+
+    document.getElementById(
+        "generateBtn"
+    ).disabled = show;
+
+}
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.style.display =
+        "block";
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+    window.toastTimer =
+        setTimeout(() => {
+
+            toast.style.display =
+                "none";
+
+        }, 3500);
 
 }
 
